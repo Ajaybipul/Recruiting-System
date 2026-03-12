@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" th:href="@{/css/site.css}" />
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+    <link rel="stylesheet" th:href="@{/css/professional-theme.css}" />
+    <title>Schedule Interview</title>
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+
+        .page-center { max-width: 900px; margin: 40px auto; padding: 24px; }
+
+        .schedule-container {
+            background: rgba(255,255,255,0.96); padding: 32px; border-radius: 14px;
+            box-shadow: 0 12px 40px rgba(0,0,0,0.08); border:1px solid rgba(16,185,129,0.12);
+            backdrop-filter: blur(6px);
+        }
+
+        .schedule-container h1 { font-size: 24px; font-weight:800; margin-bottom:8px;
+            background: linear-gradient(135deg,#10b981 0%,#059669 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .schedule-container p { color:#475569; margin-bottom:18px; }
+
+        .form-group { margin-bottom:18px; }
+        .form-group label { display:block; margin-bottom:8px; color:#0f172a; font-weight:700; }
+
+        .form-group input, .form-group select, .form-group textarea {
+            width:100%; padding:12px; border:1px solid #e6edf0; border-radius:10px; font-size:14px;
+        }
+
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            outline:none; border-color: #10b981; box-shadow: 0 6px 20px rgba(16,185,129,0.08);
+        }
+
+        .form-row { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+
+        .applicant-info { background:#f8faf9; padding:12px; border-radius:8px; border-left:4px solid #10b981; margin-bottom:16px; }
+
+        .required { color:#dc2626; }
+
+        .btn-group { display:flex; gap:10px; margin-top:18px; }
+        .btn { flex:1; padding:12px; border-radius:10px; font-weight:700; cursor:pointer; text-decoration:none; display:inline-flex; align-items:center; justify-content:center; }
+        .btn-primary { background: linear-gradient(135deg,#10b981 0%,#059669 100%); color:#fff; box-shadow:0 8px 24px rgba(16,185,129,0.12); }
+        .btn-secondary { background:#f3f4f6; color:#0f172a; border:1px solid #e6edf0; }
+
+        @media (max-width:600px) { .form-row { grid-template-columns:1fr; } .page-center{padding:12px;} }
+    </style>
+</head>
+<body>
+
+<div class="schedule-container">
+    <h1>📅 Schedule Interview</h1>
+    <p>Fill in the interview details below. The candidate will receive this information via email.</p>
+
+    <div class="applicant-info" th:if="${candidateApplication != null}">
+        <p><strong>Candidate:</strong> <span th:text="${candidateApplication.fullName}">Not provided</span></p>
+        <p><strong>Email:</strong> <span th:text="${candidateApplication.email}">Not provided</span></p>
+        <p><strong>Position:</strong> <span th:text="${candidateApplication.jobTitle}">Not provided</span></p>
+    </div>
+
+    <form th:action="@{/hiring-manager/candidate/{applicationId}/schedule-interview(applicationId=${candidateApplication.id})}" method="post" th:if="${candidateApplication != null}">
+
+        <!-- Interview Type -->
+        <div class="form-group">
+            <label for="interviewType">Interview Type <span class="required">*</span></label>
+            <select id="interviewType" name="interviewType" required>
+                <option value="">-- Select Interview Type --</option>
+                <option value="Phone">Phone Call</option>
+                <option value="Video">Video Call</option>
+                <option value="In-Person">In-Person</option>
+            </select>
+        </div>
+
+        <!-- Date & Time Row -->
+        <div class="form-row">
+            <div class="form-group">
+                <label for="date">Interview Date <span class="required">*</span></label>
+                <input type="date" id="date" name="date" required />
+            </div>
+
+            <div class="form-group">
+                <label for="time">Interview Time <span class="required">*</span></label>
+                <input type="time" id="time" name="time" required />
+            </div>
+        </div>
+
+        <!-- Location/Meeting Link Row -->
+        <div class="form-row">
+            <div class="form-group">
+                <label for="location">Location <span class="required">*</span></label>
+                <input type="text" id="location" name="location" placeholder="e.g., Office Room A, Conference Room 101" required />
+            </div>
+
+            <div class="form-group">
+                <label for="meetingLink">Meeting Link (if Virtual)</label>
+                <input type="url" id="meetingLink" name="meetingLink" placeholder="e.g., https://zoom.us/j/123456789" />
+            </div>
+        </div>
+
+        <!-- Interviewer Name -->
+        <div class="form-group">
+            <label for="interviewer">Interviewer Name <span class="required">*</span></label>
+            <input type="text" id="interviewer" name="interviewer" placeholder="Your name or another manager" required />
+        </div>
+
+        <!-- Notes for Candidate -->
+        <div class="form-group">
+            <label for="notes">Notes for Candidate</label>
+            <textarea id="notes" name="notes" placeholder="e.g., Please prepare to discuss your experience with... Bring original documents... etc."></textarea>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="btn-group">
+            <button type="submit" class="btn btn-primary">✓ Schedule Interview</button>
+            <a href="/hiring-manager/candidate/{{candidateApplication.id}}" class="btn btn-secondary" style="text-decoration: none; text-align: center; line-height: 16px;">Cancel</a>
+        </div>
+    </form>
+
+</div>
+
+</body>
+</html>
+
+</body>
+</html>

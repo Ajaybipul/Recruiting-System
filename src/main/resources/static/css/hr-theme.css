@@ -1,0 +1,40 @@
+/* HR Theme: dark slate sidebar + background image */
+body.hr-theme {
+  background: linear-gradient(180deg, rgba(15,23,42,0.78), rgba(17,24,39,0.78)), url('/images/bg.jpg') center/cover fixed;
+  color: #e6eef8;
+  min-height: 100vh;
+}
+
+/* Sidebar overrides for HR pages */
+.hr-theme .sidebar {
+  width: 280px !important;
+  background: linear-gradient(180deg, #2d3748 0%, #1f2937 100%) !important;
+  color: #f8fafc !important;
+  border-right: 1px solid rgba(255,255,255,0.04) !important;
+}
+
+.hr-theme .sidebar .nav-item {
+  color: rgba(255,255,255,0.9) !important;
+}
+
+/* Make main panels slightly translucent so background shows through */
+.hr-theme .section,
+.hr-theme .card-glass,
+.hr-theme .section-card {
+  background: rgba(255,255,255,0.95);
+}
+
+.hr-theme .welcome-header,
+.hr-theme .stat-card {
+  background: linear-gradient(180deg, rgba(255,255,255,0.96), rgba(255,255,255,0.94));
+}
+
+/* Accent for table headers */
+.hr-theme .interview-table thead th,
+.hr-theme table thead th {
+  background: linear-gradient(90deg,#06b6d4,#0891b2);
+  color: white;
+}
+
+/* Ensure body uses hr-theme class when set on templates */
+html, body { height: 100%; }

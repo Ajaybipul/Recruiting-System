@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+    <title>Workstation Setup - Onboarding</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: #111827;
+            margin-bottom: 10px;
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        .progress-text {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .checklist {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin: 30px 0;
+        }
+
+        .checklist-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 15px;
+            background: #f9fafb;
+            border-radius: 8px;
+            border: 2px solid #e5e7eb;
+        }
+
+        .checklist-item input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        .checklist-item label {
+            margin: 0;
+            font-weight: 500;
+            cursor: pointer;
+            flex: 1;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #374151;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 14px;
+            box-sizing: border-box;
+            transition: all 0.3s ease;
+        }
+
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+            background: #f8f9ff;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 30px;
+            justify-content: flex-end;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-outline {
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+
+        .btn-outline:hover {
+            background: #667eea;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Step 3: Workstation Setup</h1>
+    <p class="progress-text">Complete the workstation setup checklist</p>
+
+    <form method="post" th:action="@{'/onboard/candidates/' + ${onboarding.applicationId} + '/workstation'}">
+        <div class="checklist">
+            <div class="checklist-item">
+                <input type="checkbox" id="laptop" name="laptopAssigned" 
+                       th:checked="${onboarding.laptopAssigned}" />
+                <label for="laptop">Laptop Assigned</label>
+            </div>
+            <div class="checklist-item">
+                <input type="checkbox" id="email" name="emailCreated" 
+                       th:checked="${onboarding.emailCreated}" />
+                <label for="email">Email Created</label>
+            </div>
+            <div class="checklist-item">
+                <input type="checkbox" id="access" name="accessPermissionsGranted" 
+                       th:checked="${onboarding.accessPermissionsGranted}" />
+                <label for="access">Access Permissions Granted</label>
+            </div>
+            <div class="checklist-item">
+                <input type="checkbox" id="tools" name="departmentToolsSetup" 
+                       th:checked="${onboarding.departmentToolsSetup}" />
+                <label for="tools">Department Tools Setup</label>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="laptopModel">Laptop Model (if assigned)</label>
+            <input type="text" id="laptopModel" name="laptopModel" 
+                   th:value="${onboarding.laptopModel}" />
+        </div>
+
+        <div class="form-group">
+            <label for="emailId">Email ID (if created)</label>
+            <input type="email" id="emailId" name="emailId" 
+                   th:value="${onboarding.emailId}" />
+        </div>
+
+        <div class="form-group">
+            <label for="step3Notes">Additional Notes</label>
+            <textarea id="step3Notes" name="step3Notes" th:text="${onboarding.step3Notes}"></textarea>
+        </div>
+
+        <div class="form-actions">
+            <a class="btn btn-outline" th:href="@{'/onboard/candidates/' + ${onboarding.applicationId}}">Back</a>
+            <button type="submit" class="btn btn-primary">Save & Continue</button>
+        </div>
+    </form>
+</div>
+
+</body>
+</html>

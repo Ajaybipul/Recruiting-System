@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+    <title>Employee Details</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f7fa;
+        }
+        .dashboard-layout { display: flex; min-height: 100vh; }
+        main { flex: 1; padding: 40px; max-width: 1200px; }
+        .page-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 40px;
+        }
+        .page-header h1 { font-size: 2em; margin: 0; }
+        .page-header p { margin: 10px 0 0 0; opacity: 0.9; }
+        .employee-card {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .section-title {
+            font-size: 1.3em;
+            font-weight: 600;
+            color: #333;
+            margin: 25px 0 15px 0;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #667eea;
+        }
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        .info-item { }
+        .info-label {
+            font-weight: 600;
+            color: #666;
+            font-size: 12px;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+        .info-value {
+            color: #333;
+            font-size: 15px;
+        }
+        .status-badge {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+        .status-active { background: #d1e7dd; color: #0f5132; }
+        .status-not-started { background: #e2e3e5; color: #383d41; }
+        .status-in-progress { background: #cfe2ff; color: #084298; }
+        .status-completed { background: #d1e7dd; color: #0f5132; }
+        .onboarding-timeline {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+            margin: 20px 0;
+        }
+        .timeline-item {
+            display: flex;
+            align-items: center;
+            margin: 15px 0;
+        }
+        .timeline-status {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+        .timeline-status.pending { background: #6c757d; }
+        .timeline-status.in-progress { background: #0d6efd; }
+        .timeline-status.completed { background: #198754; }
+        .timeline-text {
+            flex: 1;
+        }
+        .timeline-text strong {
+            display: block;
+            margin-bottom: 3px;
+        }
+        .timeline-text small {
+            color: #666;
+        }
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .btn-primary { background: #667eea; color: white; }
+        .btn-primary:hover { background: #5568d3; }
+        .btn-secondary { background: #6c757d; color: white; }
+        .btn-secondary:hover { background: #5a6268; }
+        .btn-success { background: #28a745; color: white; }
+        .btn-success:hover { background: #218838; }
+        .form-inline {
+            display: flex;
+            gap: 10px;
+            align-items: flex-end;
+        }
+        .form-inline select {
+            flex: 1;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+<div th:insert="~{fragments/header :: header}"></div>
+<main style="padding: 40px; max-width: 1000px; margin: 0 auto;">
+    <div class="page-header">
+        <h1 th:text="'👤 ' + ${employee.firstName} + ' ' + ${employee.lastName}"></h1>
+        <p th:text="${employee.position} + ' | Employee ID: ' + ${employee.employeeId}"></p>
+    </div>
+
+    <!-- Basic Employment Information -->
+    <div class="employee-card">
+        <h2 class="section-title">Employment Information</h2>
+        
+        <div class="info-grid">
+            <div class="info-item">
+                <div class="info-label">Employee ID</div>
+                    <div class="info-value" th:text="${employee.employeeId}"></div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Status</div>
+                    <div class="info-value">
+                        <span th:class="'status-badge status-' + ${employee.status.toLowerCase()}" th:text="${employee.status}"></span>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Position</div>
+                    <div class="info-value" th:text="${employee.position}"></div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Department</div>
+                    <div class="info-value" th:text="${employee.department}"></div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Employment Type</div>
+                    <div class="info-value" th:text="${employee.employmentType ?: 'N/A'}"></div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Salary</div>
+                    <div class="info-value" th:text="'$' + ${#numbers.formatDecimal(employee.salary, 1, 2)}"></div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Joining Date</div>
+                    <div class="info-value" th:text="${#dates.format(employee.joiningDate, 'dd MMM yyyy')}"></div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Reports To</div>
+                    <div class="info-value" th:text="${employee.reportsTo ?: 'N/A'}"></div>
+                </div>
+            </div>
+
+            <h2 class="section-title">Contact Information</h2>
+            <div class="info-grid">
+                <div class="info-item">
+                    <div class="info-label">Email</div>
+                    <div class="info-value" th:text="${employee.email}"></div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Phone</div>
+                    <div class="info-value" th:text="${employee.phone}"></div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Office Location</div>
+                    <div class="info-value" th:text="${employee.officeLocation ?: 'N/A'}"></div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Created Date</div>
+                    <div class="info-value" th:text="${#dates.format(employee.createdDate, 'dd MMM yyyy')}"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Onboarding Status -->
+        <div class="employee-card">
+            <h2 class="section-title">Onboarding Status</h2>
+            
+            <div class="onboarding-timeline">
+                <div class="timeline-item">
+                    <div th:class="'timeline-status ' + (${#strings.isEmpty(employee.onboardingStatus) ? 'pending' : 'completed'})">
+                        <span th:if="${#strings.isEmpty(employee.onboardingStatus)}">○</span>
+                        <span th:unless="${#strings.isEmpty(employee.onboardingStatus)}">✓</span>
+                    </div>
+                    <div class="timeline-text">
+                        <strong>Onboarding Initiated</strong>
+                        <small th:if="${employee.onboardingStartDate}" th:text="${#dates.format(employee.onboardingStartDate, 'dd MMM yyyy')}"></small>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div th:class="'timeline-status ' + (${employee.onboardingStatus == 'Completed' ? 'completed' : 'pending'})">
+                        <span th:if="${employee.onboardingStatus != 'Completed'}">○</span>
+                        <span th:unless="${employee.onboardingStatus != 'Completed'}">✓</span>
+                    </div>
+                    <div class="timeline-text">
+                        <strong>Onboarding Completed</strong>
+                        <small th:if="${employee.onboardingCompletedDate}" th:text="${#dates.format(employee.onboardingCompletedDate, 'dd MMM yyyy')}"></small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Update Onboarding Status Form -->
+            <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin-top: 20px;">
+                <strong>Update Onboarding Status:</strong>
+                <form th:action="@{/hr/employees/{id}/onboarding-status(id=${employee.employeeId})}" method="post" class="form-inline">
+                    <select name="status" required>
+                        <option value="">-- Select Status --</option>
+                        <option value="Not Started" th:selected="${employee.onboardingStatus == 'Not Started'}">Not Started</option>
+                        <option value="In Progress" th:selected="${employee.onboardingStatus == 'In Progress'}">In Progress</option>
+                        <option value="Completed" th:selected="${employee.onboardingStatus == 'Completed'}">Completed</option>
+                    </select>
+                    <button type="submit" class="btn btn-primary">Update Status</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="employee-card">
+            <div class="action-buttons">
+                <a href="/hr/employees" class="btn btn-secondary">← Back to Employees</a>
+                <a th:href="@{/hr/candidate/{id}/review(id=${candidateApplication.id})}" class="btn btn-primary" 
+                   th:if="${candidateApplication}">View Application</a>
+            </div>
+        </div>
+</main>
+</body>
+</html>

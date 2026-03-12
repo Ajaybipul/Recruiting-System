@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Logs & Activity - Admin</title>
+    <style>
+        html, body { height: 100%; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+        body { display: flex; flex-direction: column; }
+        .dashboard-container { display: flex; flex: 1; overflow: hidden; width: 100%; }
+        .sidebar { width: 280px; background: linear-gradient(180deg, #667eea 0%, #764ba2 100%); padding: 0; display: flex; flex-direction: column; min-height: 100%; flex-shrink: 0; }
+        .sidebar-header { padding: 25px 20px; border-bottom: 1px solid rgba(255,255,255,0.2); text-align: center; }
+        .sidebar-header h2 { margin: 0; font-size: 22px; font-weight: 700; color: white; }
+        .sidebar nav { display: flex; flex-direction: column; gap: 8px; padding: 20px 15px; flex: 1; }
+        .sidebar .nav-item { color: rgba(255,255,255,0.9); padding: 12px 16px; border-radius: 8px; display: flex; align-items: center; gap: 12px; text-decoration: none; }
+        .sidebar .nav-item:hover { background-color: rgba(255,255,255,0.15); transform: translateX(4px); }
+        .sidebar-footer { padding: 15px; border-top: 1px solid rgba(255,255,255,0.2); }
+        .logout-btn { color: rgba(255,255,255,0.9); padding: 12px 16px; border-radius: 8px; display: flex; align-items: center; gap: 12px; background: rgba(255,0,0,0.2); border: 1px solid rgba(255,255,255,0.2); width: 100%; text-decoration: none; }
+        main { flex: 1; padding: 40px; overflow-y: auto; background: linear-gradient(135deg, #f8f9fa 0%, #f0f2f5 100%); }
+        main h1 { color: #111827; margin-bottom: 35px; font-size: 32px; font-weight: 700; }
+        .filter-bar { background: white; padding: 16px; border-radius: 8px; margin-bottom: 20px; display: flex; gap: 12px; }
+        .filter-bar input { padding: 8px 12px; border: 1px solid #e5e7eb; border-radius: 6px; }
+        .logs-table { width: 100%; border-collapse: collapse; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.07); }
+        .logs-table thead { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
+        .logs-table th { padding: 12px 16px; text-align: left; font-weight: 600; }
+        .logs-table td { padding: 12px 16px; border-bottom: 1px solid #e5e7eb; }
+        .logs-table tbody tr:hover { background: #f9fafb; }
+        .status-badge { padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: 600; }
+        .status-success { background: #d1fae5; color: #065f46; }
+        .status-error { background: #fee2e2; color: #7f1d1d; }
+        .status-warning { background: #fef3c7; color: #92400e; }
+        .pagination { margin-top: 20px; text-align: center; }
+        .pagination button { padding: 8px 12px; margin: 0 4px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 6px; cursor: pointer; }
+    </style>
+</head>
+<body>
+<div class="dashboard-container">
+    <div th:insert="~{fragments/sidebar_admin :: body}"></div>
+    <main>
+        <h1>📂 Activity Logs</h1>
+        <div class="filter-bar">
+            <input type="text" placeholder="Search by user..." />
+            <input type="text" placeholder="Search by action..." />
+            <input type="date" />
+        </div>
+        <table class="logs-table">
+            <thead>
+                <tr>
+                    <th>Timestamp</th>
+                    <th>User</th>
+                    <th>Action</th>
+                    <th>Module</th>
+                    <th>Status</th>
+                    <th>Details</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>2024-01-15 14:32:15</td>
+                    <td>john.doe@example.com</td>
+                    <td>Created Job</td>
+                    <td>Jobs</td>
+                    <td><span class="status-badge status-success">Success</span></td>
+                    <td>Software Engineer - Senior</td>
+                </tr>
+                <tr>
+                    <td>2024-01-15 13:45:22</td>
+                    <td>sarah.smith@example.com</td>
+                    <td>Login</td>
+                    <td>Authentication</td>
+                    <td><span class="status-badge status-success">Success</span></td>
+                    <td>HR Manager Login</td>
+                </tr>
+                <tr>
+                    <td>2024-01-15 13:12:08</td>
+                    <td>mike.johnson@example.com</td>
+                    <td>Failed Login</td>
+                    <td>Authentication</td>
+                    <td><span class="status-badge status-error">Failed</span></td>
+                    <td>Invalid credentials</td>
+                </tr>
+                <tr>
+                    <td>2024-01-15 12:56:44</td>
+                    <td>admin@example.com</td>
+                    <td>Updated Offer</td>
+                    <td>Offers</td>
+                    <td><span class="status-badge status-success">Success</span></td>
+                    <td>Offer #1001 - Updated Status</td>
+                </tr>
+                <tr>
+                    <td>2024-01-15 11:23:19</td>
+                    <td>lisa.brown@example.com</td>
+                    <td>Deleted Application</td>
+                    <td>Applications</td>
+                    <td><span class="status-badge status-warning">Warning</span></td>
+                    <td>Application #5432 - Spam Detection</td>
+                </tr>
+                <tr>
+                    <td>2024-01-15 10:45:33</td>
+                    <td>robert.wilson@example.com</td>
+                    <td>Created Offer</td>
+                    <td>Offers</td>
+                    <td><span class="status-badge status-success">Success</span></td>
+                    <td>New offer for Candidate ID 789</td>
+                </tr>
+                <tr>
+                    <td>2024-01-15 09:30:12</td>
+                    <td>emily.davis@example.com</td>
+                    <td>Exported Report</td>
+                    <td>Reports</td>
+                    <td><span class="status-badge status-success">Success</span></td>
+                    <td>Monthly Hiring Report - PDF</td>
+                </tr>
+                <tr>
+                    <td>2024-01-15 08:15:47</td>
+                    <td>admin@example.com</td>
+                    <td>System Configuration</td>
+                    <td>Settings</td>
+                    <td><span class="status-badge status-success">Success</span></td>
+                    <td>Updated file size limits</td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="pagination">
+            <button>« Previous</button>
+            <button>1</button>
+            <button>2</button>
+            <button>3</button>
+            <button>Next »</button>
+        </div>
+    </main>
+</div>
+</body>
+</html>

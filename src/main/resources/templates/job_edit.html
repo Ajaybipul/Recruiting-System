@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+    <title>Edit Job Posting</title>
+</head>
+<body>
+<div th:insert="fragments/header :: body"></div>
+<main class="container" style="max-width:700px;margin:40px auto;">
+    <h1>Edit Job Posting</h1>
+
+    <form th:action="@{'/jobs/edit/' + ${position.id}}" method="post">
+        <div class="form-row">
+            <label>Title</label>
+            <input type="text" name="title" th:value="${position.title}" required />
+        </div>
+        <div class="form-row">
+            <label>Description</label>
+            <textarea name="description" rows="5" th:text="${position.description}"></textarea>
+        </div>
+        <div class="form-row">
+            <label>Location</label>
+            <input type="text" name="location" th:value="${position.location}" />
+        </div>
+        <div class="form-row">
+            <label>Department</label>
+            <input type="text" name="department" th:value="${position.department}" />
+        </div>
+        <div class="form-row">
+            <label>Skills Required</label>
+            <textarea name="skills" rows="3" th:text="${position.skills}"></textarea>
+        </div>
+        <div class="form-row">
+            <label>Number of Openings</label>
+            <input type="number" name="openings" th:value="${position.openings}" min="1" />
+        </div>
+        <div class="form-row">
+            <label>Salary Range</label>
+            <input type="text" name="salaryRange" th:value="${position.salaryRange}" />
+        </div>
+        <div class="form-row">
+            <label>Status</label>
+            <input type="text" name="status" th:value="${position.status}" />
+        </div>
+        <div class="form-row">
+            <label>
+                <input type="checkbox" name="published" th:checked="${position.published}" />
+                Published
+            </label>
+        </div>
+
+        <div style="display:flex; gap:12px; margin-top:20px;">
+            <button class="btn btn-primary" type="submit">Save Changes</button>
+            <a class="btn btn-outline" th:href="@{/recruiter/my-posts}">Cancel</a>
+        </div>
+    </form>
+</main>
+<div th:insert="fragments/footer :: body"></div>
+</body>
+</html>

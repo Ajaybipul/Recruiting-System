@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+    <title>Interview Feedback</title>
+</head>
+<body>
+<div th:insert="fragments/header :: body"></div>
+<main style="max-width: 700px; margin: 40px auto; padding: 0 20px;">
+    <div style="background: white; padding: 30px; border-radius: 12px; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);">
+        <h1>Submit Interview Feedback</h1>
+        <p style="color: #666; margin-bottom: 10px;">Interview ID: <strong th:text="${interview.id}"></strong></p>
+        <p style="color: #666; margin-bottom: 30px;">Candidate: <strong th:text="${interview.candidateId}"></strong></p>
+        
+        <form th:action="@{'/interview/' + ${interview.id} + '/feedback'}" method="post">
+            <div class="form-group">
+                <label for="technicalSkills">Technical Skills (1-5)</label>
+                <input id="technicalSkills" name="technicalSkills" type="number" min="1" max="5" />
+            </div>
+            
+            <div class="form-group">
+                <label for="communicationSkills">Communication Skills (1-5)</label>
+                <input id="communicationSkills" name="communicationSkills" type="number" min="1" max="5" />
+            </div>
+            
+            <div class="form-group">
+                <label for="problemSolving">Problem Solving (1-5)</label>
+                <input id="problemSolving" name="problemSolving" type="number" min="1" max="5" />
+            </div>
+            
+            <div class="form-group">
+                <label for="overallRating">Overall Rating (1-5)</label>
+                <input id="overallRating" name="overallRating" type="number" min="1" max="5" required />
+            </div>
+            
+            <div class="form-group">
+                <label for="feedback">Your Feedback</label>
+                <textarea id="feedback" name="feedback" rows="6" required style="width: 100%; padding: 10px; border: 2px solid #e1e1e1; border-radius: 6px; font-family: inherit; font-size: 14px;"></textarea>
+            </div>
+            
+            <div style="display: flex; gap: 10px;">
+                <button type="submit" class="btn btn-primary" style="flex: 1;">Submit Feedback</button>
+                <a href="javascript:history.back()" class="btn btn-outline" style="flex: 1; text-align: center; line-height: 2.5;">Cancel</a>
+            </div>
+        </form>
+    </div>
+</main>
+<div th:insert="fragments/footer :: body"></div>
+</body>
+</html>

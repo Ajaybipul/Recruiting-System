@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+    <title th:text="${job.title}">Job Details</title>
+</head>
+<body>
+
+<div th:insert="fragments/header :: body"></div>
+
+<main style="max-width: 900px; margin: 40px auto; padding: 0 20px;">
+    <h1 th:text="${job.title}"></h1>
+    <p style="color: #666; margin-bottom: 30px;">📍 
+        <span th:text="${job.location}"></span>
+    </p>
+
+    <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 30px;">
+        <div>
+            <div style="background: white; padding: 30px; border-radius: 12px; 
+                        box-shadow: 0 8px 32px rgba(0,0,0,0.08); margin-bottom: 30px;">
+                
+                <h3>About the Role</h3>
+                <p style="color: #666; line-height: 1.8;"
+                   th:text="${job.description}"></p>
+
+                <h3>Requirements</h3>
+                <ul style="color: #666; line-height: 1.8;">
+                    <li th:each="skill : ${job.skills}" th:if="${job.skills != null}">
+                        <span th:text="${skill}"></span>
+                    </li>
+                </ul>
+
+            </div>
+        </div>
+
+        <div>
+            <div style="background: white; padding: 30px; border-radius: 12px; box-shadow: 0 8px 32px rgba(0,0,0,0.08);">
+
+                <h3>Position Details</h3>
+
+                <div style="margin-bottom: 20px;">
+                    <p style="margin: 0; color: #666; font-size: 12px;">Department</p>
+                    <p th:text="${job.department}"></p>
+                </div>
+
+                <div style="margin-bottom: 20px;">
+                    <p style="margin: 0; color: #666; font-size: 12px;">💰 Salary Range</p>
+                    <p th:text="${job.salaryRange ?: 'Competitive'}"></p>
+                </div>
+
+                <div style="margin-bottom: 20px;">
+                    <p style="margin: 0; color: #666; font-size: 12px;">Openings</p>
+                    <p th:text="${job.openings}"></p>
+                </div>
+
+                <div style="margin-bottom: 30px; padding-top: 20px; border-top: 1px solid #e1e1e1;">
+                    <p style="margin: 0; color: #666; font-size: 12px;">Posted</p>
+                    <p th:text="${#dates.format(job.postedDate, 'MMM dd, yyyy')}"></p>
+                </div>
+
+                <div th:if="${session.roles != null and session.roles.contains('ROLE_APPLICANT')}">
+                    <span th:if="${#lists.contains(appliedJobIds, job.id)}">
+                        <button class="btn btn-outline" style="width: 100%; text-align:center;" disabled>
+                            ✓ Already Applied
+                        </button>
+                    </span>
+                    <span th:if="${!#lists.contains(appliedJobIds, job.id)}">
+                        <a th:href="@{'/apply/' + ${job.id}}"
+                           class="btn btn-primary" style="width: 100%; text-align:center;">
+                            Apply Now
+                        </a>
+                    </span>
+                </div>
+                <div th:if="${session.roles == null or !session.roles.contains('ROLE_APPLICANT')}">
+                    <a th:href="@{'/login'}"
+                       class="btn btn-outline" style="width: 100%; text-align:center;">
+                        Login to Apply
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div style="margin-top: 30px;">
+        <a th:href="@{/jobs}" class="btn btn-outline">Back to Jobs</a>
+    </div>
+
+</main>
+
+<div th:insert="fragments/footer :: body"></div>
+
+</body>
+</html>

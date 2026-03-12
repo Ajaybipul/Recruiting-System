@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Onboarding Documents</title>
+    <link rel="stylesheet" th:href="@{/css/site.css}" />
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+    <link rel="stylesheet" th:href="@{/css/professional-theme.css}" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            background: white;
+            padding: 40px;
+            border-radius: 16px 16px 0 0;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+        }
+        
+        .header h1 {
+            color: #1a1a2e;
+            margin-bottom: 10px;
+            font-size: 2.2em;
+            font-weight: 700;
+        }
+        
+        .header p {
+            color: #667eea;
+            font-size: 1.1em;
+            font-weight: 500;
+        }
+        
+        .content {
+            background: white;
+            padding: 40px;
+            border-radius: 0 0 16px 16px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+        }
+        
+        .alert {
+            padding: 16px 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-left: 4px solid;
+        }
+        
+        .alert-success {
+            background: #f0f9ff;
+            color: #065f46;
+            border-left-color: #10b981;
+        }
+        
+        .alert-error {
+            background: #fef2f2;
+            color: #991b1b;
+            border-left-color: #ef4444;
+        }
+        
+        .upload-section {
+            background: linear-gradient(135deg, #f8f9fa 0%, #f0f0f5 100%);
+            padding: 35px;
+            border-radius: 12px;
+            margin-bottom: 40px;
+            border: 2px dashed #667eea;
+            transition: all 0.3s ease;
+        }
+        
+        .upload-section:hover {
+            border-color: #764ba2;
+            background: linear-gradient(135deg, #f5f7ff 0%, #f0e5ff 100%);
+        }
+        
+        .upload-section h2 {
+            color: #1a1a2e;
+            margin-bottom: 25px;
+            font-size: 1.6em;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .form-group {
+            margin-bottom: 24px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 10px;
+            color: #1a1a2e;
+            font-weight: 600;
+            font-size: 0.95em;
+        }
+        
+        input[type="file"],
+        select {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1em;
+            font-family: inherit;
+            transition: all 0.3s ease;
+            background: white;
+        }
+        
+        input[type="file"]:hover,
+        select:hover {
+            border-color: #667eea;
+        }
+        
+        input[type="file"]:focus,
+        select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            background: #f8f9ff;
+        }
+        
+        input[type="file"]::file-selector-button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin-right: 10px;
+        }
+        
+        input[type="file"]::file-selector-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 14px rgba(102, 126, 234, 0.4);
+        }
+        
+        small {
+            color: #667eea;
+            display: block;
+            margin-top: 8px;
+            font-size: 0.9em;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 15px;
+            justify-content: flex-end;
+            margin-top: 30px;
+        }
+        
+        button {
+            padding: 14px 32px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-primary:active {
+            transform: translateY(-1px);
+        }
+        
+        .btn-secondary {
+            background: #e0e0e0;
+            color: #333;
+        }
+        
+        .btn-secondary:hover {
+            background: #d0d0d0;
+        }
+        
+        .documents-section {
+            margin-top: 50px;
+        }
+        
+        .documents-section h2 {
+            color: #1a1a2e;
+            margin-bottom: 25px;
+            font-size: 1.6em;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 15px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        
+        th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 16px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.95em;
+        }
+        
+        td {
+            padding: 16px;
+            border-bottom: 1px solid #f0f0f0;
+            color: #333;
+        }
+        
+        tr:hover {
+            background: #f8f9fa;
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 8px 14px;
+            border-radius: 24px;
+            font-size: 0.85em;
+            font-weight: 600;
+        }
+        
+        .status-submitted {
+            background: #fef3c7;
+            color: #92400e;
+        }
+        
+        .status-approved {
+            background: #d1fae5;
+            color: #065f46;
+        }
+        
+        .status-rejected {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        
+        .btn-sm {
+            padding: 8px 14px;
+            font-size: 0.85em;
+            text-decoration: none;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-danger {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fecaca;
+        }
+        
+        .btn-danger:hover {
+            background: #fecaca;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 60px 40px;
+            color: #667eea;
+        }
+        
+        .empty-state-icon {
+            font-size: 4em;
+            margin-bottom: 20px;
+            opacity: 0.6;
+        }
+        
+        .empty-state h3 {
+            color: #1a1a2e;
+            margin-bottom: 10px;
+            font-size: 1.3em;
+        }
+        
+        .empty-state p {
+            margin-bottom: 10px;
+            color: #666;
+        }
+        
+        @media (max-width: 768px) {
+            .header {
+                padding: 25px;
+            }
+            
+            .header h1 {
+                font-size: 1.6em;
+            }
+            
+            .content {
+                padding: 25px;
+            }
+            
+            .upload-section {
+                padding: 25px;
+            }
+            
+            .button-group {
+                flex-direction: column;
+            }
+            
+            table {
+                font-size: 0.9em;
+            }
+            
+            th, td {
+                padding: 12px;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+                width: 100%;
+            }
+            
+            .btn-sm {
+                width: 100%;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div th:replace="fragments/header :: header"></div>
+    
+    <div class="container">
+        <div class="header">
+            <h1>📋 Upload Onboarding Documents</h1>
+            <p>Submit required documents to complete your onboarding process</p>
+        </div>
+        
+        <div class="content">
+            <!-- Success Alert -->
+            <div th:if="${param.success}" class="alert alert-success">
+                <span style="font-size: 1.2em;">✓</span>
+                <span>Documents uploaded successfully!</span>
+            </div>
+            
+            <!-- Error Alert -->
+            <div th:if="${param.error}" class="alert alert-error">
+                <span style="font-size: 1.2em;">✕</span>
+                <span th:text="${param.error}"></span>
+            </div>
+            
+            <!-- Upload Form Section -->
+            <div class="upload-section">
+                <h2>📤 Upload Your Documents</h2>
+                
+                <form method="post" enctype="multipart/form-data" th:action="@{/applicant/onboarding/upload}">
+                    <div class="form-group">
+                        <label for="documentType">Document Type <span style="color: #ef4444;">*</span></label>
+                        <select id="documentType" name="documentType" required>
+                            <option value="">-- Select a document type --</option>
+                            <option value="ID Proof">🪪 ID Proof (Passport, Driving License, Aadhar)</option>
+                            <option value="Address Proof">🏠 Address Proof (Utility Bill, Rental Agreement)</option>
+                            <option value="Educational Certificates">🎓 Educational Certificates</option>
+                            <option value="Experience Letters">💼 Experience Letters</option>
+                            <option value="Bank Details">🏦 Bank Details (Cheque, Bank Statement)</option>
+                            <option value="Medical Clearance">⚕️ Medical Clearance Certificate</option>
+                            <option value="Other">📄 Other Documents</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="files">Select Files <span style="color: #ef4444;">*</span></label>
+                        <input type="file" id="files" name="files" multiple accept=".pdf,.jpg,.jpeg,.png,.doc,.docx" required>
+                        <small>
+                            ✓ Accepted formats: PDF, JPG, PNG, DOC, DOCX<br/>
+                            ✓ Maximum 10 files per upload
+                        </small>
+                    </div>
+                    
+
+                    <div class="button-group">
+                        <button type="reset" class="btn-secondary">
+                            <span style="margin-right: 8px;">🔄</span>Clear
+                        </button>
+                        <button type="submit" class="btn-primary">
+                            <span style="margin-right: 8px;">⬆️</span>Upload Documents
+                        </button>
+                    </div>
+                </form>
+            </div>
+            
+            <!-- Uploaded Documents Section -->
+            <div class="documents-section">
+                <h2>📋 Your Uploaded Documents</h2>
+                
+                <div th:if="${documents != null and documents.size() > 0}">
+                    <div class="documents-stats" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin-bottom: 25px;">
+                        <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 15px; border-radius: 8px; color: white; text-align: center;">
+                            <div style="font-size: 1.8em; font-weight: bold;" th:text="${totalDocuments}"></div>
+                            <div style="font-size: 0.9em; opacity: 0.9;">Total Documents</div>
+                        </div>
+                        <div style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); padding: 15px; border-radius: 8px; color: white; text-align: center;">
+                            <div style="font-size: 1.8em; font-weight: bold;" th:text="${approvedDocuments}"></div>
+                            <div style="font-size: 0.9em; opacity: 0.9;">Approved</div>
+                        </div>
+                        <div style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); padding: 15px; border-radius: 8px; color: white; text-align: center;">
+                            <div style="font-size: 1.8em; font-weight: bold;" th:text="${submittedDocuments}"></div>
+                            <div style="font-size: 0.9em; opacity: 0.9;">Pending</div>
+                        </div>
+                    </div>
+                    
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>📄 Document Type</th>
+                                <th>📁 File Name</th>
+                                <th>📅 Upload Date</th>
+                                <th>✓ Status</th>
+                                <th>⚙️ Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="doc : ${documents}">
+                                <td th:text="${doc.documentType}"></td>
+                                <td style="word-break: break-word;" th:text="${doc.filePath}"></td>
+                                <td th:text="${#dates.format(doc.submittedDate, 'yyyy-MM-dd HH:mm')}"></td>
+                                <td>
+                                    <span class="status-badge" 
+                                          th:classappend="${doc.status == 'Approved' ? 'status-approved' : (doc.status == 'Rejected' ? 'status-rejected' : 'status-submitted')}"
+                                          th:text="${doc.status}">
+                                    </span>
+                                </td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <a th:href="@{${doc.filePath}}" target="_blank" class="btn btn-sm" style="background: #17a2b8; color: white; text-decoration: none;">👁️ View</a>
+                                        <form th:if="${doc.status == 'Submitted'}" method="post" th:action="@{/applicant/onboarding/delete/{id}(id=${doc.id})}" style="display: inline;">
+                                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Delete this document?');">🗑️ Delete</button>
+                                        </form>
+                                        <span th:if="${doc.status != 'Submitted'}" style="color: #999; font-size: 0.9em;">
+                                            <span th:if="${doc.status == 'Rejected'}">⚠️ Reason: <span th:text="${doc.notes}"></span></span>
+                                        </span>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div th:if="${documents == null or documents.size() == 0}" class="empty-state">
+                    <div style="font-size: 3em; margin-bottom: 15px;">📁</div>
+                    <h3 style="color: #333; margin: 10px 0;">No documents uploaded yet</h3>
+                    <p style="color: #999; font-size: 0.95em;">Start by selecting a document type and uploading your files above</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div th:replace="fragments/footer :: body"></div>
+</body>
+</html>

@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+    <title>Onboarding Specialist Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        html, body {
+            height: 100%;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        }
+        
+        body {
+            display: flex;
+            flex-direction: column;
+            background-color: #f5f5f5;
+        }
+        
+        .dashboard-container {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+        
+        .sidebar {
+            width: 260px;
+            background: #2c3e50;
+            color: white;
+            padding: 20px;
+            min-height: 100%;
+            overflow-y: auto;
+            flex-shrink: 0;
+            border-right: 1px solid #1a252f;
+        }
+        
+        .sidebar nav {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .sidebar a {
+            color: white;
+            text-decoration: none;
+            padding: 12px 15px;
+            border-radius: 4px;
+            display: block;
+            transition: all 0.3s ease;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .sidebar a:hover {
+            background-color: #34495e;
+            transform: translateX(4px);
+        }
+        
+        .sidebar hr {
+            opacity: 0.3;
+            margin: 15px 0;
+            border: none;
+            border-top: 1px solid rgba(255,255,255,0.3);
+        }
+        
+        main {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+        }
+        
+        main h1 {
+            color: #2c3e50;
+            margin-bottom: 30px;
+            font-size: 28px;
+        }
+        
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        .stat-card h3 {
+            margin: 0;
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        .stat-card .number {
+            font-size: 32px;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        
+        .section h2 {
+            color: #2c3e50;
+            margin-top: 30px;
+            margin-bottom: 20px;
+            font-size: 22px;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+        
+        .onboarding-item {
+            background: white;
+            padding: 20px;
+            border-radius: 4px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .onboarding-item h4 {
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+        
+        .onboarding-item p {
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #667eea;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .btn:hover {
+            background-color: #5568d3;
+        }
+        
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            background-color: #e7f3ff;
+            color: #0066cc;
+        }
+        
+        @media (max-width: 768px) {
+            .dashboard-container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                min-height: auto;
+            }
+            
+            main {
+                padding: 15px;
+            }
+            
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .onboarding-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+<body class="show-sidebar">
+
+<div th:insert="~{fragments/header :: header}"></div>
+
+<div class="dashboard-container">
+    <aside class="sidebar">
+        <nav>
+            <a th:href="@{/onboard/dashboard}">Dashboard</a>
+            <a th:href="@{/onboard/candidates}">Candidates</a>
+            <hr />
+            <a th:href="@{/logout}">Logout</a>
+        </nav>
+    </aside>
+
+    <main>
+        <h1>Onboarding Specialist Dashboard</h1>
+
+        <!-- STATISTICS -->
+        <div class="dashboard-grid">
+            <div class="stat-card">
+                <h3>Total Onboarding</h3>
+                <div class="number" th:text="${totalOnboarding}">0</div>
+            </div>
+            <div class="stat-card">
+                <h3>In Progress</h3>
+                <div class="number" th:text="${inProgress}">0</div>
+            </div>
+            <div class="stat-card">
+                <h3>Completed</h3>
+                <div class="number" th:text="${completed}">0</div>
+            </div>
+            <div class="stat-card">
+                <h3>Pending Doc Verification</h3>
+                <div class="number" th:text="${pendingDocVerification}">0</div>
+            </div>
+        </div>
+
+        <!-- ONBOARDING LIST -->
+        <div class="section">
+            <h2>Active Onboarding Cases</h2>
+            
+            <div th:if="${#lists.isEmpty(onboardingList)}">
+                <p>No active onboarding cases.</p>
+            </div>
+            
+            <div th:each="onboarding : ${onboardingList}" class="onboarding-item">
+                <div>
+                    <h4 th:text="${onboarding.candidateName}">Candidate Name</h4>
+                    <p th:text="'Position: ' + ${onboarding.jobTitle}">Position</p>
+                    <span class="status-badge" th:text="${onboarding.overallStatus}">Status</span>
+                </div>
+                <a class="btn" th:href="@{'/onboard/candidates/' + ${onboarding.applicationId}}">View Details</a>
+            </div>
+        </div>
+    </main>
+</div>
+
+<div th:insert="~{fragments/footer :: footer}"></div>
+
+</body>
+</html>

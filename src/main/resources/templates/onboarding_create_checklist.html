@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+    <title>Create Onboarding Checklist</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        html, body {
+            height: 100%;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        }
+        
+        body {
+            display: flex;
+            flex-direction: column;
+            background-color: #f5f5f5;
+        }
+        
+        .dashboard-container {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+        
+        .sidebar {
+            width: 260px;
+            background: linear-gradient(180deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            min-height: 100%;
+            overflow-y: auto;
+            flex-shrink: 0;
+            border-right: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        .sidebar-header {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        .sidebar-header h2 {
+            font-size: 18px;
+            font-weight: 700;
+            color: white;
+        }
+        
+        .sidebar nav {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .sidebar a {
+            color: rgba(255,255,255,0.9);
+            text-decoration: none;
+            padding: 12px 15px;
+            border-radius: 6px;
+            display: block;
+            transition: all 0.3s ease;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .sidebar a:hover {
+            background-color: rgba(255,255,255,0.2);
+            transform: translateX(4px);
+            color: white;
+        }
+        
+        main {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+        }
+        
+        .page-header {
+            margin-bottom: 30px;
+        }
+        
+        .page-header h1 {
+            font-size: 28px;
+            color: #2c3e50;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        
+        .breadcrumb {
+            font-size: 13px;
+            color: #7f8c8d;
+        }
+        
+        .breadcrumb a {
+            color: #667eea;
+            text-decoration: none;
+        }
+        
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            padding: 0;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+        
+        .card-header {
+            padding: 20px;
+            border-bottom: 1px solid #ecf0f1;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .card-header h2 {
+            font-size: 18px;
+            font-weight: 600;
+            margin: 0;
+        }
+        
+        .card-body {
+            padding: 30px;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        
+        .form-group select,
+        .form-group input {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+            font-family: inherit;
+        }
+        
+        .form-group select:focus,
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .template-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .template-card {
+            padding: 20px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            background: white;
+        }
+        
+        .template-card:hover {
+            border-color: #667eea;
+            background-color: #f8f9ff;
+        }
+        
+        .template-card input[type="radio"] {
+            display: none;
+        }
+        
+        .template-card input[type="radio"]:checked + label {
+            color: #667eea;
+        }
+        
+        .template-card.selected {
+            border-color: #667eea;
+            background-color: #f0f3ff;
+        }
+        
+        .template-name {
+            font-weight: 600;
+            color: #2c3e50;
+            font-size: 14px;
+        }
+        
+        .custom-template-input {
+            display: none;
+        }
+        
+        .custom-template-input.show {
+            display: block;
+        }
+        
+        .form-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            padding-top: 20px;
+            border-top: 1px solid #ecf0f1;
+            margin-top: 30px;
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            gap: 8px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-secondary {
+            background-color: #e8eef5;
+            color: #667eea;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #d8dff0;
+        }
+        
+        .info-box {
+            background-color: #f0f3ff;
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+        
+        .info-box h4 {
+            color: #2c3e50;
+            font-size: 14px;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        
+        .info-box p {
+            color: #34495e;
+            font-size: 13px;
+            margin: 5px 0;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Main Content -->
+        <main>
+            <div class="page-header">
+                <div class="breadcrumb">
+                    <a href="/onboarding/new-hires">New Hires</a> / 
+                    <span th:text="${application.fullName}"></span> / 
+                    Create Checklist
+                </div>
+                <h1>Create Onboarding Checklist</h1>
+            </div>
+            
+            <form th:action="@{/onboarding/create-checklist}" method="POST">
+                <!-- Candidate Information -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2>Candidate Information</h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label>Candidate Name</label>
+                            <input type="text" th:value="${candidateData.name}" disabled />
+                        </div>
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input type="text" th:value="${candidateData.email}" disabled />
+                        </div>
+                        <div class="form-group">
+                            <label>Job Title</label>
+                            <input type="text" th:value="${candidateData.jobTitle}" disabled />
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Select Template -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2>Select Checklist Template</h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="info-box">
+                            <h4>Pre-Made Templates</h4>
+                            <p>Choose from our pre-configured templates for different onboarding phases, or create a custom checklist.</p>
+                        </div>
+                        
+                        <div class="template-grid">
+                            <div class="template-card" data-template="Pre-Onboarding">
+                                <input type="radio" id="template-pre" name="templateType" value="Pre-Onboarding" />
+                                <label for="template-pre" class="template-name">Pre-Onboarding</label>
+                            </div>
+                            <div class="template-card" data-template="Day 1">
+                                <input type="radio" id="template-day1" name="templateType" value="Day 1" />
+                                <label for="template-day1" class="template-name">Day 1</label>
+                            </div>
+                            <div class="template-card" data-template="Week 1">
+                                <input type="radio" id="template-week1" name="templateType" value="Week 1" />
+                                <label for="template-week1" class="template-name">Week 1</label>
+                            </div>
+                            <div class="template-card" data-template="Month 1">
+                                <input type="radio" id="template-month1" name="templateType" value="Month 1" />
+                                <label for="template-month1" class="template-name">Month 1</label>
+                            </div>
+                            <div class="template-card" data-template="Custom">
+                                <input type="radio" id="template-custom" name="templateType" value="Custom" />
+                                <label for="template-custom" class="template-name">Custom</label>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group custom-template-input" id="customTemplateInput">
+                            <label>Custom Template Name</label>
+                            <input type="text" id="customTemplateName" name="customTemplateName" 
+                                   placeholder="e.g., Engineering Onboarding" />
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Form Actions -->
+                <div style="display: flex; gap: 12px; justify-content: flex-end;">
+                    <a href="/onboarding/new-hires" class="btn btn-secondary">Cancel</a>
+                    <button type="submit" class="btn btn-primary">Create Checklist</button>
+                </div>
+                
+                <input type="hidden" name="applicationId" th:value="${applicationId}" />
+            </form>
+        </main>
+    </div>
+    
+    <script>
+        document.querySelectorAll('.template-card').forEach(card => {
+            card.addEventListener('click', function() {
+                document.querySelectorAll('.template-card').forEach(c => c.classList.remove('selected'));
+                this.classList.add('selected');
+                
+                const radio = this.querySelector('input[type="radio"]');
+                radio.checked = true;
+                
+                // Show/hide custom template input
+                const customInput = document.getElementById('customTemplateInput');
+                if (radio.value === 'Custom') {
+                    customInput.classList.add('show');
+                } else {
+                    customInput.classList.remove('show');
+                }
+            });
+        });
+        
+        // Handle keyboard selection
+        document.querySelectorAll('.template-card input[type="radio"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                if (this.value === 'Custom') {
+                    document.getElementById('customTemplateInput').classList.add('show');
+                } else {
+                    document.getElementById('customTemplateInput').classList.remove('show');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

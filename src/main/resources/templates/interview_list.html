@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>Scheduled Interviews</title>
+</head>
+<body>
+
+<!-- header fragment (uses your existing fragments) -->
+<div th:insert="fragments/header :: body"></div>
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2>Scheduled Interviews</h2>
+        <div>
+            <a th:href="@{/recruiter/dashboard}" class="btn btn-secondary">Back to Dashboard</a>
+        </div>
+    </div>
+
+    <div th:if="${count == 0}">
+        <div class="alert alert-info">No interviews scheduled.</div>
+    </div>
+
+    <div th:if="${interviewRows != null and interviewRows.size() > 0}">
+        <div class="table-responsive">
+            <table class="table table-striped table-hover">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Candidate</th>
+                        <th>Job Title</th>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Mode</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="r : ${interviewRows}">
+                        <td th:text="${r.candidateName}">Candidate Name</td>
+                        <td th:text="${r.jobTitle}">Job Title</td>
+                        <td th:text="${r.date}">2025-01-01</td>
+                        <td th:text="${r.time}">09:30</td>
+                        <td th:text="${r.mode}">Virtual</td>
+                        <td>
+                            <a th:href="@{'/interview/' + ${r.id}}" class="btn btn-sm btn-info">View Details</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- footer fragment -->
+<div th:insert="fragments/footer :: body"></div>
+
+</body>
+</html>

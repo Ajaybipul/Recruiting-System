@@ -1,0 +1,66 @@
+:root{
+  --glass-bg: rgba(255,255,255,0.06);
+  --glass-border: rgba(255,255,255,0.12);
+  --accent-1: #6c5ce7;
+  --accent-2: #00b894;
+  --glass-radius: 12px;
+  --glass-padding: 10px 16px;
+}
+
+/* Background image visible on every page */
+html,body{height:100%;}
+body{
+  margin:0;
+  font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  color: #e9eef8;
+  background: linear-gradient(180deg, rgba(30,40,80,0.85), rgba(20,25,50,0.85)), url('/images/bg.jpg') center/cover fixed;
+  background-attachment: fixed;
+  min-height: 100vh;
+}
+
+/* Container helpers */
+.container{max-width:1200px;margin:0 auto;padding:24px}
+
+/* Nav (moved from fragment) */
+.nav{
+  background: linear-gradient(135deg,var(--accent-1) 0%, #764ba2 100%);
+  padding: 12px 22px;
+  border-radius: 10px;
+  display:flex;align-items:center;gap:18px;
+  box-shadow: 0 6px 18px rgba(3,6,23,0.45);
+}
+.nav a{color: #fff;text-decoration:none;padding:8px 12px;border-radius:8px;transition:all .25s}
+.nav a:hover{transform:translateY(-2px);background:rgba(255,255,255,0.06)}
+
+/* Glassy buttons */
+.btn{
+  display:inline-flex;align-items:center;gap:8px;cursor:pointer;
+  padding:var(--glass-padding);border-radius:var(--glass-radius);
+  background: linear-gradient(180deg, rgba(255,255,255,0.035), rgba(255,255,255,0.02));
+  border: 1px solid var(--glass-border);
+  color: #f5f7fb;font-weight:600;font-size:0.95em;text-decoration:none;
+  backdrop-filter: blur(6px) saturate(1.1);
+  -webkit-backdrop-filter: blur(6px) saturate(1.1);
+  transition: transform .15s ease, box-shadow .15s ease, background .15s ease;
+}
+.btn:hover{transform:translateY(-4px);box-shadow:0 10px 30px rgba(2,6,23,0.45)}
+.btn:active{transform:translateY(-1px)}
+
+.btn-primary{background:linear-gradient(90deg,var(--accent-1), #9b59ff);border:1px solid rgba(255,255,255,0.12);color:white}
+.btn-secondary{background:linear-gradient(90deg,#4b6cb7,#182848);color:white}
+.btn-success{background:linear-gradient(90deg,#00b894,#00c98a);color:white}
+.btn-danger{background:linear-gradient(90deg,#ff6b6b,#ff4757);color:white}
+.btn-outline{background:transparent;border:1px solid rgba(255,255,255,0.12);color:inherit}
+
+/* Small / block variants */
+.btn-sm{padding:6px 10px;font-size:0.85em}
+.btn-block{display:block;width:100%}
+
+/* Glassy cards for dashboard widgets */
+.card-glass{background:linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));border:1px solid rgba(255,255,255,0.06);padding:18px;border-radius:14px;box-shadow:0 8px 24px rgba(3,6,23,0.45);}
+
+/* Make sure forms and panels are readable */
+input,textarea,select{background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);color:inherit;padding:10px;border-radius:8px}
+
+/* Ensure background image remains visible under content */
+.page-content{position:relative;z-index:1}

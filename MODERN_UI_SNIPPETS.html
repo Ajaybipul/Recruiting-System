@@ -1,0 +1,343 @@
+<!-- 
+    MODERN UI BUTTON & COMPONENT SNIPPETS
+    Copy and paste these examples into your templates
+-->
+
+<!-- ========================================
+     BUTTON EXAMPLES - COPY AND USE
+     ======================================== -->
+
+<!-- PRIMARY BUTTONS (Main actions) -->
+<a class="btn-primary" href="/create">➕ Create New</a>
+<button class="btn-primary" type="submit">💾 Save</button>
+<a class="btn-primary" href="/edit">✏️ Edit</a>
+
+<!-- SUCCESS BUTTONS (Confirmations) -->
+<button class="btn-success" type="submit">✓ Approve</button>
+<a class="btn-success" href="/confirm">✓ Confirm</a>
+<button class="btn-success" type="button">✓ Accept</button>
+
+<!-- DANGER BUTTONS (Deletions) -->
+<a class="btn-danger" href="/delete">🗑️ Delete</a>
+<button class="btn-danger" type="button">✗ Reject</button>
+<button class="btn-danger" type="submit">🗑️ Remove</button>
+
+<!-- WARNING BUTTONS (Reviews/Updates) -->
+<a class="btn-warning" href="/review">⚠️ Review</a>
+<button class="btn-warning" type="submit">📝 Update</button>
+<a class="btn-warning" href="/edit">✏️ Edit</a>
+
+<!-- INFO BUTTONS (Information) -->
+<a class="btn-info" href="/details">ℹ️ More Info</a>
+<a class="btn-info" href="/help">❓ Get Help</a>
+<button class="btn-info" type="button">ℹ️ Learn More</button>
+
+<!-- SECONDARY BUTTONS (Alternatives) -->
+<a class="btn-secondary" href="/back">← Back</a>
+<button class="btn-secondary" type="button">❌ Cancel</button>
+<a class="btn-secondary" href="/dismiss">✕ Dismiss</a>
+
+<!-- LIGHT BUTTONS (Subtle) -->
+<a class="btn-light" href="/optional">Optional Action</a>
+<button class="btn-light" type="button">More Options</button>
+
+<!-- ========================================
+     BUTTON SIZES
+     ======================================== -->
+
+<!-- Small button -->
+<button class="btn-primary btn-sm">Small Button</button>
+
+<!-- Regular button (default) -->
+<button class="btn-primary">Regular Button</button>
+
+<!-- Large button -->
+<button class="btn-primary btn-lg">Large Button</button>
+
+<!-- Full width button -->
+<button class="btn-primary btn-block">Full Width Button</button>
+
+<!-- ========================================
+     BUTTON GROUPS (Multiple actions)
+     ======================================== -->
+
+<!-- Horizontal button group -->
+<div style="display: flex; gap: 12px; margin-top: 20px;">
+    <button class="btn-primary" type="submit">Save</button>
+    <button class="btn-secondary" type="button">Cancel</button>
+</div>
+
+<!-- Vertical button group (mobile) -->
+<div style="display: flex; flex-direction: column; gap: 12px; margin-top: 20px;">
+    <button class="btn-primary btn-block" type="submit">Save</button>
+    <button class="btn-secondary btn-block" type="button">Cancel</button>
+</div>
+
+<!-- ========================================
+     BADGE EXAMPLES
+     ======================================== -->
+
+<!-- Status badges -->
+<span class="badge badge-success">✓ Approved</span>
+<span class="badge badge-danger">✗ Rejected</span>
+<span class="badge badge-warning">⚠ Pending</span>
+<span class="badge badge-info">ℹ New</span>
+<span class="badge badge-light">Inactive</span>
+<span class="badge badge-primary">Featured</span>
+
+<!-- ========================================
+     FORM EXAMPLES
+     ======================================== -->
+
+<!-- Text input -->
+<div class="form-group">
+    <label class="form-label">Email Address</label>
+    <input class="form-input" type="email" placeholder="your@email.com">
+</div>
+
+<!-- Password input -->
+<div class="form-group">
+    <label class="form-label">Password</label>
+    <input class="form-input" type="password" placeholder="Enter password">
+</div>
+
+<!-- Select dropdown -->
+<div class="form-group">
+    <label class="form-label">Choose Option</label>
+    <select class="form-input">
+        <option>-- Select an option --</option>
+        <option>Option 1</option>
+        <option>Option 2</option>
+    </select>
+</div>
+
+<!-- Textarea -->
+<div class="form-group">
+    <label class="form-label">Message</label>
+    <textarea class="form-input" rows="4" placeholder="Enter your message..."></textarea>
+</div>
+
+<!-- Form with buttons -->
+<form style="max-width: 500px;">
+    <div class="form-group">
+        <label class="form-label">Name</label>
+        <input class="form-input" type="text" placeholder="Your name">
+    </div>
+    
+    <div class="form-group">
+        <label class="form-label">Email</label>
+        <input class="form-input" type="email" placeholder="your@email.com">
+    </div>
+    
+    <div style="display: flex; gap: 12px; margin-top: 24px;">
+        <button class="btn-primary" type="submit">Submit</button>
+        <button class="btn-secondary" type="reset">Clear</button>
+    </div>
+</form>
+
+<!-- ========================================
+     ALERT/MESSAGE EXAMPLES
+     ======================================== -->
+
+<!-- Success alert -->
+<div class="alert alert-success">
+    ✓ Operation completed successfully!
+</div>
+
+<!-- Danger alert -->
+<div class="alert alert-danger">
+    ✗ An error occurred. Please try again.
+</div>
+
+<!-- Warning alert -->
+<div class="alert alert-warning">
+    ⚠ Please review this action before continuing.
+</div>
+
+<!-- Info alert -->
+<div class="alert alert-info">
+    ℹ This is an informational message.
+</div>
+
+<!-- ========================================
+     CARD EXAMPLES
+     ======================================== -->
+
+<!-- Basic card -->
+<div class="card">
+    <h3>Card Title</h3>
+    <p>This is the card content goes here.</p>
+    <a class="btn-primary btn-sm" href="#">Learn More</a>
+</div>
+
+<!-- Card with multiple sections -->
+<div class="card">
+    <h3>User Information</h3>
+    <p><strong>Name:</strong> John Doe</p>
+    <p><strong>Email:</strong> john@example.com</p>
+    <p><strong>Status:</strong> <span class="badge badge-success">Active</span></p>
+    <div style="margin-top: 16px;">
+        <a class="btn-primary btn-sm" href="#">Edit</a>
+        <a class="btn-secondary btn-sm" href="#">Cancel</a>
+    </div>
+</div>
+
+<!-- ========================================
+     TABLE EXAMPLES
+     ======================================== -->
+
+<!-- Basic table -->
+<table>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Status</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>John Doe</td>
+            <td>john@example.com</td>
+            <td><span class="badge badge-success">Active</span></td>
+            <td><a class="btn-primary btn-sm" href="#">View</a></td>
+        </tr>
+        <tr>
+            <td>Jane Smith</td>
+            <td>jane@example.com</td>
+            <td><span class="badge badge-warning">Pending</span></td>
+            <td><a class="btn-info btn-sm" href="#">Review</a></td>
+        </tr>
+        <tr>
+            <td>Bob Johnson</td>
+            <td>bob@example.com</td>
+            <td><span class="badge badge-danger">Inactive</span></td>
+            <td><a class="btn-secondary btn-sm" href="#">Details</a></td>
+        </tr>
+    </tbody>
+</table>
+
+<!-- ========================================
+     GRID LAYOUTS
+     ======================================== -->
+
+<!-- 2-column grid -->
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px;">
+    <div class="card">
+        <h3>Card 1</h3>
+        <p>Content goes here</p>
+    </div>
+    <div class="card">
+        <h3>Card 2</h3>
+        <p>Content goes here</p>
+    </div>
+</div>
+
+<!-- 3-column grid -->
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 24px;">
+    <div class="card">
+        <h3>Card 1</h3>
+        <p>Content</p>
+    </div>
+    <div class="card">
+        <h3>Card 2</h3>
+        <p>Content</p>
+    </div>
+    <div class="card">
+        <h3>Card 3</h3>
+        <p>Content</p>
+    </div>
+</div>
+
+<!-- ========================================
+     STAT CARDS
+     ======================================== -->
+
+<!-- Stat card (dashboard) -->
+<div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 28px; border-radius: 12px; text-align: center; box-shadow: 0 8px 16px rgba(102, 126, 234, 0.3);">
+    <h3 style="margin: 0; font-size: 14px; opacity: 0.95;">Total Users</h3>
+    <p style="margin: 12px 0 0 0; font-size: 36px; font-weight: 700;">1,234</p>
+</div>
+
+<!-- Multiple stat cards -->
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 24px;">
+    <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 28px; border-radius: 12px; text-align: center; box-shadow: 0 8px 16px rgba(102, 126, 234, 0.3);">
+        <h3 style="margin: 0; font-size: 14px; opacity: 0.95;">Total Jobs</h3>
+        <p style="margin: 12px 0 0 0; font-size: 36px; font-weight: 700;">42</p>
+    </div>
+    <div style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; padding: 28px; border-radius: 12px; text-align: center; box-shadow: 0 8px 16px rgba(16, 185, 129, 0.3);">
+        <h3 style="margin: 0; font-size: 14px; opacity: 0.95;">Active Jobs</h3>
+        <p style="margin: 12px 0 0 0; font-size: 36px; font-weight: 700;">28</p>
+    </div>
+    <div style="background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); color: white; padding: 28px; border-radius: 12px; text-align: center; box-shadow: 0 8px 16px rgba(59, 130, 246, 0.3);">
+        <h3 style="margin: 0; font-size: 14px; opacity: 0.95;">Applications</h3>
+        <p style="margin: 12px 0 0 0; font-size: 36px; font-weight: 700;">156</p>
+    </div>
+</div>
+
+<!-- ========================================
+     UTILITY CLASSES
+     ======================================== -->
+
+<!-- Text alignment -->
+<p class="text-center">Center aligned text</p>
+<p class="text-right">Right aligned text</p>
+
+<!-- Text colors -->
+<p class="text-primary">Primary colored text</p>
+<p class="text-success">Success colored text</p>
+<p class="text-danger">Danger colored text</p>
+<p class="text-muted">Muted gray text</p>
+
+<!-- Spacing -->
+<div class="mt-4">Margin top</div>
+<div class="mb-4">Margin bottom</div>
+<div class="p-4">Padding all sides</div>
+
+<!-- Border radius -->
+<div class="rounded card">Regular rounded corners</div>
+<div class="rounded-lg card">Large rounded corners</div>
+<div class="rounded-full" style="width: 44px; height: 44px; background: #667eea;"></div>
+
+<!-- Shadows -->
+<div class="card shadow-md">Medium shadow</div>
+<div class="card shadow-lg">Large shadow</div>
+
+<!-- ========================================
+     FULL PAGE EXAMPLE
+     ======================================== -->
+
+<!--
+<body>
+    <!-- Header -->
+    <div th:insert="fragments/header :: body"></div>
+    
+    <!-- Main content -->
+    <main style="max-width: 1200px; margin: 40px auto; padding: 0 20px;">
+        <h1>Page Title</h1>
+        
+        <!-- Stats section -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 24px; margin-bottom: 40px;">
+            <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 28px; border-radius: 12px; text-align: center;">
+                <h3 style="margin: 0; font-size: 14px; opacity: 0.95;">Total</h3>
+                <p style="margin: 12px 0 0 0; font-size: 36px; font-weight: 700;">100</p>
+            </div>
+        </div>
+        
+        <!-- Content card -->
+        <div class="card">
+            <h2>Content Section</h2>
+            <p>Your content goes here...</p>
+            <div style="display: flex; gap: 12px; margin-top: 20px;">
+                <button class="btn-primary">Action 1</button>
+                <button class="btn-secondary">Action 2</button>
+            </div>
+        </div>
+    </main>
+    
+    <!-- Footer -->
+    <div th:insert="fragments/footer :: body"></div>
+</body>
+-->
+

@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+    <title>Onboarding Complete</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 600px;
+            background: white;
+            padding: 60px 40px;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .success-icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+            animation: bounce 1s ease-in-out;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        h1 {
+            color: #111827;
+            margin-bottom: 10px;
+            font-size: 32px;
+            font-weight: 700;
+        }
+
+        p {
+            color: #666;
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        .summary {
+            background: #f9fafb;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 30px 0;
+            text-align: left;
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .summary-item:last-child {
+            border-bottom: none;
+        }
+
+        .summary-label {
+            color: #666;
+            font-weight: 500;
+        }
+
+        .summary-value {
+            color: #111827;
+            font-weight: 600;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-outline {
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+
+        .btn-outline:hover {
+            background: #667eea;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="success-icon">✓</div>
+    <h1>Onboarding Complete!</h1>
+    <p>Congratulations! Your onboarding process has been successfully completed. You are now ready to begin your role.</p>
+
+    <div class="summary" th:if="${onboarding}">
+        <div class="summary-item">
+            <span class="summary-label">Candidate Name:</span>
+            <span class="summary-value" th:text="${onboarding.candidateName}">-</span>
+        </div>
+        <div class="summary-item">
+            <span class="summary-label">Position:</span>
+            <span class="summary-value" th:text="${onboarding.jobTitle}">-</span>
+        </div>
+        <div class="summary-item">
+            <span class="summary-label">Start Date:</span>
+            <span class="summary-value" th:text="${#dates.format(onboarding.startDate, 'dd/MM/yyyy')}">-</span>
+        </div>
+        <div class="summary-item">
+            <span class="summary-label">Status:</span>
+            <span class="summary-value" th:text="${onboarding.overallStatus}">-</span>
+        </div>
+    </div>
+
+    <p>Your HR team will be in touch if any additional information is needed.</p>
+
+    <div class="form-actions">
+        <a class="btn btn-primary" href="/dashboard">Go to Dashboard</a>
+        <a class="btn btn-outline" href="/onboard/candidates">Back to Candidates</a>
+    </div>
+</div>
+
+</body>
+</html>

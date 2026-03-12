@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<aside th:fragment="body" class="sidebar">
+    <div class="sidebar-header">
+        <h2>Recruiter</h2>
+    </div>
+    
+    <nav>
+        <a th:href="@{/recruiter/dashboard}" class="nav-item">
+            <span class="icon">📊</span>
+            <span class="label">Dashboard</span>
+        </a>
+        <a th:href="@{/recruiter/my-posts}" class="nav-item">
+            <span class="icon">💼</span>
+            <span class="label">My Job Posts</span>
+        </a>
+        <a th:href="@{/recruiter/applicants}" class="nav-item">
+            <span class="icon">👥</span>
+            <span class="label">All Applicants</span>
+        </a>
+        <a th:href="@{/recruiter/offers}" class="nav-item">
+            <span class="icon">📄</span>
+            <span class="label">My Offers</span>
+        </a>
+        <a th:href="@{/jobs}" class="nav-item">
+            <span class="icon">🔍</span>
+            <span class="label">All Published Jobs</span>
+        </a>
+    </nav>
+    
+    <div class="sidebar-footer">
+        <a th:href="@{/logout}" class="logout-btn">
+            <span class="icon">🚪</span>
+            <span class="label">Logout</span>
+        </a>
+    </div>
+</aside>
+
+</body>
+</html>

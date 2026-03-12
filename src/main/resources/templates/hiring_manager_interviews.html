@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Assigned Interviews</title>
+    <link rel="stylesheet" th:href="@{/css/site.css}" />
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+    <link rel="stylesheet" th:href="@{/css/professional-theme.css}" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px;
+        }
+
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #10b981;
+            text-decoration: none;
+            font-weight: 700;
+            margin-bottom: 24px;
+            transition: all 0.3s ease;
+        }
+
+        .back-button:hover {
+            transform: translateX(-4px);
+            color: #059669;
+        }
+
+        .header-card {
+            background: rgba(16, 185, 129, 0.15);
+            backdrop-filter: blur(10px);
+            color: white;
+            padding: 40px;
+            border-radius: 16px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            box-shadow: 0 8px 32px rgba(16, 185, 129, 0.1);
+        }
+
+        .header-card h1 {
+            font-size: 2.5em;
+            font-weight: 800;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header-card p {
+            font-size: 1.1em;
+            color: #cbd5e1;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 32px;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            margin-bottom: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.2) 0%, rgba(5, 150, 105, 0.2) 100%);
+            border-bottom: 2px solid rgba(16, 185, 129, 0.3);
+        }
+
+        th {
+            padding: 16px;
+            text-align: left;
+            font-weight: 700;
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #10b981;
+        }
+
+        td {
+            padding: 16px;
+            border-bottom: 1px solid #e5e7eb;
+            color: #555;
+        }
+
+        tbody tr:hover {
+            background: rgba(16, 185, 129, 0.05);
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 8px 14px;
+            border-radius: 8px;
+            font-size: 0.8em;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            background: rgba(16, 185, 129, 0.2);
+            color: #059669;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .action-btn {
+            padding: 10px 16px;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 0.8em;
+            font-weight: 700;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(16, 185, 129, 0.4);
+        }
+
+        .action-btn.secondary {
+            background: rgba(16, 185, 129, 0.1);
+            color: #10b981;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            box-shadow: none;
+        }
+
+        .action-btn.secondary:hover {
+            background: rgba(16, 185, 129, 0.2);
+            border-color: rgba(16, 185, 129, 0.5);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            background: rgba(16, 185, 129, 0.05);
+            border-radius: 10px;
+            border: 2px dashed rgba(16, 185, 129, 0.3);
+        }
+
+        .empty-state h3 {
+            font-size: 1.3em;
+            color: #1f2937;
+            margin-bottom: 12px;
+            font-weight: 700;
+        }
+
+        .empty-state p {
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        @media (max-width: 768px) {
+            .header-card {
+                padding: 24px;
+            }
+
+            .header-card h1 {
+                font-size: 1.8em;
+            }
+
+            .card {
+                padding: 20px;
+            }
+
+            th, td {
+                padding: 12px;
+                font-size: 0.9em;
+            }
+
+            .actions {
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            .action-btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div th:insert="~{fragments/header :: header}"></div>
+
+    <div class="container">
+        <!-- Back Button -->
+        <a href="/hiring-manager/dashboard" class="back-button">
+            ← Back to Dashboard
+        </a>
+
+        <!-- Header Card -->
+        <div class="header-card">
+            <h1>📅 Your Assigned Interviews</h1>
+            <p>Manage interviews where you are listed as the interviewer</p>
+        </div>
+
+        <!-- Interviews Table -->
+        <div class="card">
+            <div th:if="${interviews != null && interviews.size() > 0}" class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Candidate Name</th>
+                            <th>Email</th>
+                            <th>Interview Date</th>
+                            <th>Interview Time</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="interview : ${interviews}">
+                            <td th:text="${interview.candidateName ?: 'Unknown Candidate'}">John Doe</td>
+                            <td th:text="${interview.email ?: 'No email'}">john@example.com</td>
+                            <td th:text="${interview.date ?: 'Not scheduled'}">2025-01-15</td>
+                            <td th:text="${interview.time ?: '-'}">10:00</td>
+                            <td>
+                                <span class="status-badge" th:text="${interview.status ?: 'Scheduled'}">Scheduled</span>
+                            </td>
+                            <td>
+                                <div class="actions">
+                                    <a th:if="${interview.applicationId}" th:href="@{/hiring-manager/candidate/{id}(id=${interview.applicationId})}" class="action-btn">
+                                        View Candidate
+                                    </a>
+                                    <form th:action="@{/hiring-manager/interview/{id}/complete(id=${interview.id})}" method="post" style="margin: 0; display: inline;">
+                                        <button type="submit" class="action-btn secondary">
+                                            ✓ Mark Complete
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div th:if="${interviews == null || interviews.size() == 0}" class="empty-state">
+                <h3>No Interviews Assigned</h3>
+                <p>You don't have any interviews assigned to you yet.</p>
+                <p style="font-size: 13px; color: #999; margin-bottom: 20px;">Check back soon for interview assignments.</p>
+                <a href="/hiring-manager/dashboard" class="action-btn">Back to Dashboard</a>
+            </div>
+        </div>
+    </div>
+
+    <div th:insert="~{fragments/footer :: footer}"></div>
+</body>
+</html>

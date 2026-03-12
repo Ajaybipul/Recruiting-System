@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Candidate Details</title>
+    <link rel="stylesheet" th:href="@{/css/site.css}" />
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+    <link rel="stylesheet" th:href="@{/css/professional-theme.css}" />
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .page-wrap { max-width: 1200px; margin: 0 auto; padding: 40px; }
+
+        .back-button {
+            display: inline-flex; align-items: center; gap: 8px;
+            color: #059669; text-decoration: none; font-weight: 700;
+            margin-bottom: 24px; transition: all 0.3s ease;
+        }
+        .back-button:hover { transform: translateX(-4px); color: #047a55; }
+
+        .header-card {
+            background: rgba(16,185,129,0.15);
+            backdrop-filter: blur(8px);
+            color: white; padding: 36px; border-radius: 16px; margin-bottom: 30px;
+            border: 1px solid rgba(16,185,129,0.25); box-shadow: 0 8px 32px rgba(16,185,129,0.08);
+        }
+        .header-card h1 { font-size: 2.2em; font-weight: 800; margin-bottom: 8px;
+            background: linear-gradient(135deg,#10b981 0%,#059669 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+        }
+        .header-card p { color: #cbd5e1; margin-top: 6px; }
+
+        .status-badge { display: inline-block; padding: 8px 14px; border-radius: 12px;
+            font-weight: 700; font-size: 0.85em; color: #059669; background: rgba(16,185,129,0.08);
+            border: 1px solid rgba(16,185,129,0.15);
+        }
+
+        .card {
+            background: rgba(255,255,255,0.95); padding: 28px; border-radius: 14px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.08); margin-bottom: 24px;
+            border: 1px solid rgba(255,255,255,0.2); backdrop-filter: blur(8px);
+        }
+
+        .card-title { font-size: 1.1em; font-weight: 800; color: #1f2937; margin-bottom: 18px;
+            display: inline-block; padding-bottom: 12px; border-bottom: 2px solid rgba(16,185,129,0.18);
+        }
+
+        .info-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(250px,1fr)); gap: 20px; }
+
+        .info-item { background: #f9fafb; padding: 14px; border-radius: 10px; border-left: 4px solid #10b981; }
+        .info-label { font-size: 12px; color: #64748b; text-transform: uppercase; font-weight: 700; margin-bottom: 6px; }
+        .info-value { font-size: 15px; color: #111827; font-weight: 600; }
+
+        .long-text { background: #f9fafb; padding: 14px; border-radius: 10px; border-left: 4px solid #10b981; line-height:1.6; color:#111827; }
+
+        .action-buttons { display: grid; grid-template-columns: repeat(auto-fit,minmax(160px,1fr)); gap: 12px; margin-top: 20px; }
+
+        .btn { padding: 12px 20px; border-radius: 10px; font-weight: 700; font-size: 0.95em; text-decoration: none; cursor: pointer; }
+        .btn-primary { background: linear-gradient(135deg,#667eea 0%,#764ba2 100%); color:#fff; box-shadow:0 6px 20px rgba(102,126,234,0.15); }
+        .btn-success { background: linear-gradient(135deg,#10b981 0%,#059669 100%); color:#fff; box-shadow:0 6px 20px rgba(16,185,129,0.12); }
+        .btn-warning { background: linear-gradient(135deg,#f59e0b 0%,#d97706 100%); color:#fff; }
+        .btn-danger { background: linear-gradient(135deg,#ef4444 0%,#dc2626 100%); color:#fff; }
+        .btn-secondary { background:#f3f4f6; color:#111827; border:1px solid #e5e7eb; }
+
+        .form-group textarea { width:100%; padding:12px; border:1px solid #e5e7eb; border-radius:10px; font-family:inherit; }
+
+        @media (max-width:768px) {
+            .header-card { padding: 20px; }
+            .info-grid { grid-template-columns: 1fr; }
+            .action-buttons { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div th:insert="~{fragments/header :: header}"></div>
+
+    <div class="container">
+        <!-- Back Button -->
+        <a href="/hiring-manager/candidates" class="back-button">
+            ← Back to Candidates
+        </a>
+
+        <!-- Header Card -->
+        <div class="header-card">
+            <h1 th:text="${candidate.fullName}">John Doe</h1>
+            <p th:text="${candidate.jobTitle}">Software Engineer</p>
+            <span class="status-badge" th:text="${candidate.status}">Sent to Hiring Manager</span>
+        </div>
+
+        <!-- Basic Information -->
+        <div class="card">
+            <h2 class="card-title">📋 Basic Information</h2>
+            
+            <div class="info-grid">
+                <div class="info-item">
+                    <div class="info-label">Email Address</div>
+                    <div class="info-value">
+                        <a th:href="@{'mailto:' + ${candidate.email}}" th:text="${candidate.email}">john@example.com</a>
+                    </div>
+                </div>
+
+                <div class="info-item">
+                    <div class="info-label">Applied Date</div>
+                    <div class="info-value" th:text="${candidate.appliedDate}">Nov 28, 2025</div>
+                </div>
+
+                <div class="info-item">
+                    <div class="info-label">Current Status</div>
+                    <div class="info-value">
+                        <span class="status-badge" th:text="${candidate.status}">Sent to Hiring Manager</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-item" th:if="${candidate.screeningNotes != null and candidate.screeningNotes != ''}">
+                <div class="info-label">Screening Notes from Recruiter</div>
+                <div class="long-text" th:text="${candidate.screeningNotes}"></div>
+            </div>
+
+            <div class="info-item" th:if="${candidate.resumePath}">
+                <div class="info-label">Resume</div>
+                <div class="info-value">
+                    <a th:href="${candidate.resumePath}" target="_blank" class="btn btn-secondary" style="width: auto;">
+                        📄 Download Resume
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Interview Information -->
+        <div class="card" th:if="${candidate.interviewDate != null and candidate.interviewDate != ''}">
+            <h2 class="card-title">📅 Interview Details</h2>
+            
+            <div class="info-grid">
+                <div class="info-item">
+                    <div class="info-label">Interview Date</div>
+                    <div class="info-value" th:text="${candidate.interviewDate}">Dec 10, 2025</div>
+                </div>
+
+                <div class="info-item" th:if="${candidate.interviewTime != null and candidate.interviewTime != ''}">
+                    <div class="info-label">Interview Time</div>
+                    <div class="info-value" th:text="${candidate.interviewTime}">10:00 AM</div>
+                </div>
+
+                <div class="info-item" th:if="${candidate.interviewMode != null}">
+                    <div class="info-label">Interview Type</div>
+                    <div class="info-value" th:text="${candidate.interviewMode}">Phone / Video / In-Person</div>
+                </div>
+
+                <div class="info-item" th:if="${candidate.interviewLocation != null}">
+                    <div class="info-label">Location</div>
+                    <div class="info-value" th:text="${candidate.interviewLocation}">Office / Virtual</div>
+                </div>
+            </div>
+
+            <div class="info-item" th:if="${candidate.interviewMeetingLink != null and !candidate.interviewMeetingLink.isEmpty() and candidate.interviewMeetingLink.startsWith('http')}">
+                <div class="info-label">Meeting Link</div>
+                <div class="info-value">
+                    <a th:href="${candidate.interviewMeetingLink}" target="_blank" style="color:#667eea; text-decoration:none; font-weight:600;">
+                        🔗 Join Video Call
+                    </a>
+                </div>
+            </div>
+
+            <div class="info-item" th:if="${candidate.interviewNotes != null and !candidate.interviewNotes.isEmpty()}">
+                <div class="info-label">Notes for Candidate</div>
+                <div class="long-text" th:text="${candidate.interviewNotes}"></div>
+            </div>
+
+            <div class="info-item" th:if="${candidate.interviewerNotes}">
+                <div class="info-label">Interview Feedback Notes</div>
+                <div class="long-text" th:text="${candidate.interviewerNotes}"></div>
+            </div>
+
+            <div style="margin-top: 16px;">
+                <a th:href="@{/hiring-manager/candidate/{id}/history(id=${candidate.id})}" class="btn btn-secondary">
+                    📜 View Interview History
+                </a>
+            </div>
+        </div>
+
+        <!-- Hiring Manager Feedback -->
+        <div class="card" th:if="${candidate.hmFeedback != null}">
+            <h2 class="card-title">⭐ Your Feedback</h2>
+            
+            <div class="info-grid">
+                <div class="info-item">
+                    <div class="info-label">Overall Rating</div>
+                    <div class="info-value" th:text="${candidate.hmRating + '/5 ⭐'}">4/5 ⭐</div>
+                </div>
+
+                <div class="info-item" th:if="${candidate.hmDecision}">
+                    <div class="info-label">Your Decision</div>
+                    <div class="info-value" th:text="${candidate.hmDecision}">Approved</div>
+                </div>
+            </div>
+
+            <div class="info-item">
+                <div class="info-label">📝 Detailed Comments</div>
+                <div class="long-text" th:text="${candidate.hmFeedback}"></div>
+            </div>
+
+            <div class="info-item" th:if="${candidate.hmNotes}">
+                <div class="info-label">📋 Internal Notes</div>
+                <div class="long-text" th:text="${candidate.hmNotes}"></div>
+            </div>
+        </div>
+
+        <!-- Make a Decision -->
+        <div class="card">
+            <h2 class="card-title">🎯 Interview & Feedback Actions</h2>
+            
+            <div style="margin-bottom: 20px; padding: 16px; background: #f0f4ff; border-radius: 8px; border-left: 4px solid #667eea;">
+                <p style="margin: 0 0 12px 0; color: #333; font-weight: 600;">After scheduling an interview:</p>
+                <ol style="margin: 0; padding-left: 20px; color: #666;">
+                    <li>Conduct the interview</li>
+                    <li>Click <strong>"📝 Give Feedback"</strong> button below</li>
+                    <li>Fill in your detailed assessment</li>
+                    <li>Submit and then click <strong>"✓ Approve for Offer"</strong> or <strong>"✗ Reject"</strong></li>
+                </ol>
+            </div>
+            
+            <div class="action-buttons">
+                <a th:href="@{/hiring-manager/candidate/{id}/schedule-interview(id=${candidate.id})}" class="btn btn-primary">
+                    📅 Schedule Interview
+                </a>
+
+                <a th:href="@{/hiring-manager/candidate/{id}/feedback(id=${candidate.id})}" class="btn btn-primary" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);">
+                    📝 Give Feedback
+                </a>
+
+                <form th:action="@{/hiring-manager/candidate/{id}/approve(id=${candidate.id})}" method="post" style="display: contents;">
+                    <button type="submit" class="btn btn-success">✓ Approve for Offer</button>
+                </form>
+
+                <form th:action="@{/hiring-manager/candidate/{id}/hold(id=${candidate.id})}" method="post" style="display: contents;">
+                    <button type="submit" class="btn btn-warning">⏸ Hold</button>
+                </form>
+
+                <form th:action="@{/hiring-manager/candidate/{id}/reject(id=${candidate.id})}" method="post" style="display: contents;">
+                    <button type="submit" class="btn btn-danger">✗ Reject</button>
+                </form>
+            </div>
+
+            <!-- Request Next Round -->
+            <div class="form-group">
+                <form th:action="@{/hiring-manager/candidate/{id}/request-next-round(id=${candidate.id})}" method="post">
+                    <label>📋 Request Next Interview Round (Optional)</label>
+                    <textarea name="hmNotes" rows="3" placeholder="Add any notes for the next round..."></textarea>
+                    <button type="submit" class="btn btn-primary">🔁 Request Next Round</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div th:insert="~{fragments/footer :: footer}"></div>
+</body>
+</html>

@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+    <title>User Management - Admin</title>
+    <style>
+        html, body {
+            height: 100%;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        }
+        
+        body {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .dashboard-container {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+            width: 100%;
+        }
+        
+        .sidebar {
+            width: 280px !important;
+            background: linear-gradient(180deg, #667eea 0%, #764ba2 100%) !important;
+            color: white !important;
+            padding: 0 !important;
+            min-height: 100% !important;
+            overflow-y: auto !important;
+            flex-shrink: 0 !important;
+            border-right: 1px solid rgba(255,255,255,0.1) !important;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1) !important;
+            display: flex !important;
+            visibility: visible !important;
+            position: relative !important;
+            flex-direction: column !important;
+        }
+        
+        .sidebar-header {
+            padding: 25px 20px !important;
+            border-bottom: 1px solid rgba(255,255,255,0.2) !important;
+            text-align: center !important;
+        }
+        
+        .sidebar-header h2 {
+            margin: 0 !important;
+            font-size: 22px !important;
+            font-weight: 700 !important;
+            color: white !important;
+            letter-spacing: 0.5px !important;
+        }
+        
+        .sidebar nav {
+            display: flex !important;
+            flex-direction: column !important;
+            gap: 8px !important;
+            padding: 20px 15px !important;
+            flex: 1 !important;
+        }
+        
+        .sidebar .nav-item {
+            color: rgba(255, 255, 255, 0.9) !important;
+            text-decoration: none !important;
+            padding: 12px 16px !important;
+            border-radius: 8px !important;
+            display: flex !important;
+            align-items: center !important;
+            gap: 12px !important;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+            font-size: 14px !important;
+            font-weight: 500 !important;
+        }
+        
+        .sidebar .nav-item:hover {
+            background-color: rgba(255, 255, 255, 0.15) !important;
+            transform: translateX(4px) !important;
+            color: white !important;
+        }
+        
+        .sidebar .nav-divider {
+            height: 1px !important;
+            background: rgba(255, 255, 255, 0.15) !important;
+            margin: 12px 0 !important;
+        }
+        
+        .sidebar-footer {
+            padding: 15px !important;
+            border-top: 1px solid rgba(255,255,255,0.2) !important;
+        }
+        
+        .sidebar-footer .logout-btn {
+            color: rgba(255, 255, 255, 0.9) !important;
+            text-decoration: none !important;
+            padding: 12px 16px !important;
+            border-radius: 8px !important;
+            display: flex !important;
+            align-items: center !important;
+            gap: 12px !important;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+            font-size: 14px !important;
+            font-weight: 500 !important;
+            background: rgba(255, 0, 0, 0.2) !important;
+            border: 1px solid rgba(255, 255, 255, 0.2) !important;
+            width: 100% !important;
+            box-sizing: border-box !important;
+        }
+        
+        .sidebar-footer .logout-btn:hover {
+            background: rgba(255, 0, 0, 0.3) !important;
+            transform: translateX(4px) !important;
+            color: white !important;
+        }
+        
+        main {
+            flex: 1;
+            padding: 40px;
+            overflow-y: auto;
+            background: linear-gradient(135deg, #f8f9fa 0%, #f0f2f5 100%);
+        }
+        
+        main h1 {
+            color: #111827;
+            margin-bottom: 35px;
+            font-size: 32px;
+            font-weight: 700;
+        }
+
+        .btn-primary {
+            display: inline-block;
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 30px;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.07);
+        }
+
+        table thead {
+            background: #f3f4f6;
+        }
+
+        table th {
+            padding: 16px;
+            text-align: left;
+            font-weight: 600;
+            color: #374151;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        table td {
+            padding: 16px;
+            border-top: 1px solid #e5e7eb;
+            color: #6b7280;
+        }
+
+        table tbody tr:hover {
+            background: #f9fafb;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .badge-primary {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .badge-success {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .btn-sm {
+            padding: 8px 16px;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="dashboard-container">
+    <div th:insert="~{fragments/sidebar_admin :: body}"></div>
+
+    <main>
+        <h1>👥 User Management</h1>
+
+        <button class="btn-primary">+ Create New User</button>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Roles</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="user : ${users}">
+                    <td th:text="${user.username}">username</td>
+                    <td>
+                        <span th:each="role : ${user.roles}" class="badge badge-primary" th:text="${role}">Role</span>
+                    </td>
+                    <td><span class="badge badge-success">Active</span></td>
+                    <td>
+                        <button class="btn-primary btn-sm" type="button" th:data-username="${user.username}" onclick="editUser(this.getAttribute('data-username'))">Edit</button>
+                        <button class="btn-primary btn-sm" type="button" th:data-username="${user.username}" onclick="resetPassword(this.getAttribute('data-username'))">Reset Password</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </main>
+</div>
+
+<script>
+    function editUser(username) {
+        window.location.href = `/admin/users/${encodeURIComponent(username)}/edit`;
+    }
+
+    function resetPassword(username) {
+        if (confirm(`Reset password for user: ${username}?`)) {
+            window.location.href = `/admin/users/${encodeURIComponent(username)}/reset-password`;
+        }
+    }
+
+    // Handle Create New User button
+    document.addEventListener('DOMContentLoaded', function() {
+        const createBtn = document.querySelector('button.btn-primary:not(.btn-sm)');
+        if (createBtn) {
+            createBtn.addEventListener('click', function() {
+                window.location.href = '/admin/users/create';
+            });
+        }
+    });
+</script>
+
+<!-- Include the footer fragment -->
+<div th:replace="fragments/footer :: footer"></div>
+
+</body>
+</html>

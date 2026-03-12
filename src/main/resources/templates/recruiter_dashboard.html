@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" th:href="@{/css/site.css}" />
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+    <link rel="stylesheet" th:href="@{/css/professional-theme.css}" />
+    <title>Recruiter Dashboard</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .dashboard-layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        main {
+            flex: 1;
+            padding: 40px;
+            margin-left: 280px;
+            margin-bottom: 100px;
+        }
+
+        .page-header {
+            background: rgba(102, 126, 234, 0.15);
+            backdrop-filter: blur(10px);
+            color: white;
+            padding: 40px;
+            border-radius: 16px;
+            margin-bottom: 40px;
+            border: 1px solid rgba(102, 126, 234, 0.3);
+            box-shadow: 0 8px 32px rgba(102, 126, 234, 0.1);
+        }
+
+        .page-header h1 {
+            font-size: 2.5em;
+            margin-bottom: 8px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .page-header p {
+            font-size: 1.1em;
+            color: #cbd5e1;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 32px;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 16px 48px rgba(102, 126, 234, 0.2);
+            border-color: rgba(102, 126, 234, 0.4);
+        }
+
+        .stat-card h3 {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-size: 3em;
+            margin: 12px 0;
+            font-weight: 800;
+        }
+
+        .stat-card p {
+            color: #666;
+            font-size: 0.95em;
+            margin: 0;
+            font-weight: 600;
+        }
+
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 40px;
+        }
+
+        .action-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 18px 28px;
+            border-radius: 12px;
+            text-decoration: none;
+            text-align: center;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 1em;
+            box-shadow: 0 8px 24px rgba(102, 126, 234, 0.3);
+        }
+
+        .action-btn:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 16px 40px rgba(102, 126, 234, 0.4);
+        }
+
+        .recent-box {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 32px;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+        }
+
+        .recent-box h2 {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 24px;
+            font-size: 1.6em;
+            font-weight: 800;
+        }
+
+        .recent-item {
+            padding: 20px;
+            border-bottom: 1px solid #f0f0f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.2s ease;
+        }
+
+        .recent-item:hover {
+            background: rgba(102, 126, 234, 0.05);
+            border-radius: 8px;
+        }
+
+        .recent-item:last-child {
+            border-bottom: none;
+        }
+
+        .recent-info h4 {
+            color: #1e293b;
+            margin-bottom: 6px;
+            font-size: 1.05em;
+            font-weight: 700;
+        }
+
+        .recent-info p {
+            color: #94a3b8;
+            font-size: 0.9em;
+            margin: 0;
+        }
+
+        .status-badge {
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: 600;
+            color: white;
+        }
+
+        .badge-shortlisted { background: #ff8c00; }
+        .badge-interview { background: #007bff; }
+        .badge-sent { background: #28a745; }
+        .badge-rejected { background: #dc3545; }
+    </style>
+</head>
+
+<body>
+<div th:replace="fragments/header :: header"></div>
+
+<div class="dashboard-layout">
+    <div th:insert="~{fragments/sidebar_recruiter :: body}"></div>
+    
+    <main>
+        <div class="page-header">
+            <h1>Welcome, Recruiter 👋</h1>
+            <p>Your hiring overview at a glance</p>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <p>Total Job Posts</p>
+                <h3 th:text="${totalJobs ?: 0}">0</h3>
+            </div>
+
+            <div class="stat-card">
+                <p>Total Applicants</p>
+                <h3 th:text="${totalApplicants ?: 0}">0</h3>
+            </div>
+
+            <div class="stat-card">
+                <p>Shortlisted</p>
+                <h3 th:text="${shortlisted ?: 0}">0</h3>
+            </div>
+
+            <div class="stat-card">
+                <p>Interview Scheduled</p>
+                <h3 th:text="${pendingInterviews ?: 0}">0</h3>
+            </div>
+        </div>
+
+        <div class="quick-actions">
+                <a class="action-btn" th:href="@{/recruiter/create}">+ Create Job Posting</a>
+            <a class="action-btn" th:href="@{/recruiter/my-posts}">📄 View My Job Posts</a>
+            <a class="action-btn" th:href="@{/jobs}">🌍 View All Published Jobs</a>
+        </div>
+
+        <div class="recent-box">
+            <h2>Recent Applications</h2>
+
+            <div th:if="${#lists.isEmpty(recentApps)}">
+                <p style="color:#999; text-align: center; padding: 20px;">No recent applications yet</p>
+            </div>
+
+            <div th:each="app : ${recentApps}" class="recent-item">
+                <div class="recent-info">
+                    <h4 th:text="${app.fullName}"></h4>
+                    <p th:text="${app.email}"></p>
+                </div>
+                <span th:if="${app.status == 'Sent to Hiring Manager' or app.status == 'Rejected'}" th:switch="${app.status}">
+                    <span th:case="'Sent to Hiring Manager'" class="status-badge badge-shortlisted">✓ Shortlisted</span>
+                    <span th:case="'Rejected'" class="status-badge badge-rejected">✗ Rejected</span>
+                </span>
+            </div>
+        </div>
+    </main>
+</div>
+
+<div th:insert="~{fragments/footer :: footer}"></div>
+</body>
+</html>

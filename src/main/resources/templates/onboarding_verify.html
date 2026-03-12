@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+    <link rel="stylesheet" th:href="@{/css/onboarding-theme.css}" />
+    <title>Pending Approvals</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f7fa;
+            padding: 20px;
+        }
+        
+        body.onboarding-theme {
+            background: linear-gradient(135deg, #f0f9f7 0%, #e8f5f3 100%);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 2em;
+        }
+        
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+
+        .approval-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            margin-bottom: 25px;
+            border-left: 5px solid #667eea;
+        }
+
+        .card-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-header h2 {
+            font-size: 1.3em;
+            margin: 0;
+        }
+
+        .card-body {
+            padding: 25px;
+        }
+
+        .applicant-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .info-item {
+            flex: 1;
+        }
+
+        .info-label {
+            color: #999;
+            font-size: 0.9em;
+            margin-bottom: 5px;
+        }
+
+        .info-value {
+            color: #333;
+            font-weight: 600;
+            font-size: 1.05em;
+        }
+
+        .documents-list {
+            margin-bottom: 25px;
+        }
+
+        .documents-list h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+        }
+
+        .document-item {
+            background: #f8f9fa;
+            padding: 15px;
+            margin-bottom: 12px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .document-info {
+            flex: 1;
+        }
+
+        .document-type {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 3px;
+        }
+
+        .document-date {
+            color: #999;
+            font-size: 0.9em;
+        }
+
+        .document-action {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            text-decoration: none;
+            font-size: 0.95em;
+            transition: all 0.3s ease;
+        }
+
+        .btn-view {
+            background: #17a2b8;
+            color: white;
+        }
+
+        .btn-view:hover {
+            background: #138496;
+        }
+
+        .approval-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 2px solid #f0f0f0;
+        }
+
+        .btn-approve {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+            flex: 1;
+            padding: 14px 20px;
+            font-size: 1em;
+        }
+
+        .btn-approve:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(40, 167, 69, 0.3);
+        }
+
+        .btn-request-info {
+            background: linear-gradient(135deg, #ffc107 0%, #ff9800 100%);
+            color: white;
+            flex: 1;
+            padding: 14px 20px;
+            font-size: 1em;
+        }
+
+        .btn-request-info:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(255, 193, 7, 0.3);
+        }
+
+        .notes-section {
+            background: #fff3cd;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            border-left: 4px solid #ffc107;
+        }
+
+        .notes-section textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-family: 'Segoe UI', sans-serif;
+            font-size: 0.95em;
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .notes-section button {
+            background: #ff9800;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+
+        .notes-section button:hover {
+            background: #f57c00;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+        }
+
+        .empty-state h2 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+        }
+
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+    </style>
+    <link rel="stylesheet" th:href="@{/css/onboarding-theme.css}" />
+</head>
+<body class="onboarding-theme">
+<div th:replace="fragments/header :: header"></div>
+
+<div class="container">
+    <h1>📋 Pending Approvals</h1>
+    <p class="subtitle">Review and approve submitted onboarding documents from new hires</p>
+    
+    <div th:if="${documents != null and documents.size() > 0}">
+        <!-- Group documents by candidate -->
+        <div th:each="docGroup : ${documents}">
+            <div class="approval-card">
+                <div class="card-header">
+                    <div>
+                        <h2 th:text="${docGroup.candidateName != null ? docGroup.candidateName : 'Employee'}"></h2>
+                        <span class="status-badge status-pending">Pending Approval</span>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <!-- Applicant Info -->
+                    <div class="applicant-info">
+                        <div class="info-item">
+                            <div class="info-label">Employee ID</div>
+                            <div class="info-value" th:text="${docGroup.candidateId}"></div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Submitted Date</div>
+                            <div class="info-value" th:text="${#dates.format(docGroup.firstSubmittedDate, 'MMM dd, yyyy')}"></div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Document Type</div>
+                            <div class="info-value" th:text="${docGroup.firstDocumentType}"></div>
+                        </div>
+                    </div>
+
+                    <!-- Documents list -->
+                    <div class="documents-list" style="clear: both; display: block;">
+                        <h3 style="clear: both;">✓ Documents Submitted</h3>
+                        <div th:if="${docGroup.documents != null and docGroup.documents.size() > 0}">
+                            <div th:each="doc : ${docGroup.documents}" class="document-item" style="display: flex; flex-wrap: wrap;">
+                                <div class="document-info" style="flex: 1; min-width: 250px;">
+                                    <div class="document-type" th:text="${doc.documentType}"></div>
+                                    <div class="document-date">Submitted on <span th:text="${#dates.format(doc.submittedDate, 'MMM dd, yyyy')}"></span></div>
+                                </div>
+                                <div class="document-action" style="flex: 0 0 auto; padding-left: 15px;">
+                                    <a th:href="${doc.filePath}" target="_blank" class="btn btn-view" style="white-space: nowrap;">👁️ View Document</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div th:if="${docGroup.documents == null or docGroup.documents.size() == 0}">
+                            <p>No documents submitted yet.</p>
+                        </div>
+                    </div>
+
+                    <!-- Verification Checklist -->
+                    <div class="documents-list" style="margin-bottom: 25px;">
+                        <h3>⚠️ Verification Requirements</h3>
+                        <div class="document-item">
+                            <div class="document-info">
+                                <div class="document-type">✓ All required documents provided</div>
+                            </div>
+                        </div>
+                        <div class="document-item">
+                            <div class="document-info">
+                                <div class="document-type">✓ Signed agreements complete</div>
+                            </div>
+                        </div>
+                        <div class="document-item">
+                            <div class="document-info">
+                                <div class="document-type">✓ Forms properly filled</div>
+                            </div>
+                        </div>
+                        <div class="document-item">
+                            <div class="document-info">
+                                <div class="document-type">✓ Background check cleared</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Approval Actions -->
+                    <div class="approval-buttons" style="clear: both; display: flex; gap: 15px; margin-top: 25px; padding-top: 20px; border-top: 2px solid #f0f0f0;">
+                        <form th:action="@{/hr/onboarding/verify}" method="POST" style="flex: 1;">
+                            <input type="hidden" name="documentId" th:value="${docGroup.firstDocumentId}">
+                            <input type="hidden" name="action" value="approve">
+                            <button type="submit" name="submit" value="approve" class="btn btn-approve" style="width: 100%; padding: 14px 20px; font-size: 1em;">✓ Approve Documents</button>
+                        </form>
+                    </div>
+
+                    <!-- Request More Info Section -->
+                    <div class="notes-section" style="clear: both; background: #fff3cd; padding: 15px; border-radius: 8px; margin-top: 15px; border-left: 4px solid #ffc107;">
+                        <h3 style="margin-bottom: 15px; color: #333;">📝 Request More Info (if needed)</h3>
+                        <form th:action="@{/hr/onboarding/verify}" method="POST">
+                            <input type="hidden" name="documentId" th:value="${docGroup.firstDocumentId}">
+                            <input type="hidden" name="action" value="request-info">
+                            <textarea name="notes" placeholder="Example: Please provide signed offer letter and medical clearance certificate" style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 6px; font-family: 'Segoe UI', sans-serif; font-size: 0.95em; resize: vertical; min-height: 100px;"></textarea>
+                            <button type="submit" name="submit" value="request-info" class="btn btn-request-info" style="background: #ff9800; color: white; padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; margin-top: 10px;">Send Request</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div th:if="${documents == null or documents.size() == 0}" class="empty-state">
+        <h2>✓ All Documents Approved!</h2>
+        <p>There are no pending document approvals at this time.</p>
+    </div>
+</div>
+
+<div th:replace="fragments/footer :: body"></div>
+</body>
+</html>

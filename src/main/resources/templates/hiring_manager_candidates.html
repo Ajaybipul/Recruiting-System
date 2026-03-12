@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Candidates - Hiring Manager</title>
+    <link rel="stylesheet" th:href="@{/css/site.css}" />
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+    <link rel="stylesheet" th:href="@{/css/professional-theme.css}" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .page-header {
+            margin-bottom: 30px;
+            padding: 40px;
+            background: rgba(16, 185, 129, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            box-shadow: 0 8px 32px rgba(16, 185, 129, 0.1);
+        }
+
+        .page-header h1 {
+            margin: 0;
+            font-size: 2.2em;
+            font-weight: 800;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .page-header p {
+            color: #cbd5e1;
+            margin: 8px 0 0 0;
+            font-size: 1.05em;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 32px;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .action-buttons {
+            margin-bottom: 24px;
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 0.95em;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.4);
+        }
+
+        .btn-secondary {
+            background: rgba(16, 185, 129, 0.1);
+            color: #10b981;
+            border: 2px solid rgba(16, 185, 129, 0.3);
+            box-shadow: none;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(16, 185, 129, 0.2);
+            border-color: rgba(16, 185, 129, 0.5);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead th {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.2) 0%, rgba(5, 150, 105, 0.2) 100%);
+            padding: 16px;
+            text-align: left;
+            font-weight: 700;
+            color: #10b981;
+            border-bottom: 2px solid rgba(16, 185, 129, 0.3);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-size: 0.9em;
+        }
+
+        tbody td {
+            padding: 16px;
+            border-bottom: 1px solid #e9ecef;
+            color: #555;
+        }
+
+        tbody tr:hover {
+            background: rgba(16, 185, 129, 0.05);
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 8px 14px;
+            border-radius: 8px;
+            font-size: 0.85em;
+            font-weight: 700;
+            border: 1px solid;
+        }
+
+        .status-forwarded {
+            background: rgba(245, 158, 11, 0.2);
+            color: #b45309;
+            border-color: rgba(245, 158, 11, 0.3);
+        }
+
+        .status-interviewed {
+            background: rgba(16, 185, 129, 0.2);
+            color: #059669;
+            border-color: rgba(16, 185, 129, 0.3);
+        }
+
+        .actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .action-link {
+            padding: 8px 14px;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 0.8em;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
+
+        .action-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(16, 185, 129, 0.4);
+        }
+
+        .action-link.secondary {
+            background: rgba(16, 185, 129, 0.1);
+            color: #10b981;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            box-shadow: none;
+        }
+
+        .action-link.secondary:hover {
+            background: rgba(16, 185, 129, 0.2);
+            border-color: rgba(16, 185, 129, 0.5);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #999;
+        }
+
+        .empty-state p {
+            margin: 10px 0;
+            font-size: 1.05em;
+        }
+    </style>
+</head>
+<body>
+
+<div class="page-header">
+    <h1>Forwarded Candidates</h1>
+    <p>Review and make hiring decisions for candidates sent by recruiters</p>
+</div>
+
+<div class="container">
+    <div class="action-buttons">
+        <a href="/hiring-manager/dashboard" class="btn btn-secondary">← Back to Dashboard</a>
+    </div>
+
+    <th:block th:if="${candidates != null && candidates.size() > 0}">
+        <table>
+            <thead>
+                <tr>
+                    <th>Candidate Name</th>
+                    <th>Job Title</th>
+                    <th>Email</th>
+                    <th>Interview Date</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="candidate : ${candidates}">
+                    <td th:text="${candidate.candidateName}">John Doe</td>
+                    <td th:text="${candidate.jobTitle}">Software Engineer</td>
+                    <td th:text="${candidate.email}">john@example.com</td>
+                    <td>
+                        <span th:text="${candidate.interviewDate != '' ? candidate.interviewDate + ' ' + candidate.interviewTime : 'Not Scheduled'}">2025-01-15 10:00</span>
+                    </td>
+                    <td>
+                        <span th:if="${candidate.status == 'Sent to Hiring Manager'}" class="status-badge status-forwarded">Forwarded</span>
+                        <span th:if="${candidate.status == 'Interview Scheduled'}" class="status-badge status-interviewed">Interviewed</span>
+                        <span th:unless="${candidate.status == 'Sent to Hiring Manager' || candidate.status == 'Interview Scheduled'}" class="status-badge" th:text="${candidate.status}">Unknown</span>
+                    </td>
+                    <td>
+                        <div class="actions">
+                            <a th:href="@{/hiring-manager/candidate/{id}(id=${candidate.id})}" class="action-link">View</a>
+                            <a th:href="@{/hiring-manager/candidate/{id}/feedback(id=${candidate.id})}" class="action-link secondary">Feedback</a>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </th:block>
+
+    <div th:if="${candidates == null || candidates.size() == 0}" class="empty-state">
+        <p>No candidates forwarded yet.</p>
+        <p style="font-size: 13px; color: #bbb;">Check back soon for candidates to review.</p>
+    </div>
+</div>
+
+</body>
+</html>

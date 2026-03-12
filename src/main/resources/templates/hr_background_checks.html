@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+    <title>Background Checks</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f7fa;
+        }
+        .dashboard-layout { display: flex; min-height: 100vh; }
+        main { flex: 1; padding: 40px; max-width: 1200px; }
+        .page-header {
+            background: linear-gradient(135deg, #2d3748 0%, #1f2937 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 40px;
+        }
+        .page-header h1 { font-size: 2em; margin: 0; }
+        .candidates-table {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        table { width: 100%; border-collapse: collapse; }
+        th {
+            background: #f8f9fa;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            border-bottom: 2px solid #eee;
+        }
+        td { padding: 15px; border-bottom: 1px solid #eee; }
+        tr:hover { background: #f8f9fa; }
+        .status-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .status-notstarted { background: #f0f0f0; color: #666; }
+        .status-inprogress { background: #fff3cd; color: #856404; }
+        .status-completed { background: #cfe2ff; color: #084298; }
+        .status-approved { background: #d1e7dd; color: #0f5132; }
+        .status-failed { background: #f8d7da; color: #842029; }
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .btn-primary { background: #2d3748; color: white; }
+        .btn-primary:hover { background: #1f2937; }
+        .btn-info { background: #17a2b8; color: white; }
+        .btn-info:hover { background: #138496; }
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+        }
+        .empty-state h2 { color: #333; margin-bottom: 10px; }
+    </style>
+    <link rel="stylesheet" th:href="@{/css/hr-theme.css}" />
+</head>
+<body class="hr-theme">
+<div th:insert="~{fragments/header :: header}"></div>
+<main style="padding: 40px; max-width: 1200px; margin: 0 auto;">
+    <div class="page-header">
+        <h1>🔍 Background Check Management</h1>
+    </div>
+
+        <div th:if="${candidates.isEmpty()}" class="empty-state">
+            <h2>No Selected Candidates</h2>
+            <p>Background checks will appear here once candidates are selected.</p>
+        </div>
+
+        <div th:if="${!candidates.isEmpty()}" class="candidates-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Candidate Name</th>
+                        <th>Email</th>
+                        <th>Position</th>
+                        <th>BG Check Status</th>
+                        <th>Criminal Check</th>
+                        <th>Education Verify</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="candidate : ${candidates}">
+                        <td th:text="${candidate.fullName}"></td>
+                        <td th:text="${candidate.email}"></td>
+                        <td th:text="${candidate.jobTitle}"></td>
+                        <td>
+                            <span th:class="'status-badge status-' + ${candidate.backgroundCheckStatus != null ? candidate.backgroundCheckStatus.toLowerCase().replace(' ', '') : 'notstarted'}" 
+                                  th:text="${candidate.backgroundCheckStatus != null ? candidate.backgroundCheckStatus : 'Not Started'}"></span>
+                        </td>
+                        <td>
+                            <span th:class="'status-badge status-' + ${candidate.criminalCheckStatus != null ? candidate.criminalCheckStatus.toLowerCase() : 'notstarted'}" 
+                                  th:text="${candidate.criminalCheckStatus != null ? candidate.criminalCheckStatus : 'Not Started'}"></span>
+                        </td>
+                        <td>
+                            <span th:class="'status-badge status-' + ${candidate.educationVerificationStatus != null ? candidate.educationVerificationStatus.toLowerCase() : 'notstarted'}" 
+                                  th:text="${candidate.educationVerificationStatus != null ? candidate.educationVerificationStatus : 'Not Started'}"></span>
+                        </td>
+                        <td>
+                            <a th:href="@{/hr/background-check/{id}(id=${candidate.id})}" class="btn btn-info">
+                                View Details
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+</main>
+</body>
+</html>

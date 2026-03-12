@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+    <link rel="stylesheet" th:href="@{/css/professional-theme.css}" />
+    <title>Job Offer</title>
+    <style>
+        main {
+            padding: 40px;
+            max-width: 900px;
+            margin: 0 auto;
+            background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+            min-height: 100vh;
+        }
+
+        .offer-container {
+            background: white;
+            border-radius: 16px;
+            padding: 50px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+        }
+
+        .offer-header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 30px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .offer-header h1 {
+            font-size: 32px;
+            color: #10b981;
+            margin: 0 0 10px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .offer-header p {
+            font-size: 16px;
+            color: #666;
+            margin: 8px 0;
+        }
+
+        .offer-status {
+            display: inline-block;
+            background: #d1fae5;
+            color: #065f46;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 12px;
+            text-transform: uppercase;
+            margin-top: 16px;
+        }
+
+        .offer-section {
+            margin-bottom: 40px;
+            padding-bottom: 40px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .offer-section:last-of-type {
+            border-bottom: none;
+            padding-bottom: 0;
+            margin-bottom: 0;
+        }
+
+        .offer-section h3 {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .offer-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-bottom: 24px;
+        }
+
+        .offer-row.full {
+            grid-template-columns: 1fr;
+        }
+
+        .offer-item {
+            padding: 12px 0;
+        }
+
+        .offer-item-label {
+            font-size: 12px;
+            font-weight: 700;
+            color: #667eea;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 6px;
+        }
+
+        .offer-item-value {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+
+        .offer-highlight {
+            background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+            border-left: 4px solid #667eea;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .offer-highlight strong {
+            color: #667eea;
+            font-size: 20px;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .benefits-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .benefits-list li {
+            padding: 8px 0;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 15px;
+        }
+
+        .benefits-list li:before {
+            content: "✓";
+            color: #10b981;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .action-section {
+            background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+            padding: 30px;
+            border-radius: 12px;
+            margin-top: 40px;
+            text-align: center;
+        }
+
+        .action-section p {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 14px 32px;
+            border-radius: 8px;
+            border: none;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer !important;
+            transition: all 0.3s;
+            text-decoration: none;
+            min-width: 180px;
+            pointer-events: auto !important;
+            z-index: 10 !important;
+        }
+
+        .btn-accept {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            pointer-events: auto !important;
+            cursor: pointer !important;
+        }
+
+        .btn-accept:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.4);
+            cursor: pointer !important;
+        }
+
+        .btn-decline {
+            background: white;
+            color: #ef4444;
+            border: 2px solid #ef4444;
+            pointer-events: auto !important;
+            cursor: pointer !important;
+        }
+
+        .btn-decline:hover {
+            background: #fef2f2;
+            transform: translateY(-2px);
+            cursor: pointer !important;
+        }
+
+        .btn-download {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-download:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+        }
+
+        .expires-message {
+            color: #ef4444;
+            font-weight: 600;
+            margin-top: 12px;
+            font-size: 14px;
+        }
+
+        /* Ensure forms and buttons are always clickable */
+        form {
+            pointer-events: auto !important;
+            z-index: 10 !important;
+        }
+
+        form button {
+            pointer-events: auto !important;
+            cursor: pointer !important;
+            z-index: 10 !important;
+        }
+
+        @media (max-width: 768px) {
+            .offer-row {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .offer-container {
+                padding: 30px 20px;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            .btn {
+                min-width: auto;
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div th:insert="~{fragments/header :: header}"></div>
+
+<main>
+    <div class="offer-container">
+        <!-- Header -->
+        <div class="offer-header">
+            <h1>💼 Congratulations!</h1>
+            <p>You've received a job offer from our company</p>
+            <span class="offer-status">Offer Pending Your Response</span>
+        </div>
+
+        <!-- Position Details -->
+        <div class="offer-section">
+            <h3>📋 Position Details</h3>
+            <div class="offer-row">
+                <div class="offer-item">
+                    <div class="offer-item-label">Position Title</div>
+                    <div class="offer-item-value" th:text="${application.jobTitle}">Senior Software Engineer</div>
+                </div>
+                <div class="offer-item">
+                    <div class="offer-item-label">Department</div>
+                    <div class="offer-item-value" th:text="${offer.department}">Engineering</div>
+                </div>
+            </div>
+            <div class="offer-row">
+                <div class="offer-item">
+                    <div class="offer-item-label">Reports To</div>
+                    <div class="offer-item-value" th:text="${offer.reportTo}">Manager Name</div>
+                </div>
+                <div class="offer-item">
+                    <div class="offer-item-label">Employment Type</div>
+                    <div class="offer-item-value" th:text="${offer.employmentTerms}">Full-time</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Compensation -->
+        <div class="offer-section">
+            <h3>💰 Compensation & Benefits</h3>
+            <div class="offer-highlight">
+                <strong th:text="${offer.salary}">$120,000</strong>
+                <span style="font-size: 16px; color: #666;">per year</span>
+            </div>
+
+            <div class="offer-row" th:if="${offer.signOnBonus != null and offer.signOnBonus > 0}">
+                <div class="offer-item">
+                    <div class="offer-item-label">Sign-on Bonus</div>
+                    <div class="offer-item-value" th:text="${'$' + #numbers.formatInteger(offer.signOnBonus.intValue(), 1, 'COMMA')}">$5,000</div>
+                </div>
+                <div class="offer-item">
+                    <div class="offer-item-label">Paid Time Off</div>
+                    <div class="offer-item-value" th:text="${offer.paidTimeOff + ' days/year'}">20 days/year</div>
+                </div>
+            </div>
+
+            <div class="offer-row" th:unless="${offer.signOnBonus != null and offer.signOnBonus > 0}">
+                <div class="offer-item">
+                    <div class="offer-item-label">Paid Time Off</div>
+                    <div class="offer-item-value" th:text="${offer.paidTimeOff + ' days/year'}">20 days/year</div>
+                </div>
+            </div>
+
+            <h4 style="margin-top: 24px; margin-bottom: 16px; color: #1a1a1a; font-weight: 700;">Included Benefits:</h4>
+            <ul class="benefits-list">
+                <li th:if="${offer.healthInsurance == true}">Health Insurance Coverage</li>
+                <li th:unless="${offer.healthInsurance == true}" style="color: #ccc;"><span style="color: #ccc;">Health Insurance Coverage</span></li>
+                <li th:if="${offer.fourOhOneK == true}">401(k) Retirement Plan with Company Match</li>
+                <li th:unless="${offer.fourOhOneK == true}" style="color: #ccc;"><span style="color: #ccc;">401(k) Retirement Plan with Company Match</span></li>
+            </ul>
+        </div>
+
+        <!-- Start Date -->
+        <div class="offer-section">
+            <h3>📅 Start Date</h3>
+            <div class="offer-row full">
+                <div class="offer-item">
+                    <div class="offer-item-label">Expected Start Date</div>
+                    <div class="offer-item-value" th:text="${#dates.format(offer.startDate, 'EEEE, dd MMMM yyyy')}">Monday, January 15, 2025</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Additional Notes -->
+        <div class="offer-section" th:if="${offer.additionalNotes != null and !offer.additionalNotes.isEmpty()}">
+            <h3>📝 Additional Information</h3>
+            <div class="offer-row full">
+                <p style="color: #333; line-height: 1.6;" th:text="${offer.additionalNotes}"></p>
+            </div>
+        </div>
+
+        <!-- Action Section -->
+        <div class="action-section">
+            <p>Please review the offer details above and let us know your decision</p>
+            <div th:if="${offer.expirationDate != null}">
+                <p style="color: #ef4444; font-weight: 600;">
+                    This offer expires on <span th:text="${#dates.format(offer.expirationDate, 'dd MMMM yyyy')}"></span>
+                </p>
+            </div>
+            
+            <!-- Hidden field to store application ID -->
+            <input type="hidden" id="appId" th:value="${application.id}">
+            
+            <div class="button-group">
+                <form id="acceptForm" th:action="@{/applicant/offer/{id}/accept(id=${application.id})}" method="post" style="margin: 0;">
+                    <button type="submit" class="btn btn-accept">✓ Accept Offer</button>
+                </form>
+                <form id="declineForm" th:action="@{/applicant/offer/{id}/decline(id=${application.id})}" method="post" style="margin: 0;">
+                    <button type="submit" class="btn btn-decline">Decline Offer</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</main>
+
+<div th:insert="~{fragments/footer :: footer}"></div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('Offer view page loaded');
+    
+    // Extract application ID from URL (e.g., /applicant/offer/693900c4711152a3c29e95f1)
+    const urlMatch = window.location.pathname.match(/\/applicant\/offer\/([a-f0-9]+)/);
+    let appId = '';
+    
+    if (urlMatch && urlMatch[1]) {
+        appId = urlMatch[1];
+        console.log('Application ID extracted from URL:', appId);
+    } else {
+        // Fallback: try to get from hidden field
+        const appIdField = document.getElementById('appId');
+        appId = appIdField ? appIdField.value.trim() : '';
+        console.log('Application ID from hidden field:', appId);
+    }
+    
+    // Get forms
+    const acceptForm = document.getElementById('acceptForm');
+    const declineForm = document.getElementById('declineForm');
+    
+    console.log('Forms found - Accept:', !!acceptForm, 'Decline:', !!declineForm);
+    console.log('Final appId value:', appId);
+    
+    // Validate appId
+    if (!appId || appId === '') {
+        console.error('❌ Application ID is empty or not found');
+        if (acceptForm) {
+            acceptForm.style.pointerEvents = 'none';
+            acceptForm.style.opacity = '0.5';
+        }
+        if (declineForm) {
+            declineForm.style.pointerEvents = 'none';
+            declineForm.style.opacity = '0.5';
+        }
+        return;
+    }
+    
+    // Set correct form actions BEFORE any event listeners
+    if (acceptForm) {
+        const correctAction = '/applicant/offer/' + appId + '/accept';
+        acceptForm.action = correctAction;
+        console.log('✓ Accept form action set to:', correctAction);
+        
+        // Ensure buttons are clickable
+        const acceptBtn = acceptForm.querySelector('button');
+        if (acceptBtn) {
+            acceptBtn.style.pointerEvents = 'auto';
+            acceptBtn.style.cursor = 'pointer';
+            acceptBtn.disabled = false;
+        }
+        
+        // Add submit listener
+        acceptForm.addEventListener('submit', function(e) {
+            console.log('Accept form submitting to:', this.action);
+            if (!confirm('Are you sure you want to ACCEPT this offer?')) {
+                e.preventDefault();
+                return false;
+            }
+        });
+    }
+    
+    if (declineForm) {
+        const correctAction = '/applicant/offer/' + appId + '/decline';
+        declineForm.action = correctAction;
+        console.log('✓ Decline form action set to:', correctAction);
+        
+        // Ensure buttons are clickable
+        const declineBtn = declineForm.querySelector('button');
+        if (declineBtn) {
+            declineBtn.style.pointerEvents = 'auto';
+            declineBtn.style.cursor = 'pointer';
+            declineBtn.disabled = false;
+        }
+        
+        // Add submit listener
+        declineForm.addEventListener('submit', function(e) {
+            console.log('Decline form submitting to:', this.action);
+            if (!confirm('Are you sure you want to DECLINE this offer?')) {
+                e.preventDefault();
+                return false;
+            }
+        });
+    }
+    
+    console.log('Initialization complete');
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,27 @@
+<aside th:fragment="body" class="sidebar">
+    <div class="sidebar-header">
+        <h2>Hiring Manager</h2>
+    </div>
+    
+    <nav>
+        <a th:href="@{/hiring/dashboard}" class="nav-item">
+            <span class="icon">📊</span>
+            <span class="label">Dashboard</span>
+        </a>
+        <a th:href="@{/hiring/candidates}" class="nav-item">
+            <span class="icon">👥</span>
+            <span class="label">Candidates</span>
+        </a>
+        <a th:href="@{/hiring/interviews}" class="nav-item">
+            <span class="icon">📅</span>
+            <span class="label">Interviews</span>
+        </a>
+    </nav>
+    
+    <div class="sidebar-footer">
+        <a th:href="@{/logout}" class="logout-btn">
+            <span class="icon">🚪</span>
+            <span class="label">Logout</span>
+        </a>
+    </div>
+</aside>

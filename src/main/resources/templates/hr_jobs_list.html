@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+    <link rel="stylesheet" th:href="@{/css/professional-theme.css}" />
+    <link rel="stylesheet" th:href="@{/css/modern-ui.css}" />
+    <link rel="stylesheet" th:href="@{/css/hr-theme.css}" />
+    <title>Job Management</title>
+    <style>
+        /* FLEXBOX LAYOUT FOR HR PAGES */
+        html, body {
+            height: 100%;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        }
+        
+        body {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .dashboard-container {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+            width: 100%;
+        }
+        
+        /* SIDEBAR STYLING */
+        .sidebar {
+            width: 280px !important;
+            background: linear-gradient(180deg, #2d3748 0%, #1f2937 100%) !important;
+            color: white !important;
+            padding: 0 !important;
+            min-height: 100% !important;
+            overflow-y: auto !important;
+            flex-shrink: 0 !important;
+            border-right: 1px solid rgba(255,255,255,0.1) !important;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1) !important;
+            display: flex !important;
+            visibility: visible !important;
+            position: relative !important;
+            flex-direction: column !important;
+        }
+        
+        .sidebar-header {
+            padding: 25px 20px !important;
+            border-bottom: 1px solid rgba(255,255,255,0.2) !important;
+            text-align: center !important;
+        }
+        
+        .sidebar-header h2 {
+            margin: 0 !important;
+            font-size: 22px !important;
+            font-weight: 700 !important;
+            color: white !important;
+            letter-spacing: 0.5px !important;
+        }
+        
+        .sidebar nav {
+            display: flex !important;
+            flex-direction: column !important;
+            gap: 8px !important;
+            padding: 20px 15px !important;
+            flex: 1 !important;
+        }
+        
+        .sidebar .nav-item {
+            color: rgba(255, 255, 255, 0.9) !important;
+            text-decoration: none !important;
+            padding: 12px 16px !important;
+            border-radius: 8px !important;
+            display: flex !important;
+            align-items: center !important;
+            gap: 12px !important;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+            font-size: 14px !important;
+            font-weight: 500 !important;
+        }
+        
+        .sidebar .nav-item .icon {
+            font-size: 18px !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            min-width: 20px !important;
+        }
+        
+        .sidebar .nav-item .label {
+            white-space: nowrap !important;
+            overflow: hidden !important;
+            text-overflow: ellipsis !important;
+        }
+        
+        .sidebar .nav-item:hover {
+            background-color: rgba(255, 255, 255, 0.15) !important;
+            transform: translateX(4px) !important;
+            color: white !important;
+        }
+        
+        .sidebar .nav-item.active {
+            background: rgba(255, 255, 255, 0.2) !important;
+            color: white !important;
+        }
+        
+        .sidebar .nav-item.create-job {
+            background: rgba(255, 255, 255, 0.1) !important;
+            border: 1px solid rgba(255, 255, 255, 0.3) !important;
+            margin-top: 10px !important;
+        }
+        
+        .sidebar .nav-item.create-job:hover {
+            background: rgba(255, 255, 255, 0.2) !important;
+        }
+        
+        .sidebar .nav-divider {
+            height: 1px !important;
+            background: rgba(255, 255, 255, 0.15) !important;
+            margin: 12px 0 !important;
+        }
+        
+        .sidebar-footer {
+            padding: 15px !important;
+            border-top: 1px solid rgba(255,255,255,0.2) !important;
+        }
+        
+        .sidebar-footer .logout-btn {
+            color: rgba(255, 255, 255, 0.9) !important;
+            text-decoration: none !important;
+            padding: 12px 16px !important;
+            border-radius: 8px !important;
+            display: flex !important;
+            align-items: center !important;
+            gap: 12px !important;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+            font-size: 14px !important;
+            font-weight: 500 !important;
+            background: rgba(255, 0, 0, 0.2) !important;
+            border: 1px solid rgba(255, 255, 255, 0.2) !important;
+            width: 100% !important;
+            box-sizing: border-box !important;
+        }
+        
+        .sidebar-footer .logout-btn:hover {
+            background: rgba(255, 0, 0, 0.3) !important;
+            transform: translateX(4px) !important;
+            color: white !important;
+        }
+        
+        .sidebar-footer .logout-btn .icon {
+            font-size: 18px !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            min-width: 20px !important;
+        }
+        
+        .sidebar-footer .logout-btn .label {
+            white-space: nowrap !important;
+            overflow: hidden !important;
+            text-overflow: ellipsis !important;
+        }
+        
+        .sidebar hr {
+            opacity: 0.2;
+            margin: 20px 0;
+            border: none;
+            border-top: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        /* MAIN CONTENT AREA */
+        main {
+            flex: 1;
+            padding: 40px;
+            overflow-y: auto;
+            background: linear-gradient(135deg, #f8f9fa 0%, #f0f2f5 100%);
+        }
+        
+        main h1 {
+            color: #111827;
+            margin-bottom: 35px;
+            font-size: 32px;
+            font-weight: 700;
+        }
+        
+        .job-card {
+            background: white;
+            border-left: 4px solid #667eea;
+            padding: 24px;
+            margin-bottom: 16px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.07);
+            border: 1px solid rgba(0,0,0,0.05);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .job-card:hover {
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+        
+        .job-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 15px;
+        }
+        
+        .job-header h3 {
+            margin: 0;
+            color: #111827;
+            font-weight: 700;
+        }
+        
+        .status-badge {
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+        
+        .status-open {
+            background: linear-gradient(135deg, #d4edda 0%, #c6e9c9 100%);
+            color: #155724;
+        }
+        
+        .status-closed {
+            background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
+            color: #721c24;
+        }
+        
+        .job-info {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+        
+        .job-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #667eea;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .btn:hover {
+            background-color: #5568d3;
+        }
+        
+        .btn-primary {
+            background-color: #667eea;
+        }
+        
+        .btn-primary:hover {
+            background-color: #5568d3;
+        }
+        
+        .btn-outline {
+            background-color: transparent;
+            color: #667eea;
+            border: 1px solid #667eea;
+        }
+        
+        .btn-outline:hover {
+            background-color: #667eea;
+            color: white;
+        }
+        
+        .header-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        @media (max-width: 768px) {
+            .dashboard-container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                min-height: auto;
+            }
+            
+            main {
+                padding: 15px;
+            }
+            
+            .job-info {
+                grid-template-columns: 1fr;
+            }
+            
+            .job-actions {
+                flex-direction: column;
+            }
+            
+            .job-actions a, .job-actions button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body class="hr-theme">
+
+<div th:insert="~{fragments/header :: header}"></div>
+
+<main style="padding: 40px; max-width: 1200px; margin: 0 auto;">
+    <div class="header-section">
+        <h1>Job Management</h1>
+        <a class="btn btn-primary" th:href="@{/hr/jobs/create}">Create New Job</a>
+    </div>
+
+    <div th:if="${#lists.isEmpty(jobs)}">
+        <p>No jobs posted yet. <a th:href="@{/hr/jobs/create}">Create one now</a>.</p>
+        </div>
+
+        <div th:each="job : ${jobs}" class="job-card">
+            <div class="job-header">
+                <div>
+                    <h3 th:text="${job.title}">Job Title</h3>
+                    <p style="color: #666; margin: 5px 0;">Department: <span th:text="${job.department}"></span></p>
+                </div>
+                <span th:class="'status-badge ' + (${job.status} == 'Open' ? 'status-open' : 'status-closed')" th:text="${job.status}"></span>
+            </div>
+
+            <div class="job-info">
+                <div>
+                    <strong>Location:</strong> <span th:text="${job.location}"></span>
+                </div>
+                <div>
+                    <strong>Salary Range:</strong> <span th:text="${job.salaryRange}"></span>
+                </div>
+                <div>
+                    <strong>Posted Date:</strong> <span th:text="${#dates.format(job.createdDate, 'dd MMM yyyy')}"></span>
+                </div>
+                <div>
+                    <strong>Status:</strong> <span th:text="${job.status}"></span>
+                </div>
+                <div th:if="${job.assignedRecruiter}">
+                    <strong>Recruiter:</strong> <span th:text="${job.assignedRecruiter}"></span>
+                </div>
+                <div th:if="${job.assignedHiringManager}">
+                    <strong>Hiring Manager:</strong> <span th:text="${job.assignedHiringManager}"></span>
+                </div>
+            </div>
+
+            <div class="job-actions">
+                <a class="btn" th:href="@{'/hr/jobs/' + ${job.id} + '/edit'}">Edit</a>
+                <a class="btn" th:href="@{'/jobs/' + ${job.id}}">View Details</a>
+                <form th:action="@{'/hr/jobs/' + ${job.id} + '/close'}" method="post" style="display: inline;">
+                    <button class="btn btn-outline" type="submit">Close</button>
+                </form>
+            </div>
+        </div>
+    </main>
+</div>
+
+<div th:insert="~{fragments/footer :: footer}"></div>
+
+</body>
+</html>

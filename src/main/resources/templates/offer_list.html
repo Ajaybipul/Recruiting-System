@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+    <title>Job Offers</title>
+</head>
+<body>
+<div th:insert="fragments/header :: body"></div>
+<main style="padding: 40px 20px;">
+    <div style="max-width: 1200px; margin: 0 auto;">
+        <h1>Job Offers</h1>
+        <p style="color: #666; margin-bottom: 30px;">Manage all job offers</p>
+        
+        <!-- Note: Create New Offer is done from Applicant Detail page -->
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>Offer ID</th>
+                    <th>Candidate</th>
+                    <th>Position</th>
+                    <th>Salary</th>
+                    <th>Expiration</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="offer : ${offers}">
+                    <td th:text="${offer.id}"></td>
+                    <td th:text="${offer.candidateName}"></td>
+                    <td th:text="${offer.positionTitle != null ? offer.positionTitle : offer.position}"></td>
+                    <td th:text="${offer.salary}"></td>
+                    <td th:text="${#dates.format(offer.expirationDate, 'yyyy-MM-dd')}"></td>
+                    <td>
+                        <span style="padding: 4px 8px; border-radius: 4px; background: #fff3cd; color: #856404; font-size: 12px; font-weight: 600;" 
+                              th:classappend="${offer.status == 'Accepted' ? 'bg-success' : offer.status == 'Declined' ? 'bg-danger' : 'bg-warning'}"
+                              th:text="${offer.status}"></span>
+                    </td>
+                    <td>
+                        <a th:href="@{'/applicant/offer/' + ${offer.applicationId}}" class="btn btn-outline" style="padding: 6px 12px; font-size: 12px;">View</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</main>
+<div th:insert="fragments/footer :: body"></div>
+</body>
+</html>

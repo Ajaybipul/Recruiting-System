@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login - Recruiting System</title>
+
+    <style>
+
+        body {
+            margin: 0;
+            font-family: "Poppins", sans-serif;
+        }
+      
+
+
+        /* ============================
+           SECTION 1 — PURPLE HERO AREA
+        ============================ */
+        .hero-section {
+            display: flex;
+            min-height: 100vh;
+            background: #5c2be6;
+            color: #fff;
+            padding: 60px 80px;
+            align-items: center;
+        }
+
+        /* LEFT SIDE TEXT */
+        .hero-left {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+        }
+
+        .hero-left h1 {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+
+        .hero-left p {
+            font-size: 18px;
+            line-height: 1.6;
+            max-width: 520px;
+            opacity: 0.9;
+        }
+
+        /* RIGHT SIDE LOGIN BOX */
+        .hero-right {
+            width: 420px;
+            background: #fff;
+            border-radius: 10px;
+            padding: 40px;
+            height: fit-content;
+            margin-left: 40px;
+            margin-top: 40px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+
+        .hero-right h2 {
+            font-size: 26px;
+            margin-bottom: 25px;
+            color: #333;
+        }
+
+        .hero-right label {
+            display: block;
+            margin-top: 14px;
+            font-weight: 600;
+            color: #444;
+        }
+
+        .hero-right input {
+            width: 100%;
+            padding: 14px;
+            margin-top: 6px;
+            border-radius: 6px;
+            border: 1.8px solid #ddd;
+            font-size: 15px;
+            transition: 0.3s;
+        }
+
+        .hero-right input:focus {
+            border-color: #5c2be6;
+            box-shadow: 0 0 6px rgba(92, 43, 230, 0.6);
+            outline: none;
+        }
+
+        .hero-right button {
+            width: 100%;
+            padding: 14px;
+            margin-top: 22px;
+            background: #e53935;
+            color: #fff;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: 0.3s ease;
+        }
+
+        .hero-right button:hover {
+            background: #c62828;
+        }
+
+        /* SIGNUP LINK FIXED + STYLISH */
+        .register-link {
+            margin-top: 18px;
+            font-size: 15px;
+            color: #444;
+            text-align: center;
+        }
+
+        .register-link span {
+            color: #444;
+        }
+
+        .signup-link {
+            color: #5c2be6;
+            font-weight: 700;
+            margin-left: 5px;
+            text-decoration: none;
+            transition: 0.3s ease;
+        }
+
+        .signup-link:hover {
+            color: #3a13c1;
+            text-decoration: underline;
+            transform: translateY(-2px);
+        }
+
+        /* ============================
+           SECTION 2 — WHITE CONTENT AREA
+        ============================ */
+        .white-section {
+            background: #fff;
+            padding: 70px 80px;
+            text-align: center;
+        }
+
+        .white-section h3 {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 35px;
+        }
+
+       .logo-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 60px;          /* spacing between logos */
+    margin-bottom: 50px;
+    flex-wrap: nowrap;
+}
+
+.logo-row img {
+    height: 55px;       /* uniform size */
+    width: auto;        /* keep aspect ratio */
+    opacity: 0.9;       /* subtle premium look */
+    transition: 0.3s ease-in-out;
+    filter: grayscale(20%); /* soft grey look */
+}
+
+.logo-row img:hover {
+    transform: scale(1.08);   /* gentle zoom on hover */
+    opacity: 1;
+    filter: grayscale(0%);
+}
+
+
+        .feature-title {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .feature-text {
+            font-size: 15px;
+            max-width: 680px;
+            margin: auto;
+            color: #555;
+            line-height: 1.6;
+        }
+        /* ============================
+   TOP LEFT BRAND LOGO/TITLE
+============================ */
+/* ============================
+      BRAND + LOGO TOP LEFT
+============================ */
+.top-brand {
+    position: absolute;
+    top: 25px;
+    left: 35px;
+    z-index: 20;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.brand-icon {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #ff5af3, #7b6bff);
+    box-shadow: 0 4px 10px rgba(255, 90, 243, 0.4);
+}
+
+.top-brand span {
+    font-size: 26px;
+    font-weight: 700;
+    color: #ffffff;
+    letter-spacing: 0.5px;
+    font-family: "Poppins", sans-serif;
+}
+
+
+    </style>
+</head>
+
+<body>
+<div class="top-brand">
+    <span>RecruitPro</span>
+</div>
+
+    <!-- ============================
+         PURPLE HERO SECTION
+    ============================ -->
+    <div class="hero-section">
+
+        <!-- LEFT TEXT -->
+        <div class="hero-left">
+            <h1>All in one recruitment software</h1>
+            <p>
+                Our streamlined ATS and recruitment software helps organizations hire smarter and faster. 
+                From automated job postings and AI-driven resume screening to seamless interview scheduling 
+                and real-time candidate tracking, the platform enhances every stage of the hiring lifecycle.
+                <br><br>
+                With built-in communication tools, collaborative feedback, customizable workflows, and 
+                end-to-end analytics, recruiters can focus on meaningful interactions rather than repetitive 
+                administrative tasks. The result? Higher-quality hires, reduced hiring time, improved candidate 
+                experience, and a more efficient recruitment pipeline for businesses of all sizes.
+            </p>
+        </div>
+
+        <!-- RIGHT FORM -->
+        <div class="hero-right">
+            <h2>Sign In</h2>
+            
+            <!-- Error message display -->
+            <div th:if="${error}" style="background: #ffebee; border-left: 4px solid #e53935; padding: 12px 16px; border-radius: 6px; margin-bottom: 20px; color: #c62828; font-size: 14px; font-weight: 500;">
+                <strong>Login Failed:</strong> <span th:text="${error}"></span>
+            </div>
+            
+            <form method="post" action="/login">
+                <label>Username</label>
+                <input type="text" name="username" required>
+
+                <label>Password</label>
+                <input type="password" name="password" required>
+
+                <button type="submit">Sign In</button>
+
+                <div class="register-link">
+                    <span>New here?</span>
+                    <a class="signup-link" th:href="@{/register}">Sign Up</a>
+                </div>
+
+            </form>
+        </div>
+
+    </div>
+
+    <!-- ============================
+         WHITE SECTION
+    ============================ -->
+    <div class="white-section">
+
+        <h3>Trusted by top companies worldwide</h3>
+
+        <div class="logo-row">
+          <div class="logo-row">
+    <img src="/images/Bosch.png" alt="Bosch">
+    <img src="/images/deloitte.png" alt="deloitte">
+    <img src="/images/saint.png" alt="Saint">
+    <img src="/images/allianz.png" alt="allianz">
+</div>
+
+        </div>
+
+        <div class="feature-title">Why choose our recruitment system?</div>
+        <div class="feature-text">
+            Our streamlined ATS and recruitment software ensures faster hiring, better talent discovery,
+            improved automation, and a delightful experience for both recruiters and candidates.
+        </div>
+
+    </div>
+
+    <!-- Include the footer fragment -->
+    <div th:replace="fragments/footer :: footer"></div>
+
+</body>
+
+</html>

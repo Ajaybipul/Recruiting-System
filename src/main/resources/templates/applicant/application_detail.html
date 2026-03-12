@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+    <title>Application Details</title>
+</head>
+<body>
+
+<div th:insert="~{fragments/header :: header}"></div>
+
+<main class="container" style="max-width:800px;margin:40px auto;">
+    <h1 th:text="${application.jobTitle}">Job Title</h1>
+
+    <section class="card">
+        <h3>Application</h3>
+        <p><strong>Applied On:</strong> <span th:text="${#dates.format(application.appliedDate, 'dd MMM yyyy')}"></span></p>
+        <p><strong>Status:</strong> <span th:text="${application.status}"></span></p>
+
+        <p><strong>Recruiter Notes:</strong></p>
+        <p th:if="${application.screeningNotes != null and application.screeningNotes != ''}" th:text="${application.screeningNotes}"></p>
+        <p th:if="${application.screeningNotes == null or application.screeningNotes == ''}">No recruiter notes.</p>
+
+        <p><strong>Resume:</strong>
+            <a th:if="${application.resumePath}" th:href="@{${application.resumePath}}" target="_blank">Download</a>
+            <span th:if="${application.resumePath == null}">Not uploaded</span>
+        </p>
+    </section>
+
+    <section class="card" style="margin-top:20px;">
+        <h3>Hiring Manager Feedback</h3>
+
+        <div th:if="${application.hmNotes != null or application.hmDecision != null or application.hmRating != null or application.hmFeedback != null}">
+            <p><strong>HM Internal Notes:</strong> <span th:text="${application.hmNotes}">No notes</span></p>
+            <p><strong>HM Decision:</strong> <span th:text="${application.hmDecision}">-</span></p>
+            <p><strong>HM Rating:</strong> <span th:text="${application.hmRating}">-</span></p>
+            <p><strong>HM Feedback:</strong> <span th:text="${application.hmFeedback}">No feedback</span></p>
+        </div>
+        <div th:unless="${application.hmNotes != null or application.hmDecision != null or application.hmRating != null or application.hmFeedback != null}">
+            <p>No feedback from Hiring Manager yet.</p>
+        </div>
+    </section>
+
+    <div style="margin-top:20px;">
+        <a class="btn" th:href="@{/applicant/applications}">Back to Applications</a>
+    </div>
+</main>
+
+<div th:insert="~{fragments/footer :: footer}"></div>
+
+</body>
+</html>

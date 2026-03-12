@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Provide Feedback</title>
+    <link rel="stylesheet" th:href="@{/css/site.css}" />
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+    <link rel="stylesheet" th:href="@{/css/professional-theme.css}" />
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif}
+
+        .page-center{max-width:900px;margin:40px auto;padding:24px}
+
+        .form-container{
+            background: rgba(255,255,255,0.96); padding:28px; border-radius:14px;
+            box-shadow:0 12px 40px rgba(0,0,0,0.08); border:1px solid rgba(16,185,129,0.12);
+            backdrop-filter: blur(6px);
+        }
+
+        .form-container h1{font-size:24px;font-weight:800;margin-bottom:6px;
+            background:linear-gradient(135deg,#10b981 0%,#059669 100%); -webkit-background-clip:text; -webkit-text-fill-color:transparent}
+        .form-container p{color:#475569;margin-bottom:16px}
+
+        .candidate-info{background:#f8faf9;padding:12px;border-radius:8px;margin-bottom:16px;border-left:4px solid #10b981}
+        .candidate-info p{margin:6px 0;color:#334155}
+
+        .form-group{margin-bottom:16px}
+        .form-group label{display:block;margin-bottom:8px;color:#0f172a;font-weight:700}
+        .form-group input,.form-group textarea,.form-group select{width:100%;padding:12px;border:1px solid #e6edf0;border-radius:10px}
+        .form-group input:focus,.form-group textarea:focus,.form-group select:focus{outline:none;border-color:#10b981;box-shadow:0 6px 20px rgba(16,185,129,0.08)}
+
+        .rating-group{display:flex;gap:8px;align-items:center}
+        .rating-input{display:none}
+        .rating-label{display:inline-block;width:40px;height:40px;line-height:40px;text-align:center;background:#f3f4f6;border-radius:8px;cursor:pointer;font-weight:700}
+        .rating-input:checked + .rating-label, .rating-label:hover{background:linear-gradient(135deg,#10b981 0%,#059669 100%);color:#fff}
+
+        .btn-group{display:flex;gap:10px;margin-top:16px}
+        .btn{flex:1;padding:12px;border-radius:10px;font-weight:700;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;justify-content:center}
+        .btn-primary{background:linear-gradient(135deg,#10b981 0%,#059669 100%);color:#fff;box-shadow:0 8px 24px rgba(16,185,129,0.12)}
+        .btn-secondary{background:#f3f4f6;color:#0f172a;border:1px solid #e6edf0}
+
+        @media (max-width:600px){.page-center{padding:12px}.rating-label{width:36px;height:36px;line-height:36px}}
+    </style>
+</head>
+<body>
+
+<div class="form-container">
+    <h1>Provide Feedback</h1>
+    <p>Share your assessment and rating for this candidate</p>
+
+    <div class="candidate-info">
+        <p><strong>Candidate:</strong> <span th:text="${candidate.fullName}">John Doe</span></p>
+        <p><strong>Email:</strong> <span th:text="${candidate.email}">john@example.com</span></p>
+        <p><strong>Position:</strong> <span th:text="${candidate.jobTitle}">Software Engineer</span></p>
+    </div>
+
+    <form th:action="@{/hiring-manager/candidate/{id}/feedback(id=${candidate.id})}" method="post">
+        <!-- Overall Rating -->
+        <div class="form-group">
+            <label>📊 Overall Rating (1-5 stars) *</label>
+            <div class="rating-group">
+                <th:block th:each="rating : ${ratings}">
+                    <input type="radio" id="rating-{{rating}}" class="rating-input" name="rating" th:value="${rating}" required />
+                    <label for="rating-{{rating}}" class="rating-label" th:text="${rating}">1</label>
+                </th:block>
+            </div>
+        </div>
+
+        <!-- Technical Skills Assessment -->
+        <div class="form-group">
+            <label for="technicalSkills">💻 Technical Skills *</label>
+            <select id="technicalSkills" name="technicalSkills" required>
+                <option value="">-- Select Level --</option>
+                <option value="Good">Good</option>
+                <option value="Average">Average</option>
+                <option value="Poor">Poor</option>
+            </select>
+        </div>
+
+        <!-- Communication Assessment -->
+        <div class="form-group">
+            <label for="communication">🗣️ Communication *</label>
+            <select id="communication" name="communication" required>
+                <option value="">-- Select Level --</option>
+                <option value="Good">Good</option>
+                <option value="Average">Average</option>
+                <option value="Poor">Poor</option>
+            </select>
+        </div>
+
+        <!-- Problem Solving Assessment -->
+        <div class="form-group">
+            <label for="problemSolving">🧩 Problem Solving *</label>
+            <select id="problemSolving" name="problemSolving" required>
+                <option value="">-- Select Level --</option>
+                <option value="Good">Good</option>
+                <option value="Average">Average</option>
+                <option value="Poor">Poor</option>
+            </select>
+        </div>
+
+        <!-- Cultural Fit Assessment -->
+        <div class="form-group">
+            <label for="culturalFit">🤝 Cultural Fit *</label>
+            <select id="culturalFit" name="culturalFit" required>
+                <option value="">-- Select Answer --</option>
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
+            </select>
+        </div>
+
+        <!-- Detailed Comments -->
+        <div class="form-group">
+            <label for="comments">📝 Detailed Comments *</label>
+            <textarea id="comments" name="comments" required placeholder="Share your overall assessment, strengths, areas of improvement, and overall impression of the candidate..."></textarea>
+        </div>
+
+        <!-- Internal Notes -->
+        <div class="form-group">
+            <label for="notes">📋 Internal Notes (Optional)</label>
+            <textarea id="notes" name="notes" placeholder="Any additional notes visible to HR and Recruiter only..."></textarea>
+        </div>
+
+        <!-- Recommendation/Decision -->
+        <div class="form-group">
+            <label for="decision">🎯 Recommendation *</label>
+            <select id="decision" name="decision" required>
+                <option value="">-- Select Recommendation --</option>
+                <option value="HIRE">HIRE - Move to Offer</option>
+                <option value="MAYBE">MAYBE - Discuss with HR/Team</option>
+                <option value="REJECT">DO NOT HIRE - Reject</option>
+            </select>
+        </div>
+
+        <div class="btn-group">
+            <button type="submit" class="btn btn-primary">✓ Submit Feedback</button>
+            <a href="javascript:history.back()" class="btn btn-secondary" style="text-decoration: none; display: flex; align-items: center; justify-content: center;">Cancel</a>
+        </div>
+    </form>
+</div>
+
+</body>
+</html>

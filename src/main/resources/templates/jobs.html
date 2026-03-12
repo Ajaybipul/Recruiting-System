@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" th:href="@{/css/site.css}" />
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+    <link rel="stylesheet" th:href="@{/css/professional-theme.css}" />
+    <title>Open Jobs - Recruiting System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            height: 100%;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .dashboard-container {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+            width: 100%;
+        }
+
+        main {
+            flex: 1;
+            padding: 40px;
+            margin-left: 280px;
+            overflow-y: auto;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 12px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        > p {
+            color: #cbd5e1;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+
+        .job-card {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 32px;
+            border-radius: 16px;
+            margin-bottom: 24px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .job-card:hover {
+            box-shadow: 0 16px 48px rgba(102, 126, 234, 0.2);
+            transform: translateY(-4px);
+            border-color: rgba(102, 126, 234, 0.3);
+        }
+
+        .job-card h3 {
+            color: #1e293b;
+            margin: 0 0 12px 0;
+            font-size: 1.8em;
+            font-weight: 800;
+        }
+
+        .location {
+            color: #667eea;
+            font-size: 1em;
+            margin-bottom: 16px;
+            font-weight: 600;
+        }
+
+        .description {
+            color: #555;
+            font-size: 1em;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .meta {
+            display: flex;
+            gap: 24px;
+            margin-bottom: 20px;
+            font-size: 0.95em;
+            color: #666;
+            flex-wrap: wrap;
+        }
+
+        .meta span {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border-radius: 8px;
+            border: none;
+            font-size: 0.95em;
+            font-weight: 700;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s ease;
+            margin-right: 12px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
+
+        .btn-success:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.4);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid #667eea;
+            color: #667eea;
+        }
+
+        .btn-outline:hover {
+            background: #667eea;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 8px 14px;
+            border-radius: 8px;
+            font-size: 0.85em;
+            font-weight: 700;
+        }
+
+        .badge-success {
+            background: rgba(16, 185, 129, 0.2);
+            color: #059669;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .empty-state p {
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        @media (max-width: 768px) {
+            main {
+                padding: 20px;
+                margin-left: 0;
+            }
+
+            .job-card {
+                padding: 20px;
+            }
+
+            .meta {
+                flex-direction: column;
+                gap: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Show sidebar only if user is logged in as applicant -->
+<div th:if="${session.roles != null and session.roles.contains('ROLE_APPLICANT')}" class="dashboard-container">
+    <div th:insert="~{fragments/sidebar_applicant :: body}"></div>
+    
+    <main>
+        <h1>🔍 Browse Positions</h1>
+        <p style="color: #666; margin-bottom: 30px;">
+            Explore exciting opportunities with our organization
+        </p>
+
+        <!-- EMPTY LIST HANDLING -->
+        <div th:if="${jobs == null or #lists.isEmpty(jobs)}" class="card">
+            <p style="text-align: center; color: #999;">
+                No jobs available at the moment. Check back later!
+            </p>
+        </div>
+
+        <!-- JOB LIST -->
+        <div th:each="job : ${jobs}">
+            <div class="job-card">
+                <h3 th:text="${job.title}">Job Title</h3>
+
+                <div class="location">
+                    📍 <span th:text="${job.location}"></span>
+                </div>
+
+                <div class="description" th:text="${job.description}">
+                </div>
+
+                <div class="meta">
+                    <span>
+                        <strong>Department:</strong>
+                        <span th:text="${job.department}"></span>
+                    </span>
+
+                    <span class="salary">
+                        <strong>💰</strong>
+                        <span th:text="${job.salaryRange}"></span>
+                    </span>
+
+                    <span>
+                        <strong>Openings:</strong>
+                        <span th:text="${job.openings}"></span>
+                    </span>
+                </div>
+
+                <!-- VIEW DETAILS / APPLY BUTTON -->
+                <div style="margin-top:16px;">
+                    <a class="btn btn-primary" th:href="@{'/jobs/' + ${job.id}}">View Details</a>
+                    <span th:if="${#lists.contains(appliedJobIds, job.id)}">
+                        <span class="badge badge-success">✓ Already Applied</span>
+                    </span>
+                    <span th:if="${!#lists.contains(appliedJobIds, job.id)}">
+                        <a class="btn btn-success" th:href="@{'/apply/' + ${job.id}}">Apply Now</a>
+                    </span>
+                </div>
+
+            </div>
+        </div>
+    </main>
+</div>
+
+<!-- Show without sidebar for non-logged-in users -->
+<div th:unless="${session.roles != null and session.roles.contains('ROLE_APPLICANT')}">
+    <div th:insert="fragments/header :: body"></div>
+
+    <main style="max-width:1000px;margin:40px auto;">
+        <h1>Open Positions</h1>
+        <p style="color: #666; margin-bottom: 30px;">
+            Explore exciting opportunities with our organization
+        </p>
+
+        <!-- EMPTY LIST HANDLING -->
+        <div th:if="${jobs == null or #lists.isEmpty(jobs)}" class="card">
+            <p style="text-align: center; color: #999;">
+                No jobs available at the moment. Check back later!
+            </p>
+        </div>
+
+        <!-- JOB LIST -->
+        <div th:each="job : ${jobs}">
+            <div class="job-card">
+                <h3 th:text="${job.title}">Job Title</h3>
+
+                <div class="location">
+                    📍 <span th:text="${job.location}"></span>
+                </div>
+
+                <div class="description" th:text="${job.description}">
+                </div>
+
+                <div class="meta">
+                    <span>
+                        <strong>Department:</strong>
+                        <span th:text="${job.department}"></span>
+                    </span>
+
+                    <span class="salary">
+                        <strong>💰</strong>
+                        <span th:text="${job.salaryRange}"></span>
+                    </span>
+
+                    <span>
+                        <strong>Openings:</strong>
+                        <span th:text="${job.openings}"></span>
+                    </span>
+                </div>
+
+                <!-- VIEW DETAILS / APPLY BUTTON -->
+                <div style="margin-top:16px;">
+                    <a class="btn btn-primary" th:href="@{'/jobs/' + ${job.id}}">View Details</a>
+                    <a class="btn btn-outline" th:href="@{'/login'}">Login to Apply</a>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <div th:insert="fragments/footer :: body"></div>
+</div>
+
+</body>
+</html>

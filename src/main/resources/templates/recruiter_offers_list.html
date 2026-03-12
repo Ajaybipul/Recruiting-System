@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" th:href="@{/css/site.css}" />
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+    <link rel="stylesheet" th:href="@{/css/professional-theme.css}" />
+    <link rel="stylesheet" th:href="@{/css/footer.css}" />
+    <title>My Offers</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .dashboard-layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        main {
+            flex: 1;
+            padding: 40px;
+            margin-left: 280px;
+        }
+
+        .page-header {
+            background: rgba(102, 126, 234, 0.15);
+            backdrop-filter: blur(10px);
+            color: white;
+            padding: 40px;
+            border-radius: 16px;
+            margin-bottom: 40px;
+            border: 1px solid rgba(102, 126, 234, 0.3);
+            box-shadow: 0 8px 32px rgba(102, 126, 234, 0.1);
+        }
+
+        .page-header h1 {
+            font-size: 2.5em;
+            margin-bottom: 8px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .page-header p {
+            font-size: 1.1em;
+            color: #cbd5e1;
+        }
+
+        .offers-table {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: #f8f9fa;
+            padding: 18px;
+            text-align: left;
+            font-weight: 700;
+            border-bottom: 2px solid #e9ecef;
+            color: #1e293b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-size: 0.95em;
+        }
+
+        td {
+            padding: 18px;
+            border-bottom: 1px solid #e9ecef;
+            color: #555;
+        }
+
+        tr:hover {
+            background: rgba(102, 126, 234, 0.05);
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 8px 14px;
+            border-radius: 8px;
+            font-size: 0.85em;
+            font-weight: 700;
+            border: 1px solid;
+        }
+
+        .status-created {
+            background: rgba(251, 191, 36, 0.2);
+            color: #b45309;
+            border-color: rgba(251, 191, 36, 0.3);
+        }
+
+        .status-sent {
+            background: rgba(59, 130, 246, 0.2);
+            color: #2563eb;
+            border-color: rgba(59, 130, 246, 0.3);
+        }
+
+        .status-accepted {
+            background: rgba(16, 185, 129, 0.2);
+            color: #059669;
+            border-color: rgba(16, 185, 129, 0.3);
+        }
+
+        .status-rejected {
+            background: rgba(239, 68, 68, 0.2);
+            color: #dc2626;
+            border-color: rgba(239, 68, 68, 0.3);
+        }
+
+        .btn {
+            padding: 10px 18px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9em;
+            font-weight: 700;
+            text-decoration: none;
+            display: inline-block;
+            margin-right: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            color: white;
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+        }
+
+        .btn-danger:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(239, 68, 68, 0.4);
+        }
+
+        .btn-secondary {
+            background: #94a3b8;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #64748b;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+        }
+
+        .empty-state h2 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 1.5em;
+        }
+
+        .empty-state p {
+            font-size: 1.05em;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .empty-state a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 700;
+        }
+
+        .action-cell {
+            white-space: nowrap;
+        }
+
+        /* FOOTER STYLES */
+        .footer{
+            width:100% !important;
+            background:linear-gradient(135deg,#0f172a,#1e293b) !important;
+            color:#e2e8f0 !important;
+            padding:50px 0 25px 0 !important;
+            border-top:3px solid #6366f1 !important;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif !important;
+            position: relative !important;
+            margin-top: auto !important;
+        }
+
+        .footer-container{
+            max-width:1300px !important;
+            margin:auto !important;
+            padding:0 50px !important;
+        }
+
+        .footer-content{
+            display:flex !important;
+            justify-content:space-between !important;
+            align-items:center !important;
+            gap:80px !important;
+            flex-wrap:wrap !important;
+        }
+
+        .footer-brand h3{
+            font-size:28px !important;
+            color:#6366f1 !important;
+            font-weight:700 !important;
+            letter-spacing: -0.5px !important;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3) !important;
+            margin: 0 !important;
+        }
+
+        .footer-links{
+            display:flex !important;
+            gap:45px !important;
+            flex-wrap:wrap !important;
+            justify-content: center !important;
+        }
+
+        .footer-links a{
+            text-decoration:none !important;
+            color:#cbd5f5 !important;
+            font-size:16px !important;
+            font-weight: 500 !important;
+            transition:all 0.3s ease !important;
+            display:flex !important;
+            align-items:center !important;
+            gap:8px !important;
+            padding: 8px 12px !important;
+            border-radius: 6px !important;
+        }
+
+        .footer-links a:hover{
+            color:#6366f1 !important;
+            background: rgba(99, 102, 241, 0.1) !important;
+            transform:translateY(-2px) !important;
+        }
+
+        .footer-links a i {
+            font-size: 14px !important;
+            opacity: 0.8 !important;
+            margin-right: 0 !important;
+        }
+
+        .footer-social{
+            display:flex !important;
+            gap:18px !important;
+        }
+
+        .footer-social a{
+            width:44px !important;
+            height:44px !important;
+            border-radius:10px !important;
+            background:rgba(30, 41, 59, 0.8) !important;
+            border: 1px solid rgba(99, 102, 241, 0.2) !important;
+            display:flex !important;
+            align-items:center !important;
+            justify-content:center !important;
+            color:#cbd5f5 !important;
+            transition:all 0.3s ease !important;
+            font-size: 18px !important;
+            text-decoration: none !important;
+        }
+
+        .footer-social a:hover{
+            background:#6366f1 !important;
+            border-color: #6366f1 !important;
+            color:white !important;
+            transform:translateY(-3px) scale(1.05) !important;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3) !important;
+        }
+
+        .footer-bottom{
+            margin-top:35px !important;
+            padding-top:20px !important;
+            border-top:1px solid #334155 !important;
+            display:flex !important;
+            justify-content:space-between !important;
+            align-items:center !important;
+            flex-wrap:wrap !important;
+        }
+
+        .footer-bottom p{
+            font-size:15px !important;
+            color:#94a3b8 !important;
+            font-weight: 400 !important;
+            margin: 0 !important;
+        }
+
+        .footer-bottom-links{
+            display:flex !important;
+            gap:25px !important;
+        }
+
+        .footer-bottom-links a{
+            text-decoration:none !important;
+            color:#94a3b8 !important;
+            font-size:15px !important;
+            font-weight: 500 !important;
+            transition:all 0.3s ease !important;
+            padding: 4px 8px !important;
+            border-radius: 4px !important;
+        }
+
+        .footer-bottom-links a:hover{
+            color:#6366f1 !important;
+            background: rgba(99, 102, 241, 0.05) !important;
+        }
+
+        @media(max-width:900px){
+            .footer{
+                padding:40px 0 20px 0;
+            }
+            
+            .footer-container{
+                padding:0 30px;
+            }
+            
+            .footer-content{
+                flex-direction:column;
+                text-align:center;
+                gap:30px;
+            }
+            
+            .footer-links{
+                justify-content:center;
+                gap:25px;
+            }
+            
+            .footer-bottom{
+                flex-direction:column;
+                gap:15px;
+                text-align:center;
+            }
+        }
+
+        @media(max-width:600px){
+            .footer{
+                padding:30px 0 15px 0;
+            }
+            
+            .footer-container{
+                padding:0 20px;
+            }
+            
+            .footer-brand h3{
+                font-size:24px;
+            }
+            
+            .footer-links{
+                flex-direction:column;
+                gap:15px;
+            }
+            
+            .footer-links a{
+                font-size:14px;
+            }
+            
+            .footer-social a{
+                width:40px;
+                height:40px;
+                font-size: 16px;
+            }
+            
+            .footer-bottom p,
+            .footer-bottom-links a{
+                font-size:14px;
+            }
+            
+            .footer-bottom-links{
+                flex-direction:column;
+                gap:10px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="dashboard-layout">
+    <div th:replace="fragments/sidebar_recruiter"></div>
+    <main>
+        <div class="page-header">
+            <h1>📄 My Offers</h1>
+        </div>
+
+        <div th:if="${offers.isEmpty()}" class="empty-state">
+            <h2>No Offers Created</h2>
+            <p>Create an offer for a shortlisted candidate to get started.</p>
+            <a href="/recruiter/applicants" style="color: #667eea; text-decoration: none; font-weight: 600;">View Applicants →</a>
+        </div>
+
+        <div th:if="${!offers.isEmpty()}" class="offers-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Candidate Name</th>
+                        <th>Position</th>
+                        <th>Department</th>
+                        <th>Salary</th>
+                        <th>Status</th>
+                        <th>Created Date</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="offer : ${offers}">
+                        <td th:text="${offer.candidateName}"></td>
+                        <td th:text="${offer.position}"></td>
+                        <td th:text="${offer.department}"></td>
+                        <td th:text="'$' + ${#numbers.formatDecimal(offer.salary, 1, 2)}"></td>
+                        <td>
+                            <span th:class="'status-badge status-' + ${offer.status.toLowerCase()}" th:text="${offer.status}"></span>
+                        </td>
+                        <td th:text="${#dates.format(offer.createdDate, 'dd MMM yyyy')}"></td>
+                        <td class="action-cell">
+                            <form th:if="${offer.status.equals('Created')}" 
+                                  th:action="@{/recruiter/offer/{offerId}/send(offerId=${offer.id})}" 
+                                  method="post" style="display: inline;">
+                                <button type="submit" class="btn btn-primary" onclick="return confirm('Send offer to ' + this.getAttribute('data-candidate') + '?')" th:data-candidate="${offer.candidateName}">
+                                    Send
+                                </button>
+                            </form>
+                            <form th:if="${offer.status.equals('Created')}" 
+                                  th:action="@{/recruiter/offer/{offerId}/delete(offerId=${offer.id})}" 
+                                  method="post" style="display: inline;">
+                                <button type="submit" class="btn btn-danger" onclick="return confirm('Delete this offer?')">
+                                    Delete
+                                </button>
+                            </form>
+                            <button th:if="${!offer.status.equals('Created')}" class="btn btn-secondary" disabled>
+                                [[${offer.status}]]
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+    
+    <!-- Include the footer fragment -->
+    <div th:replace="fragments/footer :: footer"></div>
+</div>
+</body>
+</html>

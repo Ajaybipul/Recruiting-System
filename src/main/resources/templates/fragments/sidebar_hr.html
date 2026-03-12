@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+    <aside th:fragment="body" class="sidebar">
+        <div class="sidebar-header">
+            <h2>HR System</h2>
+        </div>
+        
+        <nav>
+            <a th:href="@{/hr/dashboard}" class="nav-item">
+                <span class="icon">📊</span>
+                <span class="label">Dashboard</span>
+            </a>
+            <a th:href="@{/hr/jobs}" class="nav-item">
+                <span class="icon">💼</span>
+                <span class="label">Job Management</span>
+            </a>
+            <a th:href="@{/hr/applicants}" class="nav-item">
+                <span class="icon">👥</span>
+                <span class="label">All Applicants</span>
+            </a>
+            
+            <div class="nav-divider"></div>
+            
+            <a th:href="@{/hr/candidates-for-offer}" class="nav-item">
+                <span class="icon">📋</span>
+                <span class="label">HM Approved Candidates</span>
+            </a>
+            <a th:href="@{/hr/offers}" class="nav-item">
+                <span class="icon">📄</span>
+                <span class="label">Manage Offers</span>
+            </a>
+            <a th:href="@{/hr/employees}" class="nav-item">
+                <span class="icon">👤</span>
+                <span class="label">Employees</span>
+            </a>
+            
+            <div class="nav-divider"></div>
+            
+            <a th:href="@{/hr/onboarding/verify}" class="nav-item">
+                <span class="icon">📋</span>
+                <span class="label">Onboarding</span>
+            </a>
+            <a th:href="@{/hr/background-checks}" class="nav-item">
+                <span class="icon">🔍</span>
+                <span class="label">Background Checks</span>
+            </a>
+            <a th:href="@{/hr/reports}" class="nav-item">
+                <span class="icon">📈</span>
+                <span class="label">Analytics & Reports</span>
+            </a>
+            
+            <div class="nav-divider"></div>
+            
+            <a th:href="@{/hr/jobs/create}" class="nav-item create-job">
+                <span class="icon">➕</span>
+                <span class="label">Create Job</span>
+            </a>
+        </nav>
+        
+        <div class="sidebar-footer">
+            <a th:href="@{/logout}" class="logout-btn">
+                <span class="icon">🚪</span>
+                <span class="label">Logout</span>
+            </a>
+        </div>
+    </aside>
+</body>
+</html>

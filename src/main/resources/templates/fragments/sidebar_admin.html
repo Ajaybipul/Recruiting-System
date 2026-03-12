@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+    <aside th:fragment="body" class="sidebar">
+        <div class="sidebar-header">
+            <h2>🔧 Admin</h2>
+        </div>
+        
+        <nav>
+            <a th:href="@{/admin/dashboard}" class="nav-item">
+                <span class="icon">📊</span>
+                <span class="label">Dashboard</span>
+            </a>
+            <a th:href="@{/admin/users}" class="nav-item">
+                <span class="icon">👥</span>
+                <span class="label">User Management</span>
+            </a>
+            <a th:href="@{/admin/jobs}" class="nav-item">
+                <span class="icon">💼</span>
+                <span class="label">Jobs</span>
+            </a>
+            
+            <div class="nav-divider"></div>
+            
+           
+            <a th:href="@{/admin/system-config}" class="nav-item">
+                <span class="icon">🛠</span>
+                <span class="label">System Config</span>
+            </a>
+            
+            <div class="nav-divider"></div>
+            
+            <a th:href="@{/admin/announcements}" class="nav-item">
+                <span class="icon">📢</span>
+                <span class="label">Announcements</span>
+            </a>
+        </nav>
+        
+        <div class="sidebar-footer">
+            <a th:href="@{/logout}" class="logout-btn">
+                <span class="icon">🚪</span>
+                <span class="label">Logout</span>
+            </a>
+        </div>
+    </aside>
+</body>
+</html>

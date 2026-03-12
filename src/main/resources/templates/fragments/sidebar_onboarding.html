@@ -1,0 +1,35 @@
+<aside th:fragment="body" class="sidebar">
+    <div class="sidebar-header">
+        <h2>Onboarding</h2>
+    </div>
+    
+    <nav>
+        <a th:href="@{/onboard/dashboard}" class="nav-item">
+            <span class="icon">📊</span>
+            <span class="label">Dashboard</span>
+        </a>
+        <a th:href="@{/onboarding/new-hires}" class="nav-item">
+            <span class="icon">👤</span>
+            <span class="label">New Hires</span>
+        </a>
+        <a th:href="@{/onboard/candidates}" class="nav-item">
+            <span class="icon">👥</span>
+            <span class="label">All Candidates</span>
+        </a>
+        <a th:href="@{/onboarding/documents}" class="nav-item">
+            <span class="icon">📄</span>
+            <span class="label">Documents</span>
+        </a>
+        <a th:href="@{/hr/onboarding/verify}" class="nav-item">
+            <span class="icon">✅</span>
+            <span class="label">Verify Documents</span>
+        </a>
+    </nav>
+    
+    <div class="sidebar-footer">
+        <a th:href="@{/logout}" class="logout-btn">
+            <span class="icon">🚪</span>
+            <span class="label">Logout</span>
+        </a>
+    </div>
+</aside>

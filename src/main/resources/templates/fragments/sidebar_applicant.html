@@ -1,0 +1,43 @@
+<aside th:fragment="body" class="sidebar">
+    <div class="sidebar-header">
+        <h2>Applicant</h2>
+    </div>
+    
+    <nav>
+        <a th:href="@{/applicant/dashboard}" class="nav-item">
+            <span class="icon">📊</span>
+            <span class="label">Dashboard</span>
+        </a>
+        <a th:href="@{/applicant/home}" class="nav-item">
+            <span class="icon">🏠</span>
+            <span class="label">Home</span>
+        </a>
+        <a th:href="@{/jobs}" class="nav-item">
+            <span class="icon">💼</span>
+            <span class="label">Browse Jobs</span>
+        </a>
+        <a th:href="@{/applicant/profile}" class="nav-item">
+            <span class="icon">👤</span>
+            <span class="label">My Profile</span>
+        </a>
+        <a th:href="@{/applicant/applications}" class="nav-item">
+            <span class="icon">📋</span>
+            <span class="label">My Applications</span>
+        </a>
+        <a th:href="@{/applicant/offers}" class="nav-item">
+            <span class="icon">📄</span>
+            <span class="label">My Offers</span>
+        </a>
+        <a th:href="@{/applicant/onboarding/upload}" class="nav-item">
+            <span class="icon">📤</span>
+            <span class="label">Onboarding Documents</span>
+        </a>
+    </nav>
+    
+    <div class="sidebar-footer">
+        <a th:href="@{/logout}" class="logout-btn">
+            <span class="icon">🚪</span>
+            <span class="label">Logout</span>
+        </a>
+    </div>
+</aside>

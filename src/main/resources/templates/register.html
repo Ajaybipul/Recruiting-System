@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Register - Recruiting System</title>
+
+    <style>
+
+        body {
+            margin: 0;
+            font-family: "Poppins", sans-serif;
+        }
+
+        /* ============================
+           FULL PURPLE HERO SECTION
+        ============================ */
+        .hero-section {
+            display: flex;
+            min-height: 100vh;
+            background: #5c2be6;
+            color: #fff;
+            padding: 60px 80px;
+            align-items: center;
+        }
+
+        /* LEFT SECTION */
+        .hero-left {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .hero-left h1 {
+            font-size: 48px;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 20px;
+        }
+
+        .hero-left p {
+            font-size: 18px;
+            max-width: 550px;
+            line-height: 1.6;
+            opacity: 0.95;
+        }
+
+        /* RIGHT REGISTER BOX */
+        .hero-right {
+            width: 420px;
+            background: #fff;
+            padding: 40px;
+            border-radius: 12px;
+            margin-left: 40px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.25);
+            animation: fadeUp 0.7s ease-out;
+        }
+
+        @keyframes fadeUp {
+            0% {opacity: 0; transform: translateY(20px);}
+            100% {opacity: 1; transform: translateY(0);}
+        }
+
+        .hero-right h2 {
+            font-size: 28px;
+            text-align: center;
+            margin-bottom: 25px;
+            color: #333;
+            font-weight: 700;
+        }
+
+        .hero-right label {
+            margin-top: 14px;
+            font-weight: 600;
+            display: block;
+            color: #444;
+        }
+
+        .hero-right input {
+            width: 100%;
+            padding: 14px;
+            margin-top: 6px;
+            border-radius: 6px;
+            border: 1.8px solid #ccc;
+            font-size: 15px;
+            outline: none;
+            transition: 0.3s ease;
+        }
+
+        .hero-right input:focus {
+            border-color: #5c2be6;
+            box-shadow: 0 0 6px rgba(92, 43, 230, 0.4);
+        }
+
+        /* BUTTON */
+        .hero-right button {
+            width: 100%;
+            padding: 14px;
+            margin-top: 22px;
+            background: linear-gradient(135deg, #ff5af3, #7b6bff);
+            color: #fff;
+            border-radius: 6px;
+            border: none;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s ease;
+            box-shadow: 0 6px 15px rgba(255, 90, 243, 0.35);
+        }
+
+        .hero-right button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 22px rgba(255, 90, 243, 0.5);
+        }
+
+        /* SWITCH LINK */
+        .login-link {
+            text-align: center;
+            margin-top: 16px;
+            font-size: 14px;
+            color: #555;
+        }
+
+        .login-link a {
+            color: #5c2be6;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <div class="hero-section">
+
+        <!-- LEFT CONTENT -->
+        <div class="hero-left">
+            <h1>Join our recruitment platform</h1>
+            <p>
+                Create your account to access a powerful hiring platform designed to 
+                simplify job posting, candidate management, and recruitment workflows.
+                Faster onboarding, smarter tracking, and a seamless hiring experience.
+            </p>
+        </div>
+
+        <!-- RIGHT REGISTER FORM -->
+        <div class="hero-right">
+            <h2>Create Account</h2>
+
+            <form method="post" action="/register">
+
+                <label>Username</label>
+                <input type="text" name="username" required>
+
+                <label>Password</label>
+                <input type="password" name="password" required>
+
+                <button type="submit">Sign Up</button>
+
+                <div class="login-link">
+                    Already have an account? <a th:href="@{/login}">Sign in</a>
+                </div>
+
+            </form>
+        </div>
+
+    </div>
+
+    <!-- Include the footer fragment -->
+    <div th:replace="fragments/footer :: footer"></div>
+
+</body>
+
+</html>

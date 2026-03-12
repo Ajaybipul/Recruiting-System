@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+    <title>Manage Offers</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f7fa;
+        }
+            .hr-theme { background: #f5f7fa; } /* Example style for hr-theme */
+        .dashboard-layout { display: flex; min-height: 100vh; }
+        main { flex: 1; padding: 40px; max-width: 1200px; }
+        .page-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 40px;
+        }
+        .page-header h1 { font-size: 2em; margin: 0; }
+        .offers-table {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        table { width: 100%; border-collapse: collapse; }
+        th {
+            background: #f8f9fa;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            border-bottom: 2px solid #eee;
+        }
+        td { padding: 15px; border-bottom: 1px solid #eee; }
+        tr:hover { background: #f8f9fa; }
+        .status-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .status-created { background: #fff3cd; color: #856404; }
+        .status-sent { background: #cfe2ff; color: #084298; }
+        .status-accepted { background: #d1e7dd; color: #0f5132; }
+        .status-rejected { background: #f8d7da; color: #842029; }
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .btn-primary { background: #667eea; color: white; }
+        .btn-primary:hover { background: #5568d3; }
+        .btn-secondary { background: #6c757d; color: white; }
+        .btn-secondary:hover { background: #5a6268; }
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+        }
+        .empty-state h2 { color: #333; margin-bottom: 10px; }
+    </style>
+        <link rel="stylesheet" th:href="@{/css/hr-theme.css}" />
+</head>
+    <body class="hr-theme">
+<div th:insert="~{fragments/header :: header}"></div>
+<main style="padding: 40px; max-width: 1200px; margin: 0 auto;">
+    <div class="page-header">
+        <h1>📋 Manage Offers</h1>
+    </div>
+
+    <!-- DRAFT OFFERS (from Recruiters) - Pending Review -->
+    <div class="page-header" style="margin-top: 40px; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+        <h2 style="margin: 0;">📋 Pending Review - Draft Offers from Recruiters</h2>
+    </div>
+
+    <div th:if="${draftOffers.isEmpty()}" class="empty-state">
+            <h2>No Draft Offers</h2>
+            <p>Recruiters haven't created any draft offers yet.</p>
+        </div>
+
+        <div th:if="${!draftOffers.isEmpty()}" class="offers-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Candidate Name</th>
+                        <th>Position</th>
+                        <th>Department</th>
+                        <th>Salary</th>
+                        <th>Status</th>
+                        <th>Created By</th>
+                        <th>Created Date</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="draft : ${draftOffers}">
+                        <td th:text="${draft.candidateName}"></td>
+                        <td th:text="${draft.position}"></td>
+                        <td th:text="${draft.department}"></td>
+                        <td th:text="'$' + ${#numbers.formatDecimal(draft.salary, 1, 2)}"></td>
+                        <td>
+                            <span th:class="'status-badge status-' + ${draft.status.toLowerCase()}" th:text="${draft.status}"></span>
+                        </td>
+                        <td th:text="${draft.createdBy}"></td>
+                        <td th:text="${#dates.format(draft.createdDate, 'dd MMM yyyy')}"></td>
+                        <td>
+                            <form th:action="@{/hr/offer/{offerId}/approve(offerId=${draft.id})}" method="post" style="display: inline;">
+                                <button type="submit" class="btn btn-primary" onclick="return confirm('Approve this draft offer?')">✓ Approve</button>
+                            </form>
+                            <form th:action="@{/hr/offer/{offerId}/reject(offerId=${draft.id})}" method="post" style="display: inline;">
+                                <button type="submit" class="btn btn-secondary" onclick="return confirm('Reject this draft offer?')">✗ Reject</button>
+                            </form>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- FINAL OFFERS (from HR) -->
+        <div class="page-header" style="margin-top: 40px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+            <h2 style="margin: 0;">📋 Final Offers from HR</h2>
+        </div>
+
+        <div th:if="${finalOffers.isEmpty()}" class="empty-state">
+            <h2>No Final Offers</h2>
+            <p>Create final offers for selected candidates using the HR menu.</p>
+        </div>
+
+        <div th:if="${!finalOffers.isEmpty()}" class="offers-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Candidate Name</th>
+                        <th>Position</th>
+                        <th>Department</th>
+                        <th>Salary</th>
+                        <th>Status</th>
+                        <th>Created Date</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="final : ${finalOffers}">
+                        <td th:text="${final.candidateName}"></td>
+                        <td th:text="${final.position}"></td>
+                        <td th:text="${final.department}"></td>
+                        <td th:text="'$' + ${#numbers.formatDecimal(final.salary, 1, 2)}"></td>
+                        <td>
+                            <span th:class="'status-badge status-' + ${final.status.toLowerCase()}" th:text="${final.status}"></span>
+                        </td>
+                        <td th:text="${#dates.format(final.createdDate, 'dd MMM yyyy')}"></td>
+                        <td>
+                            <a th:href="@{/hr/offer/{offerId}/send(offerId=${final.id})}" 
+                               th:if="${final.status.equals('Created')}"
+                               class="btn btn-primary"
+                               onclick="return confirm('Send this offer to ' + this.getAttribute('data-candidate') + '?')"
+                               th:data-candidate="${final.candidateName}">
+                                📧 Send Offer
+                            </a>
+                            <button th:if="${!final.status.equals('Created')}" class="btn btn-secondary" disabled>
+                                [[${final.status}]]
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+</main>
+</body>
+</html>

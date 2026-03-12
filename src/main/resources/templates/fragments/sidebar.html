@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body th:fragment="body">
+
+<aside class="sidebar">
+    <h3>Applicant Menu</h3>
+    <ul>
+        <li><a th:href="@{/}">Home</a></li>
+        <li><a th:href="@{/jobs}">Browse Jobs</a></li>
+        <li><a th:href="@{/applicant/profile}">My Profile</a></li>
+        <li><a th:href="@{/applicant/applications}">My Applications</a></li>
+        <li><a th:href="@{/logout}">Logout</a></li>
+    </ul>
+</aside>
+
+</body>
+</html>

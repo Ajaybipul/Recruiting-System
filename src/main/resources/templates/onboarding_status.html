@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+    <title>Onboarding Status</title>
+</head>
+<body>
+<div th:insert="fragments/header :: body"></div>
+<main style="max-width: 1000px; margin: 40px auto; padding: 0 20px;">
+    <h1>Your Onboarding Status</h1>
+    <p style="color: #666; margin-bottom: 30px;">Track your onboarding document submission progress</p>
+    
+    <div style="margin-bottom: 30px;">
+        <a th:href="@{/onboarding/submit}" class="btn btn-primary">Submit Documents</a>
+    </div>
+    
+    <h3 style="margin-bottom: 20px;">Documents Submitted</h3>
+    <div th:if="${documents.size()} == 0" style="background: #f0f0f0; padding: 20px; border-radius: 8px; text-align: center;">
+        <p style="color: #666; margin: 0;">No documents submitted yet. <a th:href="@{/onboarding/submit}" style="color: #667eea; text-decoration: none; font-weight: 600;">Submit your documents now</a></p>
+    </div>
+    
+    <table th:unless="${documents.size()} == 0">
+        <thead>
+            <tr>
+                <th>Document Type</th>
+                <th>Submitted Date</th>
+                <th>Status</th>
+                <th>Verification Date</th>
+                <th>Notes</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="doc : ${documents}">
+                <td th:text="${doc.documentType}"></td>
+                <td th:text="${#dates.format(doc.submittedDate, 'yyyy-MM-dd')}"></td>
+                <td>
+                    <span style="padding: 4px 8px; border-radius: 4px;" 
+                          th:classappend="${doc.status == 'Verified' ? 'bg-success' : 'bg-warning'}"
+                          th:if="${doc.status == 'Verified'}"
+                          style="padding: 4px 8px; border-radius: 4px; background: #d4edda; color: #155724; font-size: 12px; font-weight: 600;">Verified</span>
+                    <span th:unless="${doc.status == 'Verified'}"
+                          style="padding: 4px 8px; border-radius: 4px; background: #fff3cd; color: #856404; font-size: 12px; font-weight: 600;" th:text="${doc.status}"></span>
+                </td>
+                <td th:text="${#dates.format(doc.verificationDate, 'yyyy-MM-dd') ?: 'Pending'}"></td>
+                <td th:text="${doc.notes ?: '-'}"></td>
+            </tr>
+        </tbody>
+    </table>
+    
+    <div style="margin-top: 30px;">
+        <a th:href="@{/candidate/status}" class="btn btn-outline">Back to Dashboard</a>
+    </div>
+</main>
+<div th:insert="fragments/footer :: body"></div>
+</body>
+</html>

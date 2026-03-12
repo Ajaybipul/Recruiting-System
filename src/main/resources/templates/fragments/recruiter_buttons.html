@@ -1,0 +1,10 @@
+<!-- Snippet: include this fragment inside recruiter_applicant_detail.html with th:with="application=${application}" -->
+<div th:fragment="actions (application)">
+    <div class="btn-group" role="group">
+        <a th:href="@{'/recruiter/interview/schedule/' + ${application.id}}" class="btn btn-primary">Schedule Interview</a>
+        <a th:href="@{'/recruiter/interview/feedback/' + ${application.id}}" class="btn btn-secondary">Submit Feedback</a>
+        <a th:href="@{'/recruiter/offer/create/' + ${application.id}}" class="btn btn-success">Create Offer</a>
+        <a th:if="${application.interviewId != null}" th:href="@{'/recruiter/interview/' + ${application.interviewId} + '/details'}" class="btn btn-info">View Interview Details</a>
+        <a th:if="${application.offerId != null}" th:href="@{'/recruiter/offers'}" class="btn btn-warning">View Offer</a>
+    </div>
+</div>

@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+    <title>My Applications</title>
+    <style>
+        .apps-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+            gap: 24px;
+            max-width: 1300px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+
+        .application-card {
+            background: white;
+            border-radius: 14px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+            padding: 24px;
+            border-left: 5px solid #667eea;
+            transition: all 0.3s ease;
+        }
+
+        .application-card:hover {
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+            transform: translateY(-2px);
+        }
+
+        .app-header {
+            margin-bottom: 16px;
+        }
+
+        .app-header h3 {
+            margin: 0 0 8px 0;
+            font-size: 20px;
+            font-weight: 700;
+            color: #1a1a1a;
+            line-height: 1.2;
+        }
+
+        .app-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+            color: #666;
+            gap: 12px;
+        }
+
+        .app-date {
+            color: #999;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .badge-submitted { background: #e3f2fd; color: #1976d2; }
+        .badge-shortlisted { background: #fff3e0; color: #f57c00; }
+        .badge-under-review { background: #f3e5f5; color: #7b1fa2; }
+        .badge-interview { background: #e0f2f1; color: #00796b; }
+        .badge-ready { background: #e8f5e9; color: #388e3c; }
+        .badge-rejected { background: #ffebee; color: #d32f2f; }
+
+        .divider {
+            height: 1px;
+            background: #f0f0f0;
+            margin: 16px 0;
+        }
+
+        .interview-info {
+            background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+            border-radius: 10px;
+            padding: 16px;
+            margin: 16px 0;
+            border-left: 4px solid #667eea;
+        }
+
+        .interview-info h4 {
+            margin: 0 0 12px 0;
+            font-size: 14px;
+            font-weight: 600;
+            color: #667eea;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .interview-date-time {
+            font-size: 15px;
+            color: #333;
+            margin-bottom: 12px;
+            font-weight: 500;
+        }
+
+        .view-details-btn {
+            display: block;
+            width: 100%;
+            padding: 10px 16px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+            margin-top: 12px;
+        }
+
+        .view-details-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(102, 126, 234, 0.4);
+        }
+
+        .feedback-info {
+            background: #f0f9ff;
+            border-radius: 10px;
+            padding: 14px;
+            margin: 16px 0;
+            border-left: 4px solid #0ea5e9;
+            font-size: 13px;
+        }
+
+        .feedback-info strong {
+            color: #0284c7;
+            display: block;
+            font-size: 12px;
+            margin-bottom: 8px;
+        }
+
+        .resume-link {
+            display: inline-block;
+            color: #667eea;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 600;
+            margin-top: 8px;
+            transition: color 0.3s;
+        }
+
+        .resume-link:hover {
+            color: #764ba2;
+            text-decoration: underline;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-dialog {
+            background: white;
+            border-radius: 16px;
+            padding: 32px;
+            max-width: 550px;
+            width: 90%;
+            max-height: 85vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 16px;
+        }
+
+        .modal-header h2 {
+            margin: 0;
+            font-size: 24px;
+            color: #1a1a1a;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 32px;
+            color: #999;
+            cursor: pointer;
+            padding: 0;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: color 0.3s;
+        }
+
+        .modal-close:hover {
+            color: #333;
+        }
+
+        .modal-section {
+            margin-bottom: 20px;
+        }
+
+        .modal-section label {
+            display: block;
+            font-weight: 600;
+            color: #667eea;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        .modal-section p {
+            margin: 0;
+            color: #333;
+            font-size: 15px;
+            line-height: 1.6;
+        }
+
+        .modal-section a {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 10px 18px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            margin-top: 8px;
+            transition: all 0.3s;
+            font-size: 14px;
+        }
+
+        .modal-section a:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(102, 126, 234, 0.4);
+        }
+
+        .modal-divider {
+            height: 1px;
+            background: #f0f0f0;
+            margin: 20px 0;
+        }
+
+        .empty-state {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 80px 40px;
+        }
+
+        .empty-state p {
+            color: #999;
+            font-size: 16px;
+            margin-bottom: 24px;
+        }
+    </style>
+</head>
+<body>
+<div th:insert="~{fragments/header :: header}"></div>
+
+<main style="min-height: 65vh; background: #fafafa;">
+    <div style="max-width: 1400px; margin: 0 auto;">
+        <h1 style="margin: 40px 20px; font-size: 32px; color: #1a1a1a; font-weight: 700;">📋 My Applications</h1>
+
+        <div th:if="${#lists.isEmpty(applications)}" class="empty-state">
+            <p style="font-size: 18px; margin-bottom: 32px;">You haven't applied to any positions yet.</p>
+            <a class="btn btn-primary" th:href="@{/jobs}" style="display: inline-block;">Browse Open Positions</a>
+        </div>
+
+        <div th:if="${!#lists.isEmpty(applications)}" class="apps-grid">
+            <div th:each="app : ${applications}" class="application-card">
+                <!-- Header -->
+                <div class="app-header">
+                    <h3 th:text="${app.jobTitle}">Senior Software Engineer</h3>
+                    <div class="app-meta">
+                        <span class="app-date" th:text="${#dates.format(app.appliedDate, 'dd MMM yyyy')}">28 Nov 2025</span>
+                        <span th:switch="${app.status}" class="status-badge"
+                              th:classappend="${app.status == 'Submitted' ? 'badge-submitted' : app.status == 'Sent to Hiring Manager' ? 'badge-shortlisted' : app.status == 'Interview Scheduled' ? 'badge-interview' : app.status == 'READY_FOR_OFFER' ? 'badge-ready' : app.status == 'Rejected' ? 'badge-rejected' : 'badge-under-review'}">
+                            <span th:case="'Submitted'">Submitted</span>
+                            <span th:case="'Sent to Hiring Manager'">Shortlisted</span>
+                            <span th:case="'Interview Scheduled'">Interview Scheduled</span>
+                            <span th:case="'READY_FOR_OFFER'">Ready for Offer</span>
+                            <span th:case="'Rejected'">Rejected</span>
+                            <span th:case="*" th:text="${app.status}"></span>
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Interview Section -->
+                <div th:if="${app.interviewDate != null}" class="interview-info">
+                    <h4>📅 Interview Scheduled</h4>
+                    <div class="interview-date-time" th:text="${#dates.format(app.interviewDate, 'EEEE, dd MMMM yyyy')} + ' at ' + ${#strings.substring(app.interviewTime.toString(), 0, 5)}">Monday, 10 December 2025 at 10:00</div>
+                    <button class="view-details-btn" th:onclick="'openModal(&#39;' + ${app.id} + '&#39;)'">
+                        📋 View Full Interview Details
+                    </button>
+                </div>
+
+                <!-- Feedback Section -->
+                <div th:if="${app.hmFeedback != null and !app.hmFeedback.isEmpty()}" class="feedback-info">
+                    <strong>⭐ Hiring Manager Feedback</strong>
+                    <span th:if="${app.hmRating != null}"><strong>Rating:</strong> <span th:text="${app.hmRating}">4</span>/5</span>
+                    <span th:if="${app.hmDecision != null}" style="display: block; margin-top: 4px;"><strong>Decision:</strong> <span th:text="${app.hmDecision}">Approved</span></span>
+                    <div style="margin-top: 8px; color: #555; font-size: 12px; line-height: 1.5;" th:text="${app.hmFeedback}"></div>
+                </div>
+
+                <!-- Resume -->
+                <div th:if="${app.resumePath != null and !app.resumePath.isEmpty()}">
+                    <a th:href="${app.resumePath}" target="_blank" class="resume-link">📄 View My Resume</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<div th:insert="~{fragments/footer :: footer}"></div>
+
+<!-- Interview Details Modal -->
+<div th:each="app : ${applications}" th:if="${app.interviewDate != null}" th:id="'modal-' + ${app.id}" class="modal">
+    <div class="modal-dialog">
+        <div class="modal-header">
+            <h2>📅 Interview Details</h2>
+            <button class="modal-close" th:onclick="'closeModal(&#39;' + ${app.id} + '&#39;)'">×</button>
+        </div>
+
+        <div class="modal-section">
+            <label>Position</label>
+            <p th:text="${app.jobTitle}">Senior Software Engineer</p>
+        </div>
+
+        <div class="modal-divider"></div>
+
+        <div class="modal-section">
+            <label>📅 Date & Time</label>
+            <p th:text="${#dates.format(app.interviewDate, 'dddd, dd MMMM yyyy')} + ' at ' + ${#strings.substring(app.interviewTime.toString(), 0, 5)}">Monday, 10 December 2025 at 10:00</p>
+        </div>
+
+        <div class="modal-divider"></div>
+
+        <div class="modal-section" th:if="${app.interviewMode != null}">
+            <label>🎤 Interview Type</label>
+            <p th:text="${app.interviewMode}">Video Call</p>
+        </div>
+
+        <div class="modal-section" th:if="${app.interviewLocation != null}">
+            <label>📍 Location</label>
+            <p th:text="${app.interviewLocation}">Office Room A</p>
+        </div>
+
+        <div class="modal-section" th:if="${app.interviewMeetingLink != null and !app.interviewMeetingLink.isEmpty() and app.interviewMeetingLink.startsWith('http')}}">
+            <label>🔗 Meeting Link</label>
+            <div>
+                <a th:href="${app.interviewMeetingLink}" target="_blank">Join Video Call</a>
+            </div>
+        </div>
+
+        <div class="modal-section" th:if="${app.interviewNotes != null and !app.interviewNotes.isEmpty()}">
+            <label>📝 Instructions</label>
+            <p th:text="${app.interviewNotes}">Please prepare to discuss your experience with...</p>
+        </div>
+
+        <div class="modal-divider"></div>
+
+        <div style="text-align: right; margin-top: 24px;">
+            <button class="view-details-btn" th:onclick="'closeModal(&#39;' + ${app.id} + '&#39;)'" style="width: auto; padding: 10px 24px; display: inline-block;">
+                ✓ Close
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+function openModal(appId) {
+    const modal = document.getElementById('modal-' + appId);
+    if (modal) {
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+}
+
+function closeModal(appId) {
+    const modal = document.getElementById('modal-' + appId);
+    if (modal) {
+        modal.classList.remove('active');
+        document.body.style.overflow = 'auto';
+    }
+}
+
+// Close modal when clicking outside
+document.addEventListener('click', function(event) {
+    if (event.target.classList.contains('modal')) {
+        event.target.classList.remove('active');
+        document.body.style.overflow = 'auto';
+    }
+});
+
+// Close modal on Escape key
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape') {
+        document.querySelectorAll('.modal.active').forEach(modal => {
+            modal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        });
+    }
+});
+</script>
+
+</body>
+</html>

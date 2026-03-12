@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+    <link rel="stylesheet" th:href="@{/css/onboarding-theme.css}" />
+    <link rel="stylesheet" th:href="@{/css/professional-theme.css}" />
+    <title>Edit Onboarding Checklist</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        html, body {
+            height: 100%;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        }
+        
+        body.onboarding-theme {
+            display: flex;
+            flex-direction: column;
+            background-color: #f5f5f5;
+            background-image: linear-gradient(rgba(10,20,40,0.55), rgba(10,20,40,0.55)), url('/images/bg.jpg');
+            background-size: cover;
+            background-position: center center;
+            background-attachment: fixed;
+        }
+        
+        .dashboard-container {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+        
+        .sidebar {
+            width: 260px;
+            background: linear-gradient(180deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            min-height: 100%;
+            overflow-y: auto;
+            flex-shrink: 0;
+            border-right: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        .sidebar-header {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        .sidebar-header h2 {
+            font-size: 18px;
+            font-weight: 700;
+            color: white;
+        }
+        
+        .sidebar nav {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .sidebar a {
+            color: rgba(255,255,255,0.9);
+            text-decoration: none;
+            padding: 12px 15px;
+            border-radius: 6px;
+            display: block;
+            transition: all 0.3s ease;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .sidebar a:hover {
+            background-color: rgba(255,255,255,0.2);
+            transform: translateX(4px);
+            color: white;
+        }
+        
+        main {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+        }
+        
+        .page-header {
+            margin-bottom: 30px;
+        }
+        
+        .page-header h1 {
+            font-size: 28px;
+            color: #2c3e50;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            padding: 0;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+        
+        .card-header {
+            padding: 20px;
+            border-bottom: 1px solid #ecf0f1;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .card-header h2 {
+            font-size: 18px;
+            font-weight: 600;
+            margin: 0;
+        }
+        
+        .card-body {
+            padding: 30px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+            font-family: inherit;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .task-item {
+            background-color: #f8f9fa;
+            border: 1px solid #ecf0f1;
+            border-radius: 6px;
+            padding: 15px;
+            margin-bottom: 12px;
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 15px;
+            align-items: start;
+        }
+        
+        .task-info h4 {
+            color: #2c3e50;
+            font-size: 14px;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+        
+        .task-meta {
+            font-size: 12px;
+            color: #7f8c8d;
+            margin-top: 8px;
+        }
+        
+        .task-meta span {
+            margin-right: 15px;
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+        
+        .status-pending {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+        
+        .status-progress {
+            background-color: #d1ecf1;
+            color: #0c5460;
+        }
+        
+        .status-completed {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            gap: 8px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-secondary {
+            background-color: #e8eef5;
+            color: #667eea;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #d8dff0;
+        }
+        
+        .btn-small {
+            padding: 6px 12px;
+            font-size: 12px;
+        }
+        
+        .form-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            padding-top: 20px;
+            border-top: 1px solid #ecf0f1;
+            margin-top: 30px;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #7f8c8d;
+        }
+        
+        .empty-state p {
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+        
+        .info-box {
+            background-color: #f0f3ff;
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+        
+        .info-box h4 {
+            color: #2c3e50;
+            font-size: 14px;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        
+        .info-box p {
+            color: #34495e;
+            font-size: 13px;
+            margin: 5px 0;
+            line-height: 1.5;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background-color: #ecf0f1;
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            transition: width 0.3s ease;
+        }
+    </style>
+</head>
+<body class="onboarding-theme">
+    <div class="dashboard-container">
+        <!-- Main Content -->
+        <main>
+            <div class="page-header">
+                <h1>Create and Manage Onboarding Tasks</h1>
+            </div>
+            
+            <!-- Checklist Overview -->
+            <div class="card">
+                <div class="card-header">
+                    <h2>Checklist Overview</h2>
+                </div>
+                <div class="card-body">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px;">
+                        <div>
+                            <strong style="color: #7f8c8d; font-size: 12px;">Candidate</strong>
+                            <div style="font-size: 16px; font-weight: 600; color: #2c3e50; margin-top: 8px;" 
+                                 th:text="${checklist.candidateName}"></div>
+                        </div>
+                        <div>
+                            <strong style="color: #7f8c8d; font-size: 12px;">Template</strong>
+                            <div style="font-size: 16px; font-weight: 600; color: #2c3e50; margin-top: 8px;" 
+                                 th:text="${checklist.templateName}"></div>
+                        </div>
+                        <div>
+                            <strong style="color: #7f8c8d; font-size: 12px;">Completion</strong>
+                            <div style="font-size: 16px; font-weight: 600; color: #2c3e50; margin-top: 8px;">
+                                <span th:text="${checklist.completionPercentage}"></span>%
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" th:style="'width: ' + ${checklist.completionPercentage} + '%'"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Add New Task -->
+            <div class="card">
+                <div class="card-header">
+                    <h2>Add New Task</h2>
+                </div>
+                <div class="card-body">
+                    <div class="info-box">
+                        <h4>Task Assignment Guidelines</h4>
+                        <p>• Organize tasks by phase: Pre-Onboarding, Day 1, Week 1, Month 1</p>
+                        <p>• Assign tasks to specific roles (IT Manager, HR Manager, Direct Manager, etc.)</p>
+                        <p>• Tasks will be tracked and assigned team members will receive notifications</p>
+                    </div>
+                    
+                    <form th:action="@{/onboarding/add-task/{id}(id=${checklist.id})}" method="POST">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Task Name *</label>
+                                <input type="text" name="taskName" placeholder="e.g., Set up computer and email" required />
+                            </div>
+                            <div class="form-group">
+                                <label>Phase *</label>
+                                <select name="phase" required>
+                                    <option value="">Select Phase</option>
+                                    <option value="Pre-Onboarding">Pre-Onboarding</option>
+                                    <option value="Day 1">Day 1</option>
+                                    <option value="Week 1">Week 1</option>
+                                    <option value="Month 1">Month 1</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Assigned To *</label>
+                                <select name="assignedTo" required>
+                                    <option value="">Select Role</option>
+                                    <option value="IT Manager">IT Manager</option>
+                                    <option value="HR Manager">HR Manager</option>
+                                    <option value="Direct Manager">Direct Manager</option>
+                                    <option value="Hiring Manager">Hiring Manager</option>
+                                    <option value="Team Lead">Team Lead</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Due Date</label>
+                                <input type="date" name="dueDate" />
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Description</label>
+                            <textarea name="description" placeholder="Add any additional details about this task" 
+                                      rows="3"></textarea>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary">Add Task</button>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- Tasks by Phase -->
+            <div th:if="${checklist.tasks != null and checklist.tasks.size() > 0}">
+                <div th:each="phase : ${phases}">
+                    <!-- Check if any task exists for this phase -->
+                    <div th:if="${phaseTasksMap.get(phase) != null and phaseTasksMap.get(phase).size() > 0}" class="card">
+                        <div class="card-header">
+                            <h2 th:text="${phase}"></h2>
+                        </div>
+                        <div class="card-body">
+                            <div th:each="task,taskStat : ${checklist.tasks}" th:if="${task.phase == phase}" class="task-item">
+                                <div class="task-info">
+                                    <h4 th:text="${task.taskName}"></h4>
+                                    <p th:if="${task.description}" style="font-size: 13px; color: #7f8c8d; margin-top: 5px;" 
+                                       th:text="${task.description}"></p>
+                                    <div class="task-meta">
+                                        <span><strong>Assigned to:</strong> <span th:text="${task.assignedTo}"></span></span>
+                                        <span><strong>Status:</strong> <span class="status-badge" 
+                                              th:classappend="${'status-' + task.status.toLowerCase()}"
+                                              th:text="${task.status}"></span></span>
+                                    </div>
+                                </div>
+                                <form th:action="@{/onboarding/update-task-status/{id}(id=${checklist.id})}" method="POST" style="display: flex; gap: 8px;">
+                                    <input type="hidden" name="taskIndex" th:value="${taskStat.index}" />
+                                    <select name="newStatus" style="padding: 6px 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 12px;">
+                                        <option value="Pending" th:selected="${task.status == 'Pending'}">Pending</option>
+                                        <option value="In Progress" th:selected="${task.status == 'In Progress'}">In Progress</option>
+                                        <option value="Completed" th:selected="${task.status == 'Completed'}">Completed</option>
+                                    </select>
+                                    <button type="submit" class="btn btn-secondary btn-small">Update</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Empty State -->
+            <div th:unless="${checklist.tasks != null and checklist.tasks.size() > 0}" class="card">
+                <div class="card-body">
+                    <div class="empty-state">
+                        <p>No tasks added yet</p>
+                        <p style="font-size: 13px;">Add tasks above to get started with onboarding</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Send Notifications -->
+            <div class="card">
+                <div class="card-body">
+                    <div class="form-actions">
+                        <a href="/onboarding/checklist" class="btn btn-secondary">View Checklist</a>
+                        <button type="button" class="btn btn-primary" onclick="sendNotifications()">Send Notifications to Team</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <script>
+        function sendNotifications() {
+            if (confirm('Send email notifications to all assigned team members?')) {
+                // This would typically call an API endpoint to send emails
+                alert('Notifications sent to assigned team members!');
+            }
+        }
+    </script>
+</body>
+</html>

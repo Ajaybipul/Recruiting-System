@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+    <title>Apply - Recruiting System</title>
+    <style>
+        html, body {
+            height: 100%;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        }
+        
+        body {
+            display: flex;
+            flex-direction: column;
+            background: #f5f5f5;
+        }
+        
+        main {
+            flex: 1;
+            padding: 40px 20px;
+            overflow-y: auto;
+        }
+        
+        .apply-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        
+        .page-header {
+            margin-bottom: 40px;
+        }
+        
+        .page-header h1 {
+            color: #333;
+            margin: 0 0 10px 0;
+            font-size: 32px;
+            font-weight: 700;
+        }
+        
+        .page-header p {
+            color: #666;
+            font-size: 16px;
+            margin: 0;
+        }
+        
+        .job-details-card {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+            border-left: 5px solid #667eea;
+        }
+        
+        .job-details-card h3 {
+            color: #333;
+            margin: 0 0 20px 0;
+            font-size: 18px;
+        }
+        
+        .job-details-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+        
+        .detail-item {
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .detail-item:last-child {
+            border-bottom: none;
+        }
+        
+        .detail-label {
+            color: #666;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 5px;
+        }
+        
+        .detail-value {
+            color: #333;
+            font-size: 16px;
+            font-weight: 500;
+        }
+        
+        .form-card {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .form-card h3 {
+            color: #333;
+            margin: 0 0 25px 0;
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 10px;
+            color: #333;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        
+        .form-group label .required {
+            color: #e74c3c;
+        }
+        
+        .form-group input[type="text"],
+        .form-group input[type="email"],
+        .form-group input[type="tel"],
+        .form-group input[type="file"],
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: all 0.3s;
+            box-sizing: border-box;
+        }
+        
+        .form-group input[type="text"]:focus,
+        .form-group input[type="email"]:focus,
+        .form-group input[type="tel"]:focus,
+        .form-group input[type="file"]:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .form-group textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+        
+        .form-help-text {
+            display: block;
+            color: #999;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 30px;
+            padding-top: 30px;
+            border-top: 1px solid #eee;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 32px;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(102, 126, 234, 0.6);
+        }
+        
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+        
+        .btn-secondary {
+            background: #e0e0e0;
+            color: #333;
+            padding: 12px 32px;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-secondary:hover {
+            background: #d0d0d0;
+            transform: translateY(-2px);
+        }
+        
+        .file-input-wrapper {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+            width: 100%;
+        }
+        
+        .file-input-label {
+            display: block;
+            padding: 20px;
+            background: #f8f9fa;
+            border: 2px dashed #ddd;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+            color: #667eea;
+            font-weight: 500;
+        }
+        
+        .file-input-label:hover {
+            border-color: #667eea;
+            background: #f0f2ff;
+        }
+        
+        .file-input-label.drag-over {
+            border-color: #667eea;
+            background: #e8ebff;
+        }
+        
+        .form-group input[type="file"] {
+            display: none;
+        }
+        
+        .file-name-display {
+            margin-top: 10px;
+            padding: 10px;
+            background: #e8f5e9;
+            border-radius: 6px;
+            color: #2e7d32;
+            font-size: 13px;
+            display: none;
+        }
+        
+        .file-name-display.show {
+            display: block;
+        }
+        
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+        
+        @media (max-width: 768px) {
+            .job-details-grid,
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            main {
+                padding: 20px;
+            }
+            
+            .apply-container {
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div th:insert="fragments/header :: body"></div>
+
+<main>
+    <div class="apply-container">
+        <div class="page-header">
+            <h1>📝 Apply for Position</h1>
+            <p>Complete your application for the opportunity below</p>
+        </div>
+        
+        <!-- Job Details Card -->
+        <div class="job-details-card">
+            <h3 th:text="${position.title}">Job Title</h3>
+            <div class="job-details-grid">
+                <div class="detail-item">
+                    <div class="detail-label">📍 Location</div>
+                    <div class="detail-value" th:text="${position.location}">Location</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">🏢 Department</div>
+                    <div class="detail-value" th:text="${position.department}">Department</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">💰 Salary Range</div>
+                    <div class="detail-value" th:text="${position.salaryRange}">Salary</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">👥 Openings</div>
+                    <div class="detail-value" th:text="${position.openings}">Openings</div>
+                </div>
+            </div>
+            <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #eee;">
+                <div class="detail-label">📋 Description</div>
+                <div class="detail-value" th:text="${position.description}" style="line-height: 1.6; margin-top: 10px;">Description</div>
+            </div>
+        </div>
+        
+        <!-- Application Form -->
+        <div class="form-card">
+            <h3>Your Information</h3>
+            
+            <form th:action="@{'/apply/' + ${position.id}}" method="post" enctype="multipart/form-data">
+                <input type="hidden" name="applicantUsername" th:value="${username}" />
+                
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="fullName">Full Name <span class="required">*</span></label>
+                        <input type="text" id="fullName" name="fullName" placeholder="John Doe" required />
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">Email Address <span class="required">*</span></label>
+                        <input type="email" id="email" name="email" placeholder="john@example.com" required />
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="phone">Phone Number <span class="required">*</span></label>
+                    <input type="tel" id="phone" name="phone" placeholder="+1-234-567-8900" required />
+                </div>
+                
+                    <div class="form-group">
+                        <label for="resume">📄 Resume (PDF / DOC)</label>
+                        <div class="file-input-wrapper">
+                            <label for="resume" class="file-input-label" id="resumeLabel">
+                                📤 Click to upload or drag and drop your resume
+                            </label>
+                            <input type="file" id="resume" name="resume" accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document" />
+                            <div class="file-name-display" id="fileNameDisplay"></div>
+                        </div>
+                        <span class="form-help-text">PDF or Word document (Max 5MB)</span>
+                    </div>                <div class="form-group">
+                    <label for="experience">💼 Professional Experience</label>
+                    <textarea id="experience" name="experience" placeholder="Tell us about your relevant work experience..."></textarea>
+                    <span class="form-help-text">Share your key accomplishments and responsibilities</span>
+                </div>
+                
+                <div class="form-group">
+                    <label for="skills">🎯 Skills (comma separated)</label>
+                    <input type="text" id="skills" name="skills" placeholder="e.g., Python, Java, SQL, Project Management" />
+                    <span class="form-help-text">List your technical and professional skills</span>
+                </div>
+                
+                <div class="button-group">
+                    <button type="submit" class="btn-primary">
+                        ✓ Submit Application
+                    </button>
+                    <a href="/jobs" class="btn-secondary">
+                        ← Back to Jobs
+                    </a>
+                </div>
+                </form>
+            </div>
+        </div>
+    </main>
+
+<div th:insert="fragments/footer :: body"></div>
+
+<script>
+    // File upload handling
+    const fileInput = document.getElementById('resume');
+    const fileLabel = document.getElementById('resumeLabel');
+    const fileDisplay = document.getElementById('fileNameDisplay');
+    
+    // Handle file selection
+    fileInput.addEventListener('change', function(e) {
+        if (this.files && this.files.length > 0) {
+            const file = this.files[0];
+            fileDisplay.textContent = '✓ Selected: ' + file.name + ' (' + (file.size / 1024).toFixed(2) + ' KB)';
+            fileDisplay.classList.add('show');
+            fileLabel.textContent = '✓ Resume selected';
+        }
+    });
+    
+    // Handle drag and drop
+    fileLabel.addEventListener('dragover', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        this.classList.add('drag-over');
+    });
+    
+    fileLabel.addEventListener('dragleave', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        this.classList.remove('drag-over');
+    });
+    
+    fileLabel.addEventListener('drop', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        this.classList.remove('drag-over');
+        
+        const files = e.dataTransfer.files;
+        if (files && files.length > 0) {
+            fileInput.files = files;
+            const file = files[0];
+            fileDisplay.textContent = '✓ Selected: ' + file.name + ' (' + (file.size / 1024).toFixed(2) + ' KB)';
+            fileDisplay.classList.add('show');
+            this.textContent = '✓ Resume selected';
+        }
+    });
+    
+    // Validate form before submission
+    document.querySelector('form').addEventListener('submit', function(e) {
+        const fullName = document.getElementById('fullName').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const phone = document.getElementById('phone').value.trim();
+        
+        if (!fullName || !email || !phone) {
+            e.preventDefault();
+            alert('Please fill in all required fields: Full Name, Email, and Phone Number');
+            return false;
+        }
+        
+        // Allow form submission even without file
+        return true;
+    });
+</script>
+
+</body>
+</html>

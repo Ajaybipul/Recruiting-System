@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+    <title>Background Check Details</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f7fa;
+        }
+        .dashboard-layout { display: flex; min-height: 100vh; }
+        main { flex: 1; padding: 40px; max-width: 900px; }
+        .page-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+        }
+        .page-header h1 { font-size: 2em; margin: 0; }
+        .candidate-card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .candidate-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+        .info-item h3 { color: #666; font-size: 12px; text-transform: uppercase; margin: 0 0 5px 0; }
+        .info-item p { color: #333; font-weight: 600; margin: 0; }
+        .form-card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .form-card h2 {
+            color: #333;
+            margin-bottom: 25px;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 15px;
+        }
+        .form-section {
+            margin-bottom: 30px;
+        }
+        .section-title {
+            color: #333;
+            font-weight: 600;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #eee;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+            box-sizing: border-box;
+        }
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        textarea { resize: vertical; min-height: 100px; }
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .checkbox-group input[type="checkbox"] {
+            width: auto;
+            margin: 0;
+        }
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 30px;
+        }
+        .btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+        .btn-secondary {
+            background: #eee;
+            color: #333;
+        }
+        .btn-secondary:hover { background: #ddd; }
+        .btn-initiate {
+            background: #28a745;
+            color: white;
+        }
+        .btn-initiate:hover { background: #218838; }
+    </style>
+</head>
+<body>
+<div th:insert="~{fragments/header :: header}"></div>
+<main style="padding: 40px; max-width: 1000px; margin: 0 auto;">
+    <div class="page-header">
+        <h1>🔍 Background Check Details</h1>
+    </div>
+
+    <!-- Candidate Information -->
+    <div class="candidate-card">
+        <div class="candidate-info">
+            <div class="info-item">
+                <h3>Candidate Name</h3>
+                <p th:text="${application.fullName}"></p>
+            </div>
+            <div class="info-item">
+                <h3>Email</h3>
+                    <p th:text="${application.email}"></p>
+                </div>
+                <div class="info-item">
+                    <h3>Position Applied</h3>
+                    <p th:text="${application.jobTitle}"></p>
+                </div>
+                <div class="info-item">
+                    <h3>Status</h3>
+                    <p th:text="${application.status}"></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Background Check Form -->
+        <div class="form-card">
+            <h2>Background Check Verification</h2>
+
+            <form th:action="@{/hr/background-check/{id}/update(id=${application.id})}" method="post">
+
+                <!-- Background Check Status -->
+                <div class="form-section">
+                    <div class="section-title">🔍 Background Check Status</div>
+                    
+                    <div th:if="${application.backgroundCheckStatus == null or application.backgroundCheckStatus.equals('Not Started')}">
+                        <p style="color: #666; margin-bottom: 15px;">No background check initiated yet.</p>
+                        <form th:action="@{/hr/background-check/{id}/initiate(id=${application.id})}" method="post">
+                            <button type="submit" class="btn btn-initiate">Initiate Background Check</button>
+                        </form>
+                    </div>
+
+                    <div th:if="${application.backgroundCheckStatus != null and !application.backgroundCheckStatus.equals('Not Started')}">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="bgCheckStatus">Background Check Status *</label>
+                                <select id="bgCheckStatus" name="bgCheckStatus" required>
+                                    <option value="In Progress" th:selected="${application.backgroundCheckStatus?.equals('In Progress')}">In Progress</option>
+                                    <option value="Completed" th:selected="${application.backgroundCheckStatus?.equals('Completed')}">Completed</option>
+                                    <option value="Approved" th:selected="${application.backgroundCheckStatus?.equals('Approved')}">Approved</option>
+                                    <option value="Failed" th:selected="${application.backgroundCheckStatus?.equals('Failed')}">Failed</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Criminal Check -->
+                        <div class="form-section">
+                            <div class="section-title">Criminal Check</div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="criminalCheck">Status *</label>
+                                    <select id="criminalCheck" name="criminalCheck" required>
+                                        <option value="Not Started" th:selected="${application.criminalCheckStatus?.equals('Not Started')}">Not Started</option>
+                                        <option value="Clear" th:selected="${application.criminalCheckStatus?.equals('Clear')}">Clear</option>
+                                        <option value="Issues" th:selected="${application.criminalCheckStatus?.equals('Issues')}">Issues Found</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="criminalNotes">Notes</label>
+                                <textarea id="criminalNotes" name="criminalCheckNotes" th:text="${application.criminalCheckNotes}"></textarea>
+                            </div>
+                        </div>
+
+                        <!-- Reference Check -->
+                        <div class="form-section">
+                            <div class="section-title">Reference Check</div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="refCheck">Status *</label>
+                                    <select id="refCheck" name="refCheckStatus" required>
+                                        <option value="Not Started" th:selected="${application.referenceCheckStatus?.equals('Not Started')}">Not Started</option>
+                                        <option value="In Progress" th:selected="${application.referenceCheckStatus?.equals('In Progress')}">In Progress</option>
+                                        <option value="Completed" th:selected="${application.referenceCheckStatus?.equals('Completed')}">Completed</option>
+                                        <option value="Approved" th:selected="${application.referenceCheckStatus?.equals('Approved')}">Approved</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Education Verification -->
+                        <div class="form-section">
+                            <div class="section-title">Education Verification</div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="eduVerify">Status *</label>
+                                    <select id="eduVerify" name="eduVerification" required>
+                                        <option value="Not Started" th:selected="${application.educationVerificationStatus?.equals('Not Started')}">Not Started</option>
+                                        <option value="Verified" th:selected="${application.educationVerificationStatus?.equals('Verified')}">Verified</option>
+                                        <option value="Failed" th:selected="${application.educationVerificationStatus?.equals('Failed')}">Failed</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Employment Verification -->
+                        <div class="form-section">
+                            <div class="section-title">Employment Verification</div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="empVerify">Status *</label>
+                                    <select id="empVerify" name="empVerification" required>
+                                        <option value="Not Started" th:selected="${application.employmentVerificationStatus?.equals('Not Started')}">Not Started</option>
+                                        <option value="Verified" th:selected="${application.employmentVerificationStatus?.equals('Verified')}">Verified</option>
+                                        <option value="Failed" th:selected="${application.employmentVerificationStatus?.equals('Failed')}">Failed</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Overall Notes -->
+                        <div class="form-section">
+                            <div class="section-title">Overall Notes & Remarks</div>
+                            <div class="form-group">
+                                <label for="notes">Notes</label>
+                                <textarea id="notes" name="notes" th:text="${application.backgroundCheckNotes}"></textarea>
+                            </div>
+
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="passed" name="passed" value="true" th:checked="${application.backgroundCheckPassed}" />
+                                <label for="passed" style="margin: 0; font-size: 14px;">All checks passed - Approve candidate</label>
+                            </div>
+                        </div>
+
+                        <!-- Submit Buttons -->
+                        <div class="btn-group">
+                            <button type="submit" class="btn btn-primary">Update Background Check</button>
+                            <a href="/hr/background-checks" class="btn btn-secondary" style="text-align: center; line-height: 1;">Back</a>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+</main>
+</body>
+</html>

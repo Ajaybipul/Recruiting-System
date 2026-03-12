@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+    <title>Job Offer Details</title>
+</head>
+<body>
+<div th:insert="fragments/header :: body"></div>
+<main style="max-width: 800px; margin: 40px auto; padding: 0 20px;">
+    <h1>Job Offer</h1>
+    
+    <div style="background: white; padding: 30px; border-radius: 12px; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08); margin-bottom: 30px;">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 30px;">
+            <div>
+                <p style="margin: 0; color: #666; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; margin-bottom: 8px;">Offer ID</p>
+                <p style="margin: 0; font-size: 16px; color: #333;" th:text="${offer.id}"></p>
+            </div>
+            <div>
+                <p style="margin: 0; color: #666; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; margin-bottom: 8px;">Candidate</p>
+                <p style="margin: 0; font-size: 16px; color: #333;" th:if="${candidate}" th:text="${candidate.firstName} + ' ' + ${candidate.lastName}"></p>
+            </div>
+            <div>
+                <p style="margin: 0; color: #666; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; margin-bottom: 8px;">Salary</p>
+                <p style="margin: 0; font-size: 16px; color: #333;" th:text="${offer.salary}"></p>
+            </div>
+            <div>
+                <p style="margin: 0; color: #666; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; margin-bottom: 8px;">Expiration</p>
+                <p style="margin: 0; font-size: 16px; color: #333;" th:text="${#dates.format(offer.expirationDate, 'yyyy-MM-dd')}"></p>
+            </div>
+        </div>
+        
+        <div style="margin-bottom: 20px;">
+            <p style="color: #666; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; margin-bottom: 8px;">Benefits</p>
+            <p style="margin: 0; color: #333; line-height: 1.6;" th:text="${offer.benefits}"></p>
+        </div>
+        
+        <div>
+            <p style="color: #666; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; margin-bottom: 8px;">Status</p>
+            <span style="padding: 6px 12px; border-radius: 6px; background: #fff3cd; color: #856404; font-size: 13px; font-weight: 600;" th:text="${offer.status}"></span>
+        </div>
+    </div>
+    
+    <div th:if="${offer.status == 'Sent'}" style="display: flex; gap: 10px; margin-bottom: 20px;">
+        <form th:action="@{'/offer/' + ${offer.id} + '/accept'}" method="post" style="flex: 1;">
+            <button type="submit" class="btn btn-success" style="width: 100%;">Accept Offer</button>
+        </form>
+        <form th:action="@{'/offer/' + ${offer.id} + '/decline'}" method="post" style="flex: 1;">
+            <button type="submit" class="btn btn-danger" style="width: 100%;">Decline Offer</button>
+        </form>
+    </div>
+    
+    <a th:href="@{/}" class="btn btn-outline">Back</a>
+</main>
+<div th:insert="fragments/footer :: body"></div>
+</body>
+</html>

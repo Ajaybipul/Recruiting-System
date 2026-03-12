@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+    <title>Applicant Dashboard</title>
+</head>
+<body>
+<div th:insert="~{fragments/header :: header}"></div>
+<main class="container" style="max-width:1000px;margin:40px auto;">
+    <h1 th:text="'Welcome, ' + ${username}">Welcome, Candidate</h1>
+
+    <div class="cards" style="display:flex;gap:16px;margin-top:20px;flex-wrap:wrap;">
+        <div class="card">
+            <h3>Total Applications</h3>
+            <div class="card-value" th:text="${totalApplications}">0</div>
+        </div>
+        <div class="card">
+            <h3>In Review</h3>
+            <div class="card-value" th:text="${inReview}">0</div>
+        </div>
+        <div class="card">
+            <h3>Shortlisted</h3>
+            <div class="card-value" th:text="${shortlisted}">0</div>
+        </div>
+        <div class="card">
+            <h3>Rejected</h3>
+            <div class="card-value" th:text="${rejected}">0</div>
+        </div>
+    </div>
+
+    <div style="margin-top:24px; display:flex; gap:12px;">
+        <a class="btn btn-primary" th:href="@{/jobs}">View Jobs</a>
+        <a class="btn" th:href="@{/applicant/applications}">My Applications</a>
+        <a class="btn" th:href="@{/applicant/profile}">My Profile</a>
+    </div>
+</main>
+<div th:insert="~{fragments/footer :: footer}"></div>
+</body>
+</html>

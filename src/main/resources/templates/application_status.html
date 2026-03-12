@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+    <title>Application Status</title>
+    <style>
+        .applications-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 20px;
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+
+        .app-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            border-left: 4px solid #667eea;
+            transition: box-shadow 0.3s;
+        }
+
+        .app-card:hover {
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        .app-card h3 {
+            margin: 0 0 8px 0;
+            font-size: 18px;
+            color: #333;
+        }
+
+        .app-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 12px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .badge-info { background: #e3f2fd; color: #1976d2; }
+        .badge-warning { background: #fff3e0; color: #f57c00; }
+        .badge-primary { background: #f3e5f5; color: #7b1fa2; }
+        .badge-success { background: #e8f5e9; color: #388e3c; }
+        .badge-danger { background: #ffebee; color: #d32f2f; }
+
+        .interview-badge {
+            background: #f5f7ff;
+            border-radius: 8px;
+            padding: 12px;
+            margin: 12px 0;
+            border-left: 3px solid #667eea;
+            text-align: center;
+        }
+
+        .interview-badge p {
+            margin: 0;
+            font-size: 13px;
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        .btn-view-details {
+            background: #667eea;
+            color: white;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            transition: background 0.3s;
+            margin-top: 8px;
+            width: 100%;
+        }
+
+        .btn-view-details:hover {
+            background: #764ba2;
+        }
+
+        .feedback-section {
+            background: #f0f9ff;
+            border-radius: 8px;
+            padding: 12px;
+            margin: 12px 0;
+            border-left: 3px solid #0ea5e9;
+            font-size: 13px;
+        }
+
+        .feedback-section strong {
+            color: #333;
+        }
+
+        .empty-state {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .empty-state p {
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+
+        .modal.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 15px;
+        }
+
+        .modal-header h2 {
+            margin: 0;
+            font-size: 22px;
+            color: #333;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 28px;
+            cursor: pointer;
+            color: #999;
+            transition: color 0.3s;
+        }
+
+        .close-btn:hover {
+            color: #333;
+        }
+
+        .modal-section {
+            margin-bottom: 20px;
+        }
+
+        .modal-section label {
+            display: block;
+            font-weight: 600;
+            color: #667eea;
+            font-size: 12px;
+            text-transform: uppercase;
+            margin-bottom: 6px;
+        }
+
+        .modal-section p {
+            margin: 0;
+            color: #333;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .modal-section a {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            margin-top: 6px;
+            transition: background 0.3s;
+        }
+
+        .modal-section a:hover {
+            background: #764ba2;
+        }
+
+        .divider {
+            height: 1px;
+            background: #eee;
+            margin: 15px 0;
+        }
+    </style>
+</head>
+<body>
+<div th:insert="~{fragments/header :: header}"></div>
+
+<main style="min-height: 60vh;">
+    <div class="container" style="max-width:1200px; margin: 0 auto;">
+        <h2 style="margin: 40px 20px 20px; font-size:28px;">My Applications</h2>
+
+        <div th:if="${#lists.isEmpty(applications)}" class="empty-state">
+            <p style="font-size:16px;">You have not applied to any positions yet.</p>
+            <a class="btn btn-primary" th:href="@{/jobs}">Browse Jobs</a>
+        </div>
+
+        <div th:if="${!#lists.isEmpty(applications)}" class="applications-container">
+            <div th:each="app : ${applications}" class="app-card">
+                <!-- Job Title -->
+                <h3 th:text="${app.jobTitle}">Senior Software Engineer</h3>
+
+                <!-- Meta Info -->
+                <div class="app-meta">
+                    <span th:text="${#dates.format(app.appliedDate, 'dd MMM yyyy')}">28 Nov 2025</span>
+                    <span th:switch="${app.status}">
+                        <span th:case="'Submitted'" class="badge badge-info">Submitted</span>
+                        <span th:case="'Sent to Hiring Manager'" class="badge badge-warning">Shortlisted</span>
+                        <span th:case="'Under Review'" class="badge badge-warning">Under Review</span>
+                        <span th:case="'Interview Scheduled'" class="badge badge-primary">Interview Scheduled</span>
+                        <span th:case="'READY_FOR_OFFER'" class="badge badge-success">Ready for Offer</span>
+                        <span th:case="'Rejected'" class="badge badge-danger">Rejected</span>
+                        <span th:case="*" class="badge" th:text="${app.status}"></span>
+                    </span>
+                </div>
+
+                <!-- Interview Badge - Only if scheduled -->
+                <div th:if="${app.interviewDate != null}" class="interview-badge">
+                    <p>📅 Interview Scheduled</p>
+                    <p th:if="${app.interviewTime != null}">[[${#temporals.format(app.interviewDate, 'dd MMM yyyy')}]] at [[${#temporals.format(app.interviewTime, 'HH:mm')}]]</p>
+                    <p th:if="${app.interviewTime == null}" th:text="${#temporals.format(app.interviewDate, 'dd MMM yyyy')}">10 Dec 2025</p>
+                    <button class="btn-view-details" type="button" th:id="'btn-' + ${app.id}" th:data-interview-id="${app.id}">
+                        📋 View Interview Details
+                    </button>
+                </div>
+
+                <!-- Hiring Manager Feedback - Only if feedback exists -->
+                <div th:if="${app.hmFeedback != null and !app.hmFeedback.isEmpty()}" class="feedback-section">
+                    <strong>⭐ Hiring Manager Feedback</strong>
+                    <div style="margin-top: 8px;">
+                        <div th:if="${app.hmRating != null}">
+                            <strong>Rating:</strong> <span th:text="${app.hmRating}">4</span>/5
+                        </div>
+                        <div th:if="${app.hmDecision != null}" style="margin-top: 4px;">
+                            <strong>Decision:</strong> <span th:text="${app.hmDecision}">Approved</span>
+                        </div>
+                        <div style="margin-top: 8px; font-size: 12px; color: #666;" th:text="${app.hmFeedback}">Great performance in the interview...</div>
+                    </div>
+                </div>
+
+                <!-- Resume Download -->
+                <div th:if="${app.resumePath != null and !app.resumePath.isEmpty()}" style="margin-top: 12px;">
+                    <a th:href="${app.resumePath}" target="_blank" style="color: #667eea; text-decoration: none; font-size: 13px; font-weight: 600;">
+                        📄 View My Resume
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Interview Details Modal -->
+        <div th:each="app : ${applications}" th:if="${app.interviewDate != null}" th:attr="id='interviewModal-' + ${app.id}" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>📅 Interview Details</h2>
+                    <button class="close-btn" type="button" th:data-app-id="${app.id}">×</button>
+                </div>
+
+                <div class="modal-section">
+                    <label>Position</label>
+                    <p th:text="${app.jobTitle}">Senior Software Engineer</p>
+                </div>
+
+                <div class="divider"></div>
+
+                <div class="modal-section">
+                    <label>📅 Date & Time</label>
+                    <p th:if="${app.interviewTime != null}">[[${#temporals.format(app.interviewDate, 'dddd, dd MMMM yyyy')}]] at [[${#temporals.format(app.interviewTime, 'HH:mm')}]]</p>
+                    <p th:if="${app.interviewTime == null}" th:text="${#temporals.format(app.interviewDate, 'dddd, dd MMMM yyyy')}">Monday, 10 December 2025</p>
+                </div>
+
+                <div class="divider"></div>
+
+                <div class="modal-section" th:if="${app.interviewMode != null}">
+                    <label>Interview Type</label>
+                    <p th:text="${app.interviewMode}">Video Call</p>
+                </div>
+
+                <div class="modal-section" th:if="${app.interviewLocation != null}">
+                    <label>Location</label>
+                    <p th:text="${app.interviewLocation}">Office Room A</p>
+                </div>
+
+                <div class="modal-section" th:if="${app.interviewMeetingLink != null and !app.interviewMeetingLink.isEmpty() and app.interviewMeetingLink.startsWith('http')}">
+                    <label>Meeting Link</label>
+                    <a th:href="${app.interviewMeetingLink}" target="_blank">🔗 Join Video Call</a>
+                </div>
+
+                <div class="modal-section" th:if="${app.interviewNotes != null and !app.interviewNotes.isEmpty()}">
+                    <label>Instructions for You</label>
+                    <p th:text="${app.interviewNotes}">Please prepare to discuss your experience with...</p>
+                </div>
+
+                <div class="divider"></div>
+
+                <div style="text-align: right;">
+                    <button class="btn-view-details" style="width: auto; margin-top: 0;" type="button" th:data-app-id="${app.id}">
+                        Close
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<div th:insert="~{fragments/footer :: footer}"></div>
+
+<script>
+function showInterviewDetails(appId) {
+    console.log('Opening modal for appId:', appId);
+    const modalId = 'interviewModal-' + appId;
+    console.log('Modal ID:', modalId);
+    const modal = document.getElementById(modalId);
+    console.log('Modal element:', modal);
+    if (modal) {
+        modal.classList.add('show');
+    } else {
+        console.error('Modal not found with ID:', modalId);
+    }
+}
+
+function closeInterviewModal(appId) {
+    console.log('Closing modal for appId:', appId);
+    const modalId = 'interviewModal-' + appId;
+    const modal = document.getElementById(modalId);
+    if (modal) {
+        modal.classList.remove('show');
+    }
+}
+
+// Attach click handlers to interview detail buttons
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOMContentLoaded - Attaching event listeners');
+    
+    const buttons = document.querySelectorAll('[data-interview-id]');
+    console.log('Found interview buttons:', buttons.length);
+    buttons.forEach(button => {
+        button.addEventListener('click', function(e) {
+            console.log('Interview button clicked');
+            const appId = this.getAttribute('data-interview-id');
+            console.log('Opening modal for appId:', appId);
+            showInterviewDetails(appId);
+        });
+    });
+
+    // Attach close handlers
+    const closeButtons = document.querySelectorAll('.close-btn[data-app-id]');
+    console.log('Found close header buttons:', closeButtons.length);
+    closeButtons.forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            const appId = this.getAttribute('data-app-id');
+            console.log('Closing modal for appId:', appId);
+            closeInterviewModal(appId);
+        });
+    });
+
+    // Attach modal close buttons at bottom
+    const modalCloseBtns = document.querySelectorAll('[data-app-id]');
+    console.log('Found all data-app-id buttons:', modalCloseBtns.length);
+    modalCloseBtns.forEach(btn => {
+        // Only attach if it's a close button (has text "Close")
+        if (btn.textContent.includes('Close')) {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                const appId = this.getAttribute('data-app-id');
+                console.log('Closing modal for appId:', appId);
+                closeInterviewModal(appId);
+            });
+        }
+    });
+});
+
+// Close modal when clicking outside of it
+window.onclick = function(event) {
+    if (event.target.classList && event.target.classList.contains('modal')) {
+        event.target.classList.remove('show');
+    }
+}
+</script>
+
+</body>
+</html>

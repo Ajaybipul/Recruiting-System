@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+    <title>My Profile</title>
+
+    <style>
+        main {
+            background: linear-gradient(135deg, #f8f9fa 0%, #f0f2f5 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+        
+        main h1 {
+            color: #111827;
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 30px;
+        }
+        
+        main h3 {
+            color: #111827;
+            font-size: 22px;
+            font-weight: 700;
+            margin-top: 30px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 12px;
+        }
+        
+        .label {
+            font-weight: 600;
+            margin-top: 20px;
+            margin-bottom: 8px;
+            color: #374151;
+            font-size: 14px;
+        }
+        
+        .value-box {
+            background: white;
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            border: 1px solid #e5e7eb;
+            color: #374151;
+            transition: all 0.3s ease;
+        }
+        
+        .value-box:hover {
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+        }
+        
+        .form-row {
+            margin-bottom: 24px;
+        }
+        
+        .form-row label {
+            display: block;
+            margin-bottom: 8px;
+            color: #374151;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        
+        .form-row input,
+        .form-row select,
+        .form-row textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .form-row input:focus,
+        .form-row select:focus,
+        .form-row textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .form-actions {
+            display: flex;
+            gap: 16px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .alert {
+            padding: 16px 20px;
+            border-radius: 8px;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .alert-success {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid #10b981;
+            color: #047857;
+        }
+        
+        .alert-danger {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid #ef4444;
+            color: #b91c1c;
+        }
+        
+        .section-card {
+            background: white;
+            padding: 28px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+        }
+        
+        hr {
+            border: none;
+            border-top: 1px solid #e5e7eb;
+            margin: 30px 0;
+        }
+    </style>
+</head>
+
+<body>
+
+<div th:insert="fragments/header :: body"></div>
+
+<main class="container" style="max-width:700px;margin:40px auto;">
+    <h1>My Profile</h1>
+
+    <!-- SUCCESS / ERROR MSG -->
+    <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+    <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+
+    <!-- VIEW MODE -->
+    <div th:if="${!editMode}">
+        <h3>Contact Information</h3>
+        <div class="label">Email</div>
+        <div class="value-box" th:text="${profile.email}"></div>
+
+        <div class="label">Phone</div>
+        <div class="value-box" th:text="${profile.phone}"></div>
+
+        <h3>Personal Information</h3>
+        <div class="label">First Name</div>
+        <div class="value-box" th:text="${profile.firstName}"></div>
+
+        <div class="label">Last Name</div>
+        <div class="value-box" th:text="${profile.lastName}"></div>
+
+        <div class="label">Address</div>
+        <div class="value-box" th:text="${profile.address}"></div>
+
+        <div class="label">Date of Birth</div>
+        <div class="value-box" th:text="${profile.dateOfBirth}"></div>
+
+        <div class="label">Emergency Contact</div>
+        <div class="value-box" th:text="${profile.emergencyContact}"></div>
+
+        <h3>Professional Information</h3>
+        <div class="label">Location</div>
+        <div class="value-box" th:text="${profile.location}"></div>
+
+        <div class="label">Highest Education</div>
+        <div class="value-box" th:text="${profile.education}"></div>
+
+        <div class="label">Skills</div>
+        <div class="value-box" th:text="${skillsString}"></div>
+
+        <div style="display: flex; gap: 16px; margin-top: 30px; flex-wrap: wrap;">
+            <a href="/applicant/profile/edit" class="btn-primary">✏️ Edit Profile</a>
+        </div>
+
+        <hr />
+
+        <h3>Resume</h3>
+        <div class="section-card">
+            <div th:if="${profile.resumeUrl}">
+                <a th:href="@{${profile.resumeUrl}}" target="_blank" class="btn-info btn-sm">📄 View Resume</a>
+            </div>
+            <div th:if="!${profile.resumeUrl}" style="color: #9ca3af; margin-bottom: 16px;">
+                No resume uploaded yet
+            </div>
+
+            <form th:action="@{/applicant/resume/upload}" method="post" enctype="multipart/form-data" style="margin-top: 16px; display: flex; gap: 12px; align-items: flex-end; flex-wrap: wrap;">
+                <div style="flex: 1; min-width: 200px;">
+                    <input type="file" name="resume" accept="application/pdf" style="border: 2px dashed #e5e7eb; padding: 12px; border-radius: 8px;" />
+                </div>
+                <button type="submit" class="btn-primary btn-sm">⬆️ Upload Resume (PDF)</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- EDIT MODE -->
+    <form th:if="${editMode}" th:action="@{/applicant/profile/update}" method="post" enctype="multipart/form-data">
+
+        <h3>Contact Information</h3>
+        
+        <div class="form-row">
+            <label>Email</label>
+            <input type="email" name="email" th:value="${profile.email}" required />
+        </div>
+
+        <div class="form-row">
+            <label>Phone</label>
+            <input type="text" name="phone" th:value="${profile.phone}" required />
+        </div>
+
+        <h3>Personal Information</h3>
+
+        <div class="form-row">
+            <label>First Name</label>
+            <input type="text" name="firstName" th:value="${profile.firstName}" />
+        </div>
+
+        <div class="form-row">
+            <label>Last Name</label>
+            <input type="text" name="lastName" th:value="${profile.lastName}" />
+        </div>
+
+        <div class="form-row">
+            <label>Address</label>
+            <textarea name="address" th:text="${profile.address}"></textarea>
+        </div>
+
+        <div class="form-row">
+            <label>Date of Birth</label>
+            <input type="date" name="dateOfBirth" th:value="${profile.dateOfBirth}" />
+        </div>
+
+        <div class="form-row">
+            <label>Emergency Contact</label>
+            <input type="text" name="emergencyContact" th:value="${profile.emergencyContact}" />
+        </div>
+
+        <div class="form-row">
+            <label>Bank Details</label>
+            <textarea name="bankDetails" th:text="${profile.bankDetails}"></textarea>
+        </div>
+
+        <h3>Professional Information</h3>
+
+        <div class="form-row">
+            <label>Location</label>
+            <input type="text" name="location" th:value="${profile.location}" />
+        </div>
+
+        <div class="form-row">
+            <label>Highest Education</label>
+            <input type="text" name="education" th:value="${profile.education}" />
+        </div>
+
+        <div class="form-row">
+            <label>Skills (comma separated)</label>
+            <input type="text" name="skills" th:value="${skillsString}" />
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn-primary">💾 Save Profile</button>
+            <a href="/applicant/profile" class="btn-secondary">❌ Cancel</a>
+        </div>
+    </form>
+
+</main>
+
+<div th:insert="fragments/footer :: body"></div>
+
+</body>
+</html>

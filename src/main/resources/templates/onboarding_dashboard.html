@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+    <link rel="stylesheet" th:href="@{/css/professional-theme.css}" />
+    <link rel="stylesheet" th:href="@{/css/modern.css}" />
+    <link rel="stylesheet" th:href="@{/css/onboarding-theme.css}" />
+    <title>Onboarding Dashboard</title>
+    <style>
+        /* FLEXBOX LAYOUT FOR PAGES */
+        html, body {
+            height: 100%;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        }
+        
+        body {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .dashboard-container {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+            width: 100%;
+        }
+        
+        /* SIDEBAR STYLING */
+        .sidebar {
+            width: 280px !important;
+            background: linear-gradient(180deg, #667eea 0%, #764ba2 100%) !important;
+            color: white !important;
+            padding: 0 !important;
+            min-height: 100% !important;
+            overflow-y: auto !important;
+            flex-shrink: 0 !important;
+            border-right: 1px solid rgba(255,255,255,0.1) !important;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1) !important;
+            display: flex !important;
+            visibility: visible !important;
+            position: relative !important;
+            flex-direction: column !important;
+        }
+        
+        .sidebar-header {
+            padding: 25px 20px !important;
+            border-bottom: 1px solid rgba(255,255,255,0.2) !important;
+            text-align: center !important;
+        }
+        
+        .sidebar-header h2 {
+            margin: 0 !important;
+            font-size: 22px !important;
+            font-weight: 700 !important;
+            color: white !important;
+            letter-spacing: 0.5px !important;
+        }
+        
+        .sidebar nav {
+            display: flex !important;
+            flex-direction: column !important;
+            gap: 8px !important;
+            padding: 20px 15px !important;
+            flex: 1 !important;
+        }
+        
+        .sidebar .nav-item {
+            color: rgba(255, 255, 255, 0.9) !important;
+            text-decoration: none !important;
+            padding: 12px 16px !important;
+            border-radius: 8px !important;
+            display: flex !important;
+            align-items: center !important;
+            gap: 12px !important;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+            font-size: 14px !important;
+            font-weight: 500 !important;
+        }
+        
+        .sidebar .nav-item .icon {
+            font-size: 18px !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            min-width: 20px !important;
+        }
+        
+        .sidebar .nav-item .label {
+            white-space: nowrap !important;
+            overflow: hidden !important;
+            text-overflow: ellipsis !important;
+        }
+        
+        .sidebar .nav-item:hover {
+            background-color: rgba(255, 255, 255, 0.15) !important;
+            transform: translateX(4px) !important;
+            color: white !important;
+        }
+        
+        .sidebar .nav-item.active {
+            background: rgba(255, 255, 255, 0.2) !important;
+            color: white !important;
+        }
+        
+        .sidebar .nav-divider {
+            height: 1px !important;
+            background: rgba(255, 255, 255, 0.15) !important;
+            margin: 12px 0 !important;
+        }
+        
+        .sidebar-footer {
+            padding: 15px !important;
+            border-top: 1px solid rgba(255,255,255,0.2) !important;
+        }
+        
+        .sidebar-footer .logout-btn {
+            color: rgba(255, 255, 255, 0.9) !important;
+            text-decoration: none !important;
+            padding: 12px 16px !important;
+            border-radius: 8px !important;
+            display: flex !important;
+            align-items: center !important;
+            gap: 12px !important;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+            font-size: 14px !important;
+            font-weight: 500 !important;
+            background: rgba(255, 0, 0, 0.2) !important;
+            border: 1px solid rgba(255, 255, 255, 0.2) !important;
+            width: 100% !important;
+            box-sizing: border-box !important;
+        }
+        
+        .sidebar-footer .logout-btn:hover {
+            background: rgba(255, 0, 0, 0.3) !important;
+            transform: translateX(4px) !important;
+            color: white !important;
+        }
+        
+        .sidebar-footer .logout-btn .icon {
+            font-size: 18px !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            min-width: 20px !important;
+        }
+        
+        .sidebar-footer .logout-btn .label {
+            white-space: nowrap !important;
+            overflow: hidden !important;
+            text-overflow: ellipsis !important;
+        }
+        
+        /* MAIN CONTENT AREA */
+        main {
+            flex: 1;
+            padding: 40px;
+            overflow-y: auto;
+            background: linear-gradient(135deg, #f8f9fa 0%, #f0f2f5 100%);
+        }
+        
+        main h1 {
+            color: #111827;
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        
+        main > p {
+            color: #6b7280;
+            margin-bottom: 30px;
+        }
+        
+        main h3 {
+            color: #111827;
+            font-size: 22px;
+            font-weight: 700;
+            margin-top: 30px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 12px;
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+        
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 28px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 8px 16px rgba(102, 126, 234, 0.3);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 12px 28px rgba(102, 126, 234, 0.4);
+        }
+        
+        .stat-card h3 {
+            margin: 0;
+            font-size: 14px;
+            opacity: 1;
+            border: none;
+            padding: 0;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            color: white;
+        }
+        
+        .stat-card p {
+            margin: 12px 0 0 0;
+            font-size: 36px;
+            font-weight: 700;
+            color: white;
+        }
+        
+        table {
+            background: white;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+        }
+        
+        thead {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .onboarding-theme thead {
+            background: linear-gradient(135deg, #16a085 0%, #138d75 100%) !important;
+        }
+        
+        .onboarding-theme thead th {
+            color: white !important;
+            font-weight: 600 !important;
+        }
+    </style>
+</head>
+<body class="onboarding-theme">
+<div th:replace="~{fragments/header :: header}"></div>
+<div class="dashboard-container">
+    <!-- Onboarding sidebar -->
+    <div th:if="${#lists.contains(session.roles, 'ROLE_ONBOARDING')}" th:insert="~{fragments/sidebar_onboarding :: body}"></div>
+    <!-- HR sidebar -->
+    <div th:if="${#lists.contains(session.roles, 'ROLE_HR')}" th:insert="~{fragments/sidebar_hr :: body}"></div>
+    <!-- Applicant sidebar -->
+    <div th:if="${#lists.contains(session.roles, 'ROLE_APPLICANT')}" th:insert="~{fragments/sidebar_applicant :: body}"></div>
+    <!-- Recruiter sidebar -->
+    <div th:if="${#lists.contains(session.roles, 'ROLE_RECRUITER')}" th:insert="~{fragments/sidebar_recruiter :: body}"></div>
+    <!-- Hiring Manager sidebar -->
+    <div th:if="${#lists.contains(session.roles, 'ROLE_HIRING_MANAGER')}" th:insert="~{fragments/sidebar_hm :: body}"></div>
+    <main>
+        <h1>Onboarding Dashboard</h1>
+        <p style="color: #666; margin-bottom: 30px;">Review and verify onboarding documents from new hires</p>
+        
+        <div class="stats">
+            <div class="stat-card accent1">
+                <h3>Total Onboarding</h3>
+                <p th:text="${totalOnboarding}">0</p>
+            </div>
+            <div class="stat-card accent2">
+                <h3>In Progress</h3>
+                <p th:text="${inProgress}">0</p>
+            </div>
+            <div class="stat-card accent3">
+                <h3>Completed</h3>
+                <p th:text="${completed}">0</p>
+            </div>
+            <div class="stat-card accent4">
+                <h3>Pending Verification</h3>
+                <p th:text="${pendingDocVerification}">0</p>
+            </div>
+        </div>
+        
+        <h3>Onboarding Candidates</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Candidate Name</th>
+                    <th>Overall Status</th>
+                    <th>Documents Uploaded</th>
+                    <th>Workstation Setup</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="onboard : ${onboardingList}">
+                    <td th:text="${onboard.firstName} + ' ' + ${onboard.lastName}">N/A</td>
+                    <td><span class="badge badge-success" th:text="${onboard.overallStatus}">Pending</span></td>
+                    <td><span class="badge badge-success" th:if="${onboard.idProofUploaded}">✓ Yes</span><span class="badge badge-danger" th:unless="${onboard.idProofUploaded}">✗ No</span></td>
+                    <td><span class="badge badge-success" th:if="${onboard.laptopAssigned}">✓ Yes</span><span class="badge badge-danger" th:unless="${onboard.laptopAssigned}">✗ No</span></td>
+                    <td>
+                        <a th:href="@{'/onboard/candidates/' + ${onboard.applicationId}}" class="btn-primary btn-sm">📋 View Details</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </main>
+</div>
+<div th:insert="~{fragments/footer :: body}"></div>
+</body>
+</html>

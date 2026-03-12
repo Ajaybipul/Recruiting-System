@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+    <title>Create Job Offer</title>
+    <style>
+        main {
+            padding: 40px;
+            max-width: 900px;
+            margin: 0 auto;
+            background: #fafafa;
+            min-height: 100vh;
+        }
+
+        .form-container {
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-section {
+            margin-bottom: 32px;
+            padding-bottom: 32px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .form-section:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .form-section h3 {
+            font-size: 18px;
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+            font-size: 14px;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        .checkbox-group label {
+            margin: 0;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+
+        .row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .row.full {
+            grid-template-columns: 1fr;
+        }
+
+        .candidate-info {
+            background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+            margin-bottom: 30px;
+        }
+
+        .candidate-info p {
+            margin: 8px 0;
+            font-size: 14px;
+            color: #333;
+        }
+
+        .candidate-info strong {
+            color: #667eea;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            border-radius: 8px;
+            border: none;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #333;
+        }
+
+        .btn-secondary:hover {
+            background: #e0e0e0;
+        }
+
+        .required::after {
+            content: " *";
+            color: #e74c3c;
+        }
+
+        @media (max-width: 768px) {
+            .row {
+                grid-template-columns: 1fr;
+            }
+
+            main {
+                padding: 20px;
+            }
+
+            .form-container {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div th:insert="~{fragments/header :: header}"></div>
+
+<main>
+    <div class="form-container">
+        <h1 style="margin-bottom: 30px; color: #1a1a1a;">💼 Create Job Offer</h1>
+
+        <!-- Candidate Info -->
+        <div class="candidate-info">
+            <p><strong>Candidate:</strong> <span th:text="${appFullName != null ? appFullName : application.fullName}"></span></p>
+            <p><strong>Email:</strong> <span th:text="${appEmail != null ? appEmail : application.email}"></span></p>
+            <p><strong>Position:</strong> <span th:text="${appJobTitle != null ? appJobTitle : application.jobTitle}"></span></p>
+        </div>
+
+        <form th:action="@{/hr/applicants/{id}/offer(id=${appId != null ? appId : application.id})}" method="post">
+            <!-- Position & Department -->
+            <div class="form-section">
+                <h3>📋 Position Details</h3>
+
+                <div class="row">
+                    <div class="form-group">
+                        <label for="positionTitle" class="required">Position Title</label>
+                        <input type="text" id="positionTitle" name="positionTitle" placeholder="e.g., Senior Software Engineer" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="department" class="required">Department</label>
+                        <input type="text" id="department" name="department" placeholder="e.g., Engineering" required />
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group">
+                        <label for="reportTo" class="required">Reports To (Manager Name)</label>
+                        <input type="text" id="reportTo" name="reportTo" placeholder="e.g., John Smith" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="employmentTerms" class="required">Employment Terms</label>
+                        <select id="employmentTerms" name="employmentTerms" required>
+                            <option value="">Select...</option>
+                            <option value="Full-time">Full-time</option>
+                            <option value="Part-time">Part-time</option>
+                            <option value="Contract">Contract</option>
+                            <option value="At-will">At-will</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Compensation -->
+            <div class="form-section">
+                <h3>💰 Compensation & Benefits</h3>
+
+                <div class="row">
+                    <div class="form-group">
+                        <label for="salary" class="required">Annual Salary</label>
+                        <input type="text" id="salary" name="salary" placeholder="e.g., $120,000" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="signOnBonus">Sign-on Bonus (Optional)</label>
+                        <input type="text" id="signOnBonus" name="signOnBonus" placeholder="e.g., $5,000" />
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group">
+                        <label for="paidTimeOff" class="required">Paid Time Off (Days)</label>
+                        <input type="number" id="paidTimeOff" name="paidTimeOff" placeholder="e.g., 20" min="0" required />
+                    </div>
+                </div>
+
+                <h4 style="margin-top: 20px; margin-bottom: 15px; color: #333; font-weight: 600;">Benefits:</h4>
+
+                <div class="checkbox-group">
+                    <input type="checkbox" id="healthInsurance" name="healthInsurance" value="true" />
+                    <label for="healthInsurance">Health Insurance</label>
+                </div>
+
+                <div class="checkbox-group">
+                    <input type="checkbox" id="fourOhOneK" name="fourOhOneK" value="true" />
+                    <label for="fourOhOneK">401(k) Retirement Plan</label>
+                </div>
+            </div>
+
+            <!-- Start Date & Validity -->
+            <div class="form-section">
+                <h3>📅 Start Date & Offer Validity</h3>
+
+                <div class="row">
+                    <div class="form-group">
+                        <label for="startDate" class="required">Start Date</label>
+                        <input type="date" id="startDate" name="startDate" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="offerValidity" class="required">Offer Valid For (Days)</label>
+                        <input type="number" id="offerValidity" name="offerValidity" placeholder="e.g., 30" min="1" value="30" required />
+                    </div>
+                </div>
+            </div>
+
+            <!-- Additional Notes -->
+            <div class="form-section">
+                <h3>📝 Additional Notes</h3>
+
+                <div class="form-group row full">
+                    <label for="additionalNotes">Special Conditions or Notes (Optional)</label>
+                    <textarea id="additionalNotes" name="additionalNotes" placeholder="Any special conditions, equity offers, or additional notes..."></textarea>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="button-group">
+                <button type="submit" class="btn btn-primary">✓ Create & Send Offer</button>
+                <a th:href="@{/hr/applicants}" class="btn btn-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+</main>
+
+<div th:insert="~{fragments/footer :: footer}"></div>
+
+</body>
+</html>

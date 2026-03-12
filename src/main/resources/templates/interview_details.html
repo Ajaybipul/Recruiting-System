@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+    <title>Interview Details</title>
+</head>
+<body>
+<div th:insert="fragments/header :: body"></div>
+<main style="max-width: 800px; margin: 40px auto; padding: 0 20px;">
+    <h1>Interview Details</h1>
+    
+    <th:block th:if="${interview != null}">
+    <div style="background: white; padding: 30px; border-radius: 12px; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08); margin-bottom: 30px;">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
+            <div>
+                <p style="margin: 0; color: #666; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; margin-bottom: 8px;">Interview ID</p>
+                <p style="margin: 0; font-size: 16px; color: #333;" th:text="${interview.id}"></p>
+            </div>
+            <div>
+                <p style="margin: 0; color: #666; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; margin-bottom: 8px;">Candidate</p>
+                <p style="margin: 0; font-size: 16px; color: #333;" th:if="${application}" th:text="${application.fullName}"></p>
+            </div>
+            <div>
+                <p style="margin: 0; color: #666; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; margin-bottom: 8px;">Date & Time</p>
+                <p style="margin: 0; font-size: 16px; color: #333;" th:text="${#dates.format(interview.scheduledAt, 'yyyy-MM-dd HH:mm')}"></p>
+            </div>
+            <div>
+                <p style="margin: 0; color: #666; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; margin-bottom: 8px;">Duration</p>
+                <p style="margin: 0; font-size: 16px; color: #333;" th:text="${interview.durationMinutes} + ' minutes'"></p>
+            </div>
+            <div>
+                <p style="margin: 0; color: #666; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; margin-bottom: 8px;">Location</p>
+                <p style="margin: 0; font-size: 16px; color: #333;" th:text="${interview.location}"></p>
+            </div>
+            <div>
+                <p style="margin: 0; color: #666; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; margin-bottom: 8px;">Mode</p>
+                <p style="margin: 0; font-size: 16px; color: #333;" th:text="${interview.mode}"></p>
+            </div>
+            <div>
+                <p style="margin: 0; color: #666; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; margin-bottom: 8px;">Status</p>
+                <span style="padding: 4px 8px; border-radius: 4px; background: #fff3cd; color: #856404; font-size: 12px; font-weight: 600;" th:text="${interview.status}"></span>
+            </div>
+        </div>
+    </div>
+    
+    <div style="display: flex; gap: 10px;">
+        <a th:href="@{'/interview/' + ${interview.id} + '/feedback'}" class="btn btn-primary">Submit Feedback</a>
+        <a th:href="@{/interview/list}" class="btn btn-outline">Back</a>
+    </div>
+    </th:block>
+    
+    <th:block th:if="${interview == null}">
+        <div style="background: white; padding: 30px; border-radius: 12px; text-align: center;">
+            <p>Interview not found.</p>
+            <a th:href="@{/interview/list}" class="btn btn-secondary">Back to List</a>
+        </div>
+    </th:block>
+</main>
+<div th:insert="fragments/footer :: body"></div>
+</body>
+</html>
