@@ -1,0 +1,6 @@
+services:
+  - type: web
+    name: recruiting-system
+    runtime: java
+    buildCommand: ./mvnw clean package
+    startCommand: java -jar target/*.jar
